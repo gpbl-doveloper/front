@@ -18,11 +18,13 @@ export default function DiaryScreen() {
       {/* Image Gallery */}
       <ScrollView style={styles.imageGallery} horizontal={true}>
         {imageData.map((data, index) => (
-          <Image
-            key={index}
-            source={require("../../assets/images/icon.png")}
-            style={styles.image}
-          />
+          <View style={styles.imageContainer}>
+            <Image
+              key={index}
+              source={require("../../assets/images/icon.png")}
+              style={styles.image}
+            />
+          </View>
         ))}
       </ScrollView>
 
@@ -37,8 +39,10 @@ export default function DiaryScreen() {
 
         <Text style={styles.message}>
           Hi Mom!{"\n"}
-          Today I had a great day doing this this this ..,{"\n"}I took a nap for
-          about 2 hours and had a nice snack. Really loved it 🐾
+          {"\n"}
+          Today I had a great day doing this this this ..,{"\n"}
+          {"\n"}I took a nap for about 2 hours and had a nice snack. Really
+          loved it 🐾
         </Text>
       </View>
     </ScrollView>
@@ -46,6 +50,9 @@ export default function DiaryScreen() {
 }
 
 const styles = StyleSheet.create({
+  imageContainer: {
+    paddingRight: 12,
+  },
   container: {
     flex: 1,
     backgroundColor: "#F6F6F6",
@@ -81,7 +88,6 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 10,
     backgroundColor: "#F4B2B0",
-    marginRight: 14,
   },
   dogNameFaceContainer: {
     flexDirection: "row",
@@ -99,9 +105,12 @@ const styles = StyleSheet.create({
   },
   dogCard: {
     backgroundColor: "#F4B2B0",
-    padding: 15,
+    paddingHorizontal: 30,
+    paddingVertical: 20,
     borderRadius: 10,
     marginBottom: 20,
+    minHeight: 250,
+    gap: 10,
   },
   dogName: {
     fontSize: 18,
@@ -109,8 +118,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   message: {
-    fontSize: 14,
+    fontSize: 15,
     color: "#fff",
+    fontWeight: "bold",
   },
   bottomNavigation: {
     flexDirection: "row",

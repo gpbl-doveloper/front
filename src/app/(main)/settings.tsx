@@ -1,4 +1,4 @@
-import { Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Settings() {
     return (
@@ -8,3 +8,6 @@ export default function Settings() {
     );
   }
   
+  const styles = StyleSheet.create({
+    
+  })

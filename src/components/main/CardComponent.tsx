@@ -7,8 +7,9 @@ import {
   Text,
   Pressable,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
 import { Href, router } from "expo-router";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
 
 interface TodayCardComponentProps {
   todayCardComponentValue: { mainImageUri: string; iconImageUri: string }[];
@@ -30,8 +31,8 @@ export function TodayCardComponent({
 
       {/* 자세히 보기 버튼 */}
       <View style={styles.nextButton}>
-        <Ionicons
-          name="arrow-forward"
+        <Entypo
+          name="chevron-right"
           size={24}
           color="white"
           onPress={() => router.push("/(main)/noticebook" as Href)}
@@ -58,6 +59,13 @@ export function HistoryComponent({ historyValue }: { historyValue: any }) {
         <View key={index} style={styles.historyCard}>
           <Image source={value.mainImageUri} style={styles.historyImage} />
           <Text style={styles.historyText}>뭔말쓸거임?</Text>
+          <View style={styles.historyNextButton}>
+            <Pressable
+              onPress={() => router.push("/(main)/noticebook" as Href)}
+            >
+              <Entypo name="chevron-right" size={24} color="white" />
+            </Pressable>
+          </View>
         </View>
       ))}
     </View>
@@ -65,6 +73,10 @@ export function HistoryComponent({ historyValue }: { historyValue: any }) {
 }
 
 const styles = StyleSheet.create({
+  historyNextButton: {
+    justifyContent: "center",
+  },
+
   cardContainer: {
     padding: 16,
     margin: "auto",
@@ -113,6 +125,7 @@ const styles = StyleSheet.create({
   },
   historyCard: {
     padding: 16,
+    justifyContent: "space-between",
     borderRadius: 15,
     gap: 16,
     flexDirection: "row",

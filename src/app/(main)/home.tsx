@@ -28,7 +28,7 @@ export default function MainScreen() {
   return (
     <ScrollView style={styles.mainContainer}>
       <View>
-        <Text className="text-2xl">Hello, dusehd1 🐾</Text>
+        <Text style={styles.titleText}>Hello, dusehd1 🐾</Text>
 
         {/* 상단 버튼, 강아지 이름 선택 및 약 아이콘 */}
         <View style={styles.btnContainer}>
@@ -61,6 +61,11 @@ export default function MainScreen() {
 }
 
 const styles = StyleSheet.create({
+  titleText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginVertical: 8,
+  },
   mainContainer: {
     display: "flex",
     padding: 16,

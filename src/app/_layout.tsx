@@ -1,4 +1,4 @@
-// _layout.tsx\
+// _layout.tsx
 import React from "react";
 import "../../global.css";
 import { Stack } from "expo-router";
