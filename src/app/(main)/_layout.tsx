@@ -3,48 +3,42 @@ import React from "react";
 import { View, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Stack } from "expo-router";
+import MainScreen from "./home";
 
 const Tab = createBottomTabNavigator();
 
 export default function MainLayout() {
   return (
     <View style={{ flex: 1 }}>
-      {/* 상단 헤더 영역 */}
-      <View style={{ padding: 16, backgroundColor: "#4CAF50" }}>
-        <Text style={{ color: "white", fontSize: 20, textAlign: "center" }}>
-          Main Layout Header
-        </Text>
-      </View>
-
       {/* 하단 탭 네비게이터 */}
       <Tab.Navigator
         screenOptions={{
-          tabBarActiveTintColor: "#42f44b",
+          tabBarActiveTintColor: "#FCB3AD",
           tabBarInactiveTintColor: "gray",
-          headerShown: false, // 개별 페이지에 헤더를 표시하지 않음
+          headerShown: true, // 개별 페이지에 헤더를 표시하지 않음
         }}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen name="Home" component={MainScreen} />
+        <Tab.Screen name="Reservation" component={ReservationScreen} />
+        <Tab.Screen name="Chat" component={ChatScreen} />
+        <Tab.Screen name="Setting" component={SettingsScreen} />
       </Tab.Navigator>
     </View>
   );
 }
 
-// 각각의 페이지를 위한 예시 컴포넌트
-function HomeScreen() {
+function ReservationScreen() {
   return (
     <View className="flex-1 justify-center items-center">
-      <Text className="text-xl">Home Page</Text>
+      <Text className="text-xl">Reservation Page</Text>
     </View>
   );
 }
 
-function ProfileScreen() {
+function ChatScreen() {
   return (
     <View className="flex-1 justify-center items-center">
-      <Text className="text-xl">Profile Page</Text>
+      <Text className="text-xl">Chatting Page</Text>
     </View>
   );
 }
