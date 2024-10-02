@@ -5,13 +5,13 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
 import { Href, useRouter } from "expo-router";
 import { IconBtn, IconTextBtn } from "@/src/components/main/Button";
-import CardComponent from "@/src/components/main/CardComponent";
+import { HistoryComponent, TodayCardComponent } from "@/src/components/main/CardComponent";
 import ReactLogo from "../../assets/images/icon.png";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function MainScreen() {
   const router = useRouter();
-  const [CardComponentValue, setCardComponentValue] = React.useState([
+  const [todayCardComponentValue, setTodayCardComponentValue] = React.useState([
     { mainImageUri: ReactLogo, iconImageUri: "" },
     { mainImageUri: ReactLogo, iconImageUri: "" },
   ]);
@@ -45,7 +45,7 @@ export default function MainScreen() {
       <View style={styles.subContentContainer}>
         <Text style={styles.subTitleText}>Today</Text>
 
-        <CardComponent CardComponentValue={CardComponentValue} />
+        <TodayCardComponent todayCardComponentValue={todayCardComponentValue} />
       </View>
 
       {/* History 메뉴 */}
@@ -79,41 +79,6 @@ const styles = StyleSheet.create({
   subContentContainer: {
     paddingHorizontal: 8,
   },
-  historyCardContainer: {
-    gap: 16,
-  },
-  historyCard: {
-    padding: 16,
-    borderRadius: 15,
-    gap: 16,
-    flexDirection: "row",
-    backgroundColor: "#FCB3AD",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 4, // 그림자 효과 (Android)
-  },
-  historyImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 15,
-  },
-  historyText: {
-    fontSize: 16,
-    paddingVertical: 6,
-  },
 });
 
-function HistoryComponent({ historyValue }: { historyValue: any }) {
-  return (
-    <View style={styles.historyCardContainer}>
-      {historyValue.map((value: any, index: number) => (
-        <View key={index} style={styles.historyCard}>
-          <Image source={value.mainImageUri} style={styles.historyImage} />
-          <Text style={styles.historyText}>뭔말쓸거임?</Text>
-        </View>
-      ))}
-    </View>
-  );
-}
+

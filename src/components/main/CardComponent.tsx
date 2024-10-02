@@ -1,19 +1,19 @@
 import React from "react";
-import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
-interface CardComponentProps {
-  CardComponentValue: { mainImageUri: string; iconImageUri: string }[];
+interface TodayCardComponentProps {
+  todayCardComponentValue: { mainImageUri: string; iconImageUri: string }[];
 }
 
-function CardComponent({ CardComponentValue }: CardComponentProps) {
+export function TodayCardComponent({ todayCardComponentValue }: TodayCardComponentProps) {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.ImageContainer}>
         {/* 최대 4개의 카드 값을 가져옴 */}
-        {CardComponentValue.map((value, index) => (
+        {todayCardComponentValue.map((value, index) => (
           <View style={styles.cardWrapper} key={index}>
-            <CardImage uri={value.mainImageUri} />
+            <TodayCardImage uri={value.mainImageUri} />
           </View>
         ))}
       </View>
@@ -25,6 +25,29 @@ function CardComponent({ CardComponentValue }: CardComponentProps) {
     </View>
   );
 }
+
+function TodayCardImage({ uri }: { uri: string }) {
+    return (
+      <Image
+        resizeMode="contain"
+        source={require("../../assets/images/icon.png")}
+        style={styles.mainImage}
+      />
+    );
+  }
+
+export function HistoryComponent({ historyValue }: { historyValue: any }) {
+    return (
+      <View style={styles.historyCardContainer}>
+        {historyValue.map((value: any, index: number) => (
+          <View key={index} style={styles.historyCard}>
+            <Image source={value.mainImageUri} style={styles.historyImage} />
+            <Text style={styles.historyText}>뭔말쓸거임?</Text>
+          </View>
+        ))}
+      </View>
+    );
+  }
 
 const styles = StyleSheet.create({
   cardContainer: {
@@ -69,16 +92,29 @@ const styles = StyleSheet.create({
     width: "100%",
     paddingTop: 20,
   },
+
+  historyCardContainer: {
+    gap: 16,
+  },
+  historyCard: {
+    padding: 16,
+    borderRadius: 15,
+    gap: 16,
+    flexDirection: "row",
+    backgroundColor: "#FCB3AD",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4, // 그림자 효과 (Android)
+  },
+  historyImage: {
+    width: 100,
+    height: 100,
+    borderRadius: 15,
+  },
+  historyText: {
+    fontSize: 16,
+    paddingVertical: 6,
+  },
 });
-
-export default CardComponent;
-
-function CardImage({ uri }: { uri: string }) {
-  return (
-    <Image
-      resizeMode="contain"
-      source={require("../../assets/images/icon.png")}
-      style={styles.mainImage}
-    />
-  );
-}
