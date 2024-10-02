@@ -25,12 +25,12 @@ export default function AuthLayout() {
       <Tab.Screen
         name="Login"
         component={LoginScreen}
-        options={{ headerShown: false }} // 탭 네비게이터의 헤더를 감추기 위해 사용
+        options={{ headerShown: false }}
       />
       <Tab.Screen
         name="Register"
         component={RegisterScreen}
-        options={{ headerShown: false }} // 탭 네비게이터의 헤더를 감추기 위해 사용
+        options={{ headerShown: false }}
       />
     </Tab.Navigator>
   );

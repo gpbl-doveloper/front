@@ -12,6 +12,9 @@
       "screens/*": [
         "./src/screens/*"
       ],
+      "@/assets/*": [
+        "./src/screens/*"
+      ],
     }
   },
   "include": [
