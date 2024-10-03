@@ -1,4 +1,5 @@
 import { IconTextBtn } from "@/src/components/main/Button";
+import { HorizontalImageGallery } from "@/src/components/main/CardComponent";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
@@ -13,20 +14,9 @@ export default function DiaryScreen() {
   return (
     <ScrollView style={styles.content}>
       {/* Teacher Name */}
-      <Text style={styles.teacherName}>Teacher Name</Text>
+      <Text style={styles.teacherName}>Teacher: pinky</Text>
 
-      {/* Image Gallery */}
-      <ScrollView style={styles.imageGallery} horizontal={true}>
-        {imageData.map((data, index) => (
-          <View style={styles.imageContainer}>
-            <Image
-              key={index}
-              source={require("../../assets/images/icon.png")}
-              style={styles.image}
-            />
-          </View>
-        ))}
-      </ScrollView>
+      <HorizontalImageGallery imageData={imageData} />
 
       {/* Dog Card */}
       <View style={styles.dogCard}>
@@ -50,9 +40,6 @@ export default function DiaryScreen() {
 }
 
 const styles = StyleSheet.create({
-  imageContainer: {
-    paddingRight: 12,
-  },
   container: {
     flex: 1,
     backgroundColor: "#F6F6F6",
@@ -74,20 +61,6 @@ const styles = StyleSheet.create({
   teacherName: {
     fontSize: 24,
     marginBottom: 20,
-  },
-  imageGallery: {
-    flexDirection: "row",
-    marginBottom: 20,
-    backgroundColor: "#F4B2B0",
-    padding: 15,
-    borderRadius: 10,
-    flexWrap: "nowrap",
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 10,
-    backgroundColor: "#F4B2B0",
   },
   dogNameFaceContainer: {
     flexDirection: "row",

@@ -4,7 +4,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import ReactLogo from "../../assets/images/icon.png";
 import React from "react";
 
-export default function Chatting() {
+export default function TeacherHome() {
   const [dogsData, setDogsData] = React.useState([
     { mainImageUri: ReactLogo, iconImageUri: "" },
     { mainImageUri: ReactLogo, iconImageUri: "" },
@@ -16,7 +16,7 @@ export default function Chatting() {
       </View>
       <View style={styles.subContentContainer}>
         <Text style={styles.subTitleText}>Today</Text>
-        <HistoryComponent historyValue={dogsData} />
+        <HistoryComponent historyValue={dogsData} url={"new-diary"} />
       </View>
     </ScrollView>
   );
