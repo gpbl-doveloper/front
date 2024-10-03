@@ -16,8 +16,9 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.dovelopers_ft.myapp",
       "adaptiveIcon": {
-        "foregroundImage": "./src/assets/images/adaptive-icon.png",
+        "foregroundImage": "./src/assets/images/icon.png",
         "backgroundColor": "#ffffff"
       }
     },
@@ -27,7 +28,8 @@
       "favicon": "./src/assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-image-picker"
     ],
     "experiments": {
       "typedRoutes": true

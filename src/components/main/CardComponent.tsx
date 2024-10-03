@@ -1,12 +1,23 @@
 import React from "react";
-import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import {
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  Pressable,
+} from "react-native";
+import { Href, router } from "expo-router";
+import AntDesign from "@expo/vector-icons/AntDesign";
+import Entypo from "@expo/vector-icons/Entypo";
 
 interface TodayCardComponentProps {
   todayCardComponentValue: { mainImageUri: string; iconImageUri: string }[];
 }
 
-export function TodayCardComponent({ todayCardComponentValue }: TodayCardComponentProps) {
+export function TodayCardComponent({
+  todayCardComponentValue,
+}: TodayCardComponentProps) {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.ImageContainer}>
@@ -19,37 +30,53 @@ export function TodayCardComponent({ todayCardComponentValue }: TodayCardCompone
       </View>
 
       {/* 자세히 보기 버튼 */}
-      <TouchableOpacity style={styles.nextButton}>
-        <Ionicons name="arrow-forward" size={24} color="white" />
-      </TouchableOpacity>
+      <View style={styles.nextButton}>
+        <Entypo
+          name="chevron-right"
+          size={24}
+          color="white"
+          onPress={() => router.push("/(main)/noticebook" as Href)}
+        />
+      </View>
     </View>
   );
 }
 
 function TodayCardImage({ uri }: { uri: string }) {
-    return (
-      <Image
-        resizeMode="contain"
-        source={require("../../assets/images/icon.png")}
-        style={styles.mainImage}
-      />
-    );
-  }
+  return (
+    <Image
+      resizeMode="contain"
+      source={require("../../assets/images/icon.png")}
+      style={styles.mainImage}
+    />
+  );
+}
 
 export function HistoryComponent({ historyValue }: { historyValue: any }) {
-    return (
-      <View style={styles.historyCardContainer}>
-        {historyValue.map((value: any, index: number) => (
-          <View key={index} style={styles.historyCard}>
-            <Image source={value.mainImageUri} style={styles.historyImage} />
-            <Text style={styles.historyText}>뭔말쓸거임?</Text>
+  return (
+    <View style={styles.historyCardContainer}>
+      {historyValue.map((value: any, index: number) => (
+        <View key={index} style={styles.historyCard}>
+          <Image source={value.mainImageUri} style={styles.historyImage} />
+          <Text style={styles.historyText}>뭔말쓸거임?</Text>
+          <View style={styles.historyNextButton}>
+            <Pressable
+              onPress={() => router.push("/(main)/noticebook" as Href)}
+            >
+              <Entypo name="chevron-right" size={24} color="white" />
+            </Pressable>
           </View>
-        ))}
-      </View>
-    );
-  }
+        </View>
+      ))}
+    </View>
+  );
+}
 
 const styles = StyleSheet.create({
+  historyNextButton: {
+    justifyContent: "center",
+  },
+
   cardContainer: {
     padding: 16,
     margin: "auto",
@@ -98,6 +125,7 @@ const styles = StyleSheet.create({
   },
   historyCard: {
     padding: 16,
+    justifyContent: "space-between",
     borderRadius: 15,
     gap: 16,
     flexDirection: "row",

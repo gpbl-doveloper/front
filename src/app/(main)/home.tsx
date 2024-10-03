@@ -2,10 +2,13 @@
 // main 화면의 index.tsx 파일입니다.
 import "../../../global.css";
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { Href, useRouter } from "expo-router";
+import { View, Text, StyleSheet } from "react-native";
+import { Href, Stack, useRouter } from "expo-router";
 import { IconBtn, IconTextBtn } from "@/src/components/main/Button";
-import { HistoryComponent, TodayCardComponent } from "@/src/components/main/CardComponent";
+import {
+  HistoryComponent,
+  TodayCardComponent,
+} from "@/src/components/main/CardComponent";
 import ReactLogo from "../../assets/images/icon.png";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -25,7 +28,7 @@ export default function MainScreen() {
   return (
     <ScrollView style={styles.mainContainer}>
       <View>
-        <Text className="text-2xl">Hello, dusehd1 🐾</Text>
+        <Text style={styles.titleText}>Hello, dusehd1 🐾</Text>
 
         {/* 상단 버튼, 강아지 이름 선택 및 약 아이콘 */}
         <View style={styles.btnContainer}>
@@ -58,10 +61,15 @@ export default function MainScreen() {
 }
 
 const styles = StyleSheet.create({
+  titleText: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginVertical: 8,
+  },
   mainContainer: {
     display: "flex",
     padding: 16,
-    gap: 24,
+    gap: 24, //이거 적용 안됨
     flexGrow: 1,
   },
   btnContainer: {
@@ -78,7 +86,6 @@ const styles = StyleSheet.create({
   },
   subContentContainer: {
     paddingHorizontal: 8,
+    paddingBottom: 32,
   },
 });
-
-
