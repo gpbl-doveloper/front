@@ -11,26 +11,35 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { ScrollView } from "react-native-gesture-handler";
 import Feather from "@expo/vector-icons/Feather";
+import ReactLogo from "../../assets/images/icon.png";
+import { HorizontalImageGallery } from "@/src/components/main/CardComponent";
+import { Href, router, Stack } from "expo-router";
 
 // 알림장 작성 페이지 진행중 - 현재는 공식문서 내용 그대로 작성중
-export default function Settings() {
-  const [image, setImage] = useState<string | null>(null);
+export default function NewDiary() {
+  const [image, setImage] = useState<string[] | null>([
+    ReactLogo,
+    ReactLogo,
+    ReactLogo,
+  ]);
   const [dogActivityText, setDogActivityText] = useState<string>("");
   const [checkGenerate, setCheckGenerate] = useState<boolean>(false);
+  const [imageSelected, setImageSelected] = useState<boolean>(false);
 
-  const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  // image picker 코드
+  // const pickImage = async () => {
+  //   // No permissions request is necessary for launching the image library
+  //   let result = await ImagePicker.launchImageLibraryAsync({
+  //     mediaTypes: ImagePicker.MediaTypeOptions.All,
+  //     allowsEditing: true,
+  //     aspect: [4, 3],
+  //     quality: 1,
+  //   });
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
+  //   if (!result.canceled) {
+  //     setImage(result.assets[0].uri);
+  //   }
+  // };
 
   return (
     <ScrollView style={styles.mainContainer}>
@@ -38,13 +47,14 @@ export default function Settings() {
         <Text style={styles.titleText}>Hello, Dog Name🐾</Text>
       </View>
 
-      <View style={styles.photoContainer}>
-        <View style={styles.photoBtnContainer}>
-          <Feather name="plus-circle" size={24} color="black" />
-          <Button title="Add Photos" onPress={pickImage} />
-        </View>
-        {image && <Image source={{ uri: image }} style={styles.image} />}
-      </View>
+      {imageSelected ? (
+        <HorizontalImageGallery imageData={image} />
+      ) : (
+        <HorizontalAddImageContainer
+          image={image}
+          setImageSelected={setImageSelected}
+        />
+      )}
 
       {checkGenerate ? (
         // 나중에 axios 통신하고 결과값을 받아서 렌더링하는 방식으로 변경
@@ -60,13 +70,28 @@ export default function Settings() {
   );
 }
 
+function HorizontalAddImageContainer({
+  setImageSelected,
+}: {
+  setImageSelected: (value: boolean) => void;
+}) {
+  return (
+    <View style={styles.photoContainer}>
+      <View style={styles.photoBtnContainer}>
+        <Feather name="plus-circle" size={24} color="black" />
+        <Button
+          title="Add Photos"
+          onPress={() => {
+            setImageSelected(true);
+            router.push(`/photos` as Href);
+          }}
+        />
+      </View>
+    </View>
+  );
+}
+
 function TextGeneratedContainer({ text }: { text: string }) {
-  // const data = {
-  //   files: [
-  //     "https://firebasestorage.googleapis.com/v0/b/gpbl-doveloper.appspot.com/o/uploads%2F1727855053878.jpg",
-  //     "https://firebasestorage.googleapis.com/v0/b/gpbl-doveloper.appspot.com/o/uploads%2F1727855053879.jpg",
-  //   ],
-  // };
   const 내용 =
     "Hi Mom!\n\nToday I had a great day doing this this this ..,\n\nI took a nap for about 2 hours and had a nice snack. Really loved it 🐾 ";
 

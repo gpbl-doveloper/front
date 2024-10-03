@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Text,
   Pressable,
+  ScrollView,
 } from "react-native";
 import { Href, router } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -35,7 +36,7 @@ export function TodayCardComponent({
           name="chevron-right"
           size={24}
           color="white"
-          onPress={() => router.push("/(main)/noticebook" as Href)}
+          onPress={() => router.push("/diary" as Href)}
         />
       </View>
     </View>
@@ -52,7 +53,13 @@ function TodayCardImage({ uri }: { uri: string }) {
   );
 }
 
-export function HistoryComponent({ historyValue }: { historyValue: any }) {
+export function HistoryComponent({
+  historyValue,
+  url,
+}: {
+  historyValue: any;
+  url: string;
+}) {
   return (
     <View style={styles.historyCardContainer}>
       {historyValue.map((value: any, index: number) => (
@@ -60,9 +67,7 @@ export function HistoryComponent({ historyValue }: { historyValue: any }) {
           <Image source={value.mainImageUri} style={styles.historyImage} />
           <Text style={styles.historyText}>뭔말쓸거임?</Text>
           <View style={styles.historyNextButton}>
-            <Pressable
-              onPress={() => router.push("/(main)/noticebook" as Href)}
-            >
+            <Pressable onPress={() => router.push(`/${url}` as Href)}>
               <Entypo name="chevron-right" size={24} color="white" />
             </Pressable>
           </View>
@@ -72,7 +77,40 @@ export function HistoryComponent({ historyValue }: { historyValue: any }) {
   );
 }
 
+export function HorizontalImageGallery({ imageData }: { imageData: any }) {
+  return (
+    <ScrollView style={styles.imageGallery} horizontal={true}>
+      {imageData.map((_data: any, index: React.Key | null | undefined) => (
+        <View style={styles.imageContainer}>
+          <Image
+            key={index}
+            source={require("../../assets/images/icon.png")}
+            style={styles.image}
+          />
+        </View>
+      ))}
+    </ScrollView>
+  );
+}
+
 const styles = StyleSheet.create({
+  imageContainer: {
+    paddingRight: 12,
+  },
+  imageGallery: {
+    flexDirection: "row",
+    marginBottom: 20,
+    backgroundColor: "#F4B2B0",
+    padding: 15,
+    borderRadius: 10,
+    flexWrap: "nowrap",
+  },
+  image: {
+    width: 100,
+    height: 100,
+    borderRadius: 10,
+    backgroundColor: "#F4B2B0",
+  },
   historyNextButton: {
     justifyContent: "center",
   },

@@ -54,7 +54,8 @@ export default function MainScreen() {
       {/* History 메뉴 */}
       <View style={styles.subContentContainer}>
         <Text style={styles.subTitleText}>History</Text>
-        <HistoryComponent historyValue={historyValue} />
+        {/* 추후 url 수정 예정, 이전 알림장들 링크로 가야됨 (diary/숫자) */}
+        <HistoryComponent historyValue={historyValue} url={"diary"} />
       </View>
     </ScrollView>
   );
