@@ -16,6 +16,8 @@ export default function MainLayout() {
         <Tabs.Screen name="reservation" options={{ title: "Reservation" }} />
         <Tabs.Screen name="chat" options={{ title: "Chat" }} />
         <Tabs.Screen name="settings" options={{ title: "Settings" }} />
+
+        <Tabs.Screen name="photos" options={{ title: "Photos" }} />
       </Tabs>
     </View>
   );
