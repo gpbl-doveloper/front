@@ -56,16 +56,19 @@ function TodayCardImage({ uri }: { uri: string }) {
 export function HistoryComponent({
   historyValue,
   url,
+  text,
 }: {
   historyValue: any;
   url: string;
+  text?: string;
 }) {
   return (
     <View style={styles.historyCardContainer}>
       {historyValue.map((value: any, index: number) => (
         <View key={index} style={styles.historyCard}>
           <Image source={value.mainImageUri} style={styles.historyImage} />
-          <Text style={styles.historyText}>뭔말쓸거임?</Text>
+          <Text style={styles.historyText}>강아지 이름, 일기장 제목 등</Text>
+          {/* <Text style={styles.historyText}>{text}</Text> */}
           <View style={styles.historyNextButton}>
             <Pressable onPress={() => router.push(`/${url}` as Href)}>
               <Entypo name="chevron-right" size={24} color="white" />
@@ -81,9 +84,8 @@ export function HorizontalImageGallery({ imageData }: { imageData: any }) {
   return (
     <ScrollView style={styles.imageGallery} horizontal={true}>
       {imageData.map((_data: any, index: React.Key | null | undefined) => (
-        <View style={styles.imageContainer}>
+        <View key={index} style={styles.imageContainer}>
           <Image
-            key={index}
             source={require("../../assets/images/icon.png")}
             style={styles.image}
           />
@@ -182,5 +184,6 @@ const styles = StyleSheet.create({
   historyText: {
     fontSize: 16,
     paddingVertical: 6,
+    maxWidth: 145,
   },
 });

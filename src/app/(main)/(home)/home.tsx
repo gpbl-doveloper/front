@@ -1,6 +1,6 @@
 // index.tsx
 // main 화면의 index.tsx 파일입니다.
-import "../../../global.css";
+import "../../../../global.css";
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Href, Stack, useRouter } from "expo-router";
@@ -9,11 +9,15 @@ import {
   HistoryComponent,
   TodayCardComponent,
 } from "@/src/components/main/CardComponent";
-import ReactLogo from "../../assets/images/icon.png";
+import ReactLogo from "@/assets/images/icon.png";
 import { ScrollView } from "react-native-gesture-handler";
+import useUserStore from "@/src/store/userStore";
+import { DogNameAndMedicine } from "../component/components";
 
 export default function MainScreen() {
   const router = useRouter();
+  const user = useUserStore((state) => state.user); // 타입 자동 추론 (User | null)
+
   const [todayCardComponentValue, setTodayCardComponentValue] = React.useState([
     { mainImageUri: ReactLogo, iconImageUri: "" },
     { mainImageUri: ReactLogo, iconImageUri: "" },
@@ -28,20 +32,11 @@ export default function MainScreen() {
   return (
     <ScrollView style={styles.mainContainer}>
       <View>
-        <Text style={styles.titleText}>Hello, dusehd1 🐾</Text>
+        <Text style={styles.titleText}>
+          Hello, {user ? user.email : "Guest"} 🐾
+        </Text>
 
-        {/* 상단 버튼, 강아지 이름 선택 및 약 아이콘 */}
-        <View style={styles.btnContainer}>
-          <IconTextBtn
-            title="Dog Name"
-            icon="dog"
-            onPress={() => router.push("/" as Href)}
-          />
-          <IconBtn
-            icon="medicinebox"
-            onPress={() => router.push("/" as Href)}
-          ></IconBtn>
-        </View>
+        <DogNameAndMedicine />
       </View>
 
       {/* Today 메뉴 */}
@@ -72,12 +67,6 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 24, //이거 적용 안됨
     flexGrow: 1,
-  },
-  btnContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 11,
-    marginTop: 16,
   },
   subTitleText: {
     fontSize: 20,

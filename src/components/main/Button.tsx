@@ -2,13 +2,13 @@ import "../../../global.css";
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
-import AntDesign from '@expo/vector-icons/AntDesign';
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 interface IconTextBtnProps {
   title: string;
   icon: string;
   onPress: () => void;
-  className?: string; // className은 선택적
+  className?: string;
 }
 
 export function IconTextBtn({ title, icon, onPress }: IconTextBtnProps) {
