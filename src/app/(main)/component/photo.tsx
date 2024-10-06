@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  Button,
   FlatList,
   Image,
   StyleSheet,
@@ -11,7 +10,7 @@ import {
 import * as MediaLibrary from "expo-media-library";
 import { Href, router } from "expo-router";
 
-export default function TodayPhotos() {
+export function PhotoGallery() {
   const [photos, setPhotos] = useState<MediaLibrary.Asset[]>([]);
   const [buttonText, setButtonText] = useState("Auto Select"); // 버튼 텍스트 상태
   const [selectedPhotos, setSelectedPhotos] = useState<number[]>([]); // 선택된 사진의 인덱스들을 저장
@@ -52,7 +51,7 @@ export default function TodayPhotos() {
     setButtonText("Upload"); // 버튼 텍스트 변경
 
     if (buttonText === "Upload") {
-      router.push("/new-diary"); // 올바른 경로로 푸시
+      router.push("/(main)/new-diary"); // 올바른 경로로 푸시
     }
   };
 

@@ -3,6 +3,7 @@ import React from "react";
 import "../../global.css";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import useUserStore from "../store/userStore";
 
 export default function RootLayout() {
   return (

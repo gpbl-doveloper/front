@@ -1,7 +1,6 @@
 import { useState } from "react";
 import {
   Button,
-  Image,
   StyleSheet,
   Text,
   TextInput,
@@ -11,7 +10,7 @@ import {
 import * as ImagePicker from "expo-image-picker";
 import { ScrollView } from "react-native-gesture-handler";
 import Feather from "@expo/vector-icons/Feather";
-import ReactLogo from "../../assets/images/icon.png";
+import ReactLogo from "@/assets/images/icon.png";
 import { HorizontalImageGallery } from "@/src/components/main/CardComponent";
 import { Href, router, Stack } from "expo-router";
 
@@ -43,9 +42,12 @@ export default function NewDiary() {
 
   return (
     <ScrollView style={styles.mainContainer}>
-      <View>
-        <Text style={styles.titleText}>Hello, Dog Name🐾</Text>
-      </View>
+      {/* 임시 코드임, 곧 삭제 */}
+      <TouchableOpacity onPress={() => setImageSelected(false)}>
+        <View>
+          <Text style={styles.titleText}>Hello, Dog Name🐾</Text>
+        </View>
+      </TouchableOpacity>
 
       {imageSelected ? (
         <HorizontalImageGallery imageData={image} />
@@ -83,7 +85,7 @@ function HorizontalAddImageContainer({
           title="Add Photos"
           onPress={() => {
             setImageSelected(true);
-            router.push(`/photos` as Href);
+            router.push(`/photo-gallery` as Href);
           }}
         />
       </View>

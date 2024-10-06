@@ -5,10 +5,14 @@ import { Text } from "react-native";
 
 import LoginScreen from "./login";
 import RegisterScreen from "./register";
+import useUserStore from "@/src/store/userStore";
 
 const Tab = createBottomTabNavigator();
 
 export default function AuthLayout() {
+  const setUser = useUserStore((state) => state.setUser); // 타입 자동 추론 ((user: User) => void)
+  const resetUser = useUserStore((state) => state.resetUser); // 타입 자동 추론 (() => void)
+
   return (
     <Tab.Navigator
       initialRouteName="Login"
