@@ -32,14 +32,21 @@ export const uploadPicture = async (photoURIs: string[]) => {
         continue;
       }
 
-      // 파일을 Blob으로 변환
-      const response = await fetch(fileUri);
-      const blob = await response.blob();
+      // 파일 경로를 이용해 파일의 blob 혹은 binary 데이터를 다룸
+      const fileInfo = await FileSystem.getInfoAsync(fileUri);
 
-      // Blob을 FormData에 추가 (파일 이름을 함께 지정)
-      formData.append("files", blob, asset.filename || `file-${i}.jpg`); // 기본 파일 이름 추가
+      if (!fileInfo.exists) {
+        console.error("File does not exist:", fileUri);
+        continue;
+      }
 
-      console.log("Blob created from file:", blob); // Blob을 확인
+      const fileData = {
+        uri: fileUri,
+        type: asset.mediaType === "photo" ? "image/jpeg" : "image/png", // 파일 타입 설정
+        name: asset.filename || `file-${i}.jpg`, // 파일 이름 설정
+      };
+
+      formData.append("files", fileData);
     }
 
     // FormData 내용 확인
