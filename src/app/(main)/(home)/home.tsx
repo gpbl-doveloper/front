@@ -3,7 +3,7 @@ import "../../../../global.css";
 import React, { useEffect } from "react";
 import { View, Text, StyleSheet, Alert } from "react-native";
 import {
-  HistoryComponent,
+  VerticalList,
   TodayCardComponent,
 } from "@/src/components/main/CardComponent";
 import { ScrollView } from "react-native-gesture-handler";
@@ -70,7 +70,7 @@ export default function MainScreen() {
         <Text style={styles.subTitleText}>History</Text>
         {diaries.length === 0 && <Text>일기가 없습니다.</Text>}
         {/* 추후 url 수정 예정, 이전 알림장들 링크로 가야됨 (diary/숫자) */}
-        <HistoryComponent historyValue={diaries} url={"diary"} />
+        <VerticalList dataList={diaries} url={"diary"} />
       </View>
     </ScrollView>
   );

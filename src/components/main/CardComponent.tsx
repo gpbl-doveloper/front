@@ -6,18 +6,17 @@ import {
   Text,
   Pressable,
   ScrollView,
+  ImageSourcePropType,
 } from "react-native";
 import { Href, router } from "expo-router";
 import Entypo from "@expo/vector-icons/Entypo";
-import { Diary, DiaryStore, useDiaryStore } from "@/src/store/diaryStore";
+import { Diary, useSingleDiaryStore } from "@/src/store/diaryStore";
 
 interface TodayCardComponentProps {
   todayDiary: Diary; // Diary 타입 지정
 }
 
 export function TodayCardComponent({ todayDiary }: TodayCardComponentProps) {
-  console.log("todayDiary.files:", JSON.stringify(todayDiary, null, 2));
-
   return (
     <View style={styles.cardContainer}>
       <View style={styles.ImageContainer}>
@@ -51,47 +50,58 @@ function TodayCardImage({ uri }: { uri: string }) {
   );
 }
 
-export function HistoryComponent({
-  historyValue,
+// 세로로 스크롤되는 리스트
+export function VerticalList({
+  dataList,
   url,
 }: {
-  historyValue: Diary[];
+  dataList: Diary[];
   url: string;
 }) {
+  const setDiaries = useSingleDiaryStore((state) => state.setDiary);
+  const onClickRightButton = (data: Diary) => {
+    router.push(`/${url}` as Href);
+    setDiaries(data);
+  };
   return (
     <View style={styles.historyCardContainer}>
-      {historyValue.map((value: any, index: number) => (
-        <View key={index} style={styles.historyCard}>
-          <Image source={value.mainImageUri} style={styles.historyImage} />
-          <View>
-            <Text style={styles.historyText}>
-              Date : {value.createdAt?.slice(0, 10) || "2024-00-00"}
-            </Text>
-            <Text style={styles.historyText}>
-              Teacher: {value.authorId || "teacher1"}
-            </Text>
+      {dataList.map((value: Diary, index: number) => {
+        // ImageSourcePropType 사용하여 이미지 소스 설정
+        const imageSource: ImageSourcePropType = {
+          uri: value.files[0].fileURL,
+        };
+
+        return (
+          <View key={index} style={styles.historyCard}>
+            <Image source={imageSource} style={styles.historyImage} />
+            <View>
+              <Text style={styles.historyText}>
+                Date: {value.createdAt?.slice(0, 10) || "2024-00-00"}
+              </Text>
+              <Text style={styles.historyText}>
+                Teacher: {value.authorId || "teacher1"}
+              </Text>
+            </View>
+            <View style={styles.historyNextButton}>
+              <Pressable onPress={() => onClickRightButton(value)}>
+                <Entypo name="chevron-right" size={24} color="white" />
+              </Pressable>
+            </View>
           </View>
-          <View style={styles.historyNextButton}>
-            <Pressable onPress={() => router.push(`/${url}` as Href)}>
-              <Entypo name="chevron-right" size={24} color="white" />
-            </Pressable>
-          </View>
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 }
 
 // 가로로 스크롤되는 이미지 갤러리
-export function HorizontalImageGallery({ imageData }: { imageData: any }) {
+export function HorizontalImageGallery({ imageData }: { imageData: string[] }) {
+  console.log(imageData);
   return (
     <ScrollView style={styles.imageGallery} horizontal={true}>
-      {imageData?.map((_data: any, index: React.Key | null | undefined) => (
+      {imageData?.map((data: any, index: React.Key | null | undefined) => (
         <View key={index} style={styles.imageContainer}>
-          <Image
-            source={require("../../assets/images/icon.png")}
-            style={styles.image}
-          />
+          <Image source={{ uri: data }} style={styles.image} />
         </View>
       ))}
     </ScrollView>

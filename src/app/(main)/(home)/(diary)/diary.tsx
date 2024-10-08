@@ -1,22 +1,22 @@
 import { IconTextBtn } from "@/src/components/main/Button";
 import { HorizontalImageGallery } from "@/src/components/main/CardComponent";
+import { useSingleDiaryStore } from "@/src/store/diaryStore";
 import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
 
 export default function DiaryScreen() {
-  const [imageData, setImageData] = React.useState([
-    { imageUri: "" },
-    { imageUri: "" },
-    { imageUri: "" },
-    { imageUri: "" },
-  ]);
+  const diary = useSingleDiaryStore((state) => state.diary);
+  const fileURLList = diary.files.map((file) => file.fileURL);
+
   return (
     <ScrollView style={styles.content}>
       {/* Teacher Name */}
-      <Text style={styles.teacherName}>Teacher: pinky</Text>
+      <Text style={styles.teacherName}>
+        Teacher: {diary.authorId || "센세이름"}
+      </Text>
 
-      <HorizontalImageGallery imageData={imageData} />
+      <HorizontalImageGallery imageData={fileURLList} />
 
       {/* Dog Card */}
       <View style={styles.dogCard}>
@@ -24,16 +24,10 @@ export default function DiaryScreen() {
           <View style={styles.dogFaceIcon}>
             <FontAwesome6 name="dog" size={24} color="black" />
           </View>
-          <Text style={styles.dogName}>Dog Name</Text>
+          <Text style={styles.dogName}>{diary.dogId || "Wobbuffet"}</Text>
         </View>
 
-        <Text style={styles.message}>
-          Hi Mom!{"\n"}
-          {"\n"}
-          Today I had a great day doing this this this ..,{"\n"}
-          {"\n"}I took a nap for about 2 hours and had a nice snack. Really
-          loved it 🐾
-        </Text>
+        <Text style={styles.message}>{diary.content}</Text>
       </View>
     </ScrollView>
   );

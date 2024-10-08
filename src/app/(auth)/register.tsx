@@ -1,6 +1,6 @@
 // register.tsx
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebaseConfig"; // firebaseConfig에서 가져오기
 
@@ -25,28 +25,49 @@ export default function RegisterScreen() {
   };
 
   return (
-    <View className="flex-1 justify-center items-center p-4">
-      <Text className="text-2xl mb-5">Register</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Register</Text>
       <TextInput
         placeholder="Username"
         value={username}
         onChangeText={(text) => setUsername(text)}
-        className="w-4/5 p-2 border border-gray-300 mb-3 rounded"
+        style={styles.input}
       />
       <TextInput
         placeholder="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
-        className="w-4/5 p-2 border border-gray-300 mb-3 rounded"
+        style={styles.input}
       />
       <TextInput
         placeholder="Password"
         secureTextEntry
         value={password}
         onChangeText={(text) => setPassword(text)}
-        className="w-4/5 p-2 border border-gray-300 mb-5 rounded"
+        style={styles.input}
       />
       <Button title="Register" onPress={handleRegister} />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  input: {
+    width: "80%",
+    padding: 8,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 15,
+    borderRadius: 8,
+  },
+});

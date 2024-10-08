@@ -1,16 +1,12 @@
-import { HistoryComponent } from "@/src/components/main/CardComponent";
+import { VerticalList } from "@/src/components/main/CardComponent";
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import ReactLogo from "@/assets/images/icon.png";
+// import ReactLogo from "@/assets/images/icon.png";
 import React from "react";
 import { useUserStore } from "@/src/store/userStore";
 import { DogNameAndMedicine } from "../component/components";
 
 export default function TeacherHome() {
-  const [dogsData, setDogsData] = React.useState([
-    { mainImageUri: ReactLogo, iconImageUri: "" },
-    { mainImageUri: ReactLogo, iconImageUri: "" },
-  ]);
   const user = useUserStore((state) => state.user); // 타입 자동 추론 (User | null)
 
   return (
@@ -23,8 +19,8 @@ export default function TeacherHome() {
       </View>
       <View style={styles.subContentContainer}>
         <Text style={styles.subTitleText}>Today</Text>
-        {/* HistoryComponent 수정 후 이부분도 수정 */}
-        <HistoryComponent historyValue={dogsData} url={"(write-diary)"} />
+        {/* VerticalList 수정 후 이부분도 수정 */}
+        {/* <VerticalList dataList={dogsData} url={"(write-diary)"} /> */}
       </View>
     </ScrollView>
   );

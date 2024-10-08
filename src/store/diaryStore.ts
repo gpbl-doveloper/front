@@ -17,11 +17,27 @@ interface File {
   diaryId: number;
 }
 
+export interface SingleDiaryStore {
+  diary: Diary;
+  setDiary: (diary: Diary) => void;
+}
+
+export const useSingleDiaryStore = create<SingleDiaryStore>((set) => ({
+  diary: {
+    id: 0,
+    content: "",
+    createdAt: "",
+    authorId: null,
+    dogId: null,
+    files: [],
+  },
+  setDiary: (diary: any) => set({ diary }),
+}));
+
 export interface DiaryStore {
   diaries: Diary[];
   setDiaries: (diaries: Diary[]) => void;
 }
-
 export const useDiaryStore = create<DiaryStore>((set) => ({
   diaries: [],
   setDiaries: (diaries) => set({ diaries }),

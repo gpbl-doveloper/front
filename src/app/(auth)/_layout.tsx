@@ -5,7 +5,7 @@ import { Text } from "react-native";
 
 import LoginScreen from "./login";
 import RegisterScreen from "./register";
-import useUserStore from "@/src/store/userStore";
+import { useUserStore } from "@/src/store/userStore";
 
 const Tab = createBottomTabNavigator();
 

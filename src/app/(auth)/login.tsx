@@ -1,9 +1,9 @@
 // login.tsx
 import React, { useState } from "react";
-import { View, Text, TextInput, Button, Alert } from "react-native";
+import { View, Text, TextInput, Button, Alert, StyleSheet } from "react-native";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../../firebaseConfig"; // firebaseConfig.js를 import
-import useUserStore from "@/src/store/userStore";
+import { useUserStore } from "@/src/store/userStore";
 import { Href, router } from "expo-router";
 
 export default function LoginScreen() {
@@ -36,16 +36,16 @@ export default function LoginScreen() {
   };
 
   return (
-    <View className="flex-1 justify-center items-center p-4">
-      <Text className="text-2xl mb-5">Login</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login</Text>
       <TextInput
-        className="w-4/5 p-2 border border-gray-500 mb-3 rounded"
+        style={styles.input}
         placeholder="Email"
         value={email}
         onChangeText={(text) => setEmail(text)}
       />
       <TextInput
-        className="w-4/5 p-2 border border-gray-500 mb-5 rounded"
+        style={styles.input}
         placeholder="Password"
         secureTextEntry
         value={password}
@@ -55,3 +55,24 @@ export default function LoginScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  title: {
+    fontSize: 24,
+    marginBottom: 20,
+  },
+  input: {
+    width: "80%",
+    padding: 8,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginBottom: 15,
+    borderRadius: 8,
+  },
+});
