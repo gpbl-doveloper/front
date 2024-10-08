@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import ReactLogo from "@/assets/images/icon.png";
 import React from "react";
-import useUserStore from "@/src/store/userStore";
+import { useUserStore } from "@/src/store/userStore";
 import { DogNameAndMedicine } from "../component/components";
 
 export default function TeacherHome() {
@@ -23,7 +23,8 @@ export default function TeacherHome() {
       </View>
       <View style={styles.subContentContainer}>
         <Text style={styles.subTitleText}>Today</Text>
-        <HistoryComponent historyValue={dogsData} url={"new-diary"} />
+        {/* HistoryComponent 수정 후 이부분도 수정 */}
+        <HistoryComponent historyValue={dogsData} url={"(write-diary)"} />
       </View>
     </ScrollView>
   );

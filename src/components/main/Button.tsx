@@ -3,6 +3,8 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { ActionButton } from "../photoGallery/ActionButton";
+import { useRouter } from "expo-router";
 
 interface IconTextBtnProps {
   title: string;
@@ -40,6 +42,31 @@ export function IconBtn({ onPress, icon }: IconBtnProps) {
     >
       <AntDesign name="medicinebox" size={32} color="black" />
     </TouchableOpacity>
+  );
+}
+
+export function CancelTwoButtons({
+  leftButtonFunction,
+  rightButtonFunction,
+}: {
+  leftButtonFunction: () => void;
+  rightButtonFunction: () => void;
+}) {
+  return (
+    <View style={styles.buttonContainer}>
+      <ActionButton
+        text="Cancel"
+        onPress={leftButtonFunction}
+        style={styles.leftButton}
+        textStyle={styles.leftButtonText}
+      />
+      <ActionButton
+        text="Submit"
+        onPress={rightButtonFunction}
+        style={styles.rightButton}
+        textStyle={styles.rightButtonText}
+      />
+    </View>
   );
 }
 
@@ -90,5 +117,24 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5, // 그림자 효과 (Android)
+  },
+
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 20,
+    margin: 10,
+  },
+  leftButton: {
+    backgroundColor: "#CED4DA",
+  },
+  leftButtonText: {
+    color: "black",
+  },
+  rightButton: {
+    backgroundColor: "#4CAF50",
+  },
+  rightButtonText: {
+    color: "white",
   },
 });
