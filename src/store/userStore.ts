@@ -12,9 +12,32 @@ export interface UserState {
   resetUser: () => void; // 사용자 정보 리셋 함수
 }
 
-// Zustand 스토어 생성
+export interface RegisterState {
+  token: string;
+  name: string;
+  email: string;
+  password: string;
+  setEmail: (email: string) => void;
+  setPassword: (password: string) => void;
+  setToken: (token: string) => void;
+  setName: (name: string) => void;
+}
+
+// 로그인 후, 유저 정보 저장소
 export const useUserStore = create<UserState>((set) => ({
   user: null, // 기본값
-  setUser: (user) => set({ user }), // 사용자 정보 설정 함수
-  resetUser: () => set({ user: null }), // 사용자 정보 리셋 함수
+  setUser: (user) => set({ user }),
+  resetUser: () => set({ user: null }),
+}));
+
+//회원가입 시 필요한 데이터 저장소
+export const useRegisterStore = create<RegisterState>((set) => ({
+  email: "",
+  password: "",
+  token: "",
+  name: "",
+  setEmail: (email) => set({ email }),
+  setPassword: (password) => set({ password }),
+  setToken: (token) => set({ token }),
+  setName: (name) => set({ name }),
 }));

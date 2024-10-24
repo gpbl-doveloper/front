@@ -7,9 +7,8 @@ import {
   showErrorNotification,
   showSuccessNotification,
 } from "../utils/apiUtils";
-import { Alert } from "react-native";
 
-const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api/";
+export const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api/";
 
 // 알림장 목록 불러오기
 export async function getAllDiaryList(): Promise<any> {

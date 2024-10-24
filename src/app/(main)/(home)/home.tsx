@@ -8,7 +8,7 @@ import {
 } from "@/src/components/main/CardComponent";
 import { ScrollView } from "react-native-gesture-handler";
 import { useUserStore } from "@/src/store/userStore";
-import { DogNameAndMedicine } from "../component/components";
+import { DogNameAndMedicine } from "@/src/components/components";
 import { getAllDiaryList } from "@/src/apis/apiDiary";
 import { Diary, useDiaryStore } from "@/src/store/diaryStore";
 

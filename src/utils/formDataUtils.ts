@@ -15,6 +15,17 @@ export const createDiaryFormData = async (
   return formData;
 };
 
+export const createAuthFormData = async (
+  token: string,
+  username: string
+): Promise<FormData> => {
+  const formData = new FormData();
+  formData.append("token", token);
+  formData.append("username", username);
+
+  return formData;
+};
+
 // 파일을 FormData에 추가하는 함수
 export const addFilesToFormData = async (
   fileIds: string[],

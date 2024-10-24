@@ -1,6 +1,6 @@
 // (main)/_layout.tsx
 import React from "react";
-import { Tabs, Stack } from "expo-router";
+import { Stack } from "expo-router";
 import { View } from "react-native";
 
 export default function MainLayout() {
