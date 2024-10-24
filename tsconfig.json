@@ -6,11 +6,8 @@
       "@/*": [
         "./*"
       ],
-      "components/*": [
+      "@/components/*": [
         "./src/components/*"
-      ],
-      "screens/*": [
-        "./src/screens/*"
       ],
       "@/assets/*": [
         "./src/assets/*"
@@ -22,6 +19,9 @@
     "**/*.tsx",
     "./src/**/*.tsx",
     "./src/**/**/*.tsx",
+    "./src/**/**/**/*.tsx",
+    "./src/**/**/**/**/*.tsx",
+    "./src/**/**/**/**/**/*.tsx",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
   ]

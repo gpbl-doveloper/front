@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { View, Alert, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 import * as MediaLibrary from "expo-media-library";
-import { useRouter } from "expo-router";
-import { uploadPicture } from "@/src/apis/apiPicture";
+import { router } from "expo-router";
 import { PhotoList } from "@/src/components/photoGallery/PhotoList";
 import { ActionButton } from "@/src/components/photoGallery/ActionButton";
+import { useAddDiaryStore } from "@/src/store/diaryStore";
 
 export default function PhotoGallery() {
-  const router = useRouter();
-
   const [photos, setPhotos] = useState<MediaLibrary.Asset[]>([]);
-  const [buttonText, setButtonText] = useState("Auto Select");
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
+
+  //사진 저장할 전역변수
+  const { setInputDiaryFiles } = useAddDiaryStore();
 
   //오늘 찍은 사진들만 가져오는 함수
   const getTodayPhotos = async () => {
@@ -23,7 +23,7 @@ export default function PhotoGallery() {
     }
 
     // 오늘 날짜 가져오기 및 해당 사진들 가져오는 함수
-    const startOfDay = new Date().setHours(-72, 0, 0, 0); //3일 전 날짜, 나중에 삭제
+    const startOfDay = new Date().setHours(-72, 0, 0, 0); //3일 전 날짜, 0으로 변경 예정
 
     // 오늘 찍은 사진들만 가져오기
     const assets = await MediaLibrary.getAssetsAsync({
@@ -42,24 +42,14 @@ export default function PhotoGallery() {
     setPhotos(updatedAssets); // 변환된 URI 저장
   };
 
-  // 오늘 찍은 사진 가져오기
   useEffect(() => {
     getTodayPhotos();
   }, []);
 
-  // 버튼 눌렀을 시 사진 업로드
-  const handleButtonPress = () => {
-    setButtonText("Upload");
-    if (buttonText === "Upload") {
-      if (selectedPhotos.length === 0) {
-        Alert.alert("No photos selected");
-        return;
-      } else {
-        uploadPicture(selectedPhotos);
-        Alert.alert("Photos uploaded successfully");
-        router.push("/teacher-home");
-      }
-    }
+  // 오른쪽 버튼 클릭 시 선택된 사진 전역변수에 저장 후 뒤로가기
+  const handleRightButtonPress = () => {
+    setInputDiaryFiles(selectedPhotos);
+    router.back();
   };
 
   const toggleSelectPhoto = (id: string) => {
@@ -89,8 +79,8 @@ export default function PhotoGallery() {
           textStyle={styles.leftButtonText}
         />
         <ActionButton
-          text={buttonText}
-          onPress={handleButtonPress}
+          text="Select"
+          onPress={handleRightButtonPress}
           style={styles.button}
           textStyle={styles.buttonText}
         />

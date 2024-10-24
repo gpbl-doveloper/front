@@ -3,31 +3,32 @@ import {
   View,
   Image,
   StyleSheet,
-  TouchableOpacity,
   Text,
   Pressable,
   ScrollView,
+  ImageSourcePropType,
 } from "react-native";
 import { Href, router } from "expo-router";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import Entypo from "@expo/vector-icons/Entypo";
+import { Diary, useSingleDiaryStore } from "@/src/store/diaryStore";
 
 interface TodayCardComponentProps {
-  todayCardComponentValue: { mainImageUri: string; iconImageUri: string }[];
+  todayDiary: Diary; // Diary 타입 지정
 }
 
-export function TodayCardComponent({
-  todayCardComponentValue,
-}: TodayCardComponentProps) {
+export function TodayCardComponent({ todayDiary }: TodayCardComponentProps) {
   return (
     <View style={styles.cardContainer}>
       <View style={styles.ImageContainer}>
-        {/* 최대 4개의 카드 값을 가져옴 */}
-        {todayCardComponentValue.map((value, index) => (
-          <View style={styles.cardWrapper} key={index}>
-            <TodayCardImage uri={value.mainImageUri} />
-          </View>
-        ))}
+        {!todayDiary || !todayDiary.files || todayDiary.files.length === 0 ? (
+          <Text>일기가 없습니다.</Text>
+        ) : (
+          todayDiary.files.map((value, index) => (
+            <View style={styles.cardWrapper} key={index}>
+              <TodayCardImage uri={value.fileURL} />
+            </View>
+          ))
+        )}
       </View>
 
       {/* 자세히 보기 버튼 */}
@@ -45,50 +46,62 @@ export function TodayCardComponent({
 
 function TodayCardImage({ uri }: { uri: string }) {
   return (
-    <Image
-      resizeMode="contain"
-      source={require("../../assets/images/icon.png")}
-      style={styles.mainImage}
-    />
+    <Image resizeMode="contain" source={{ uri }} style={styles.mainImage} />
   );
 }
 
-export function HistoryComponent({
-  historyValue,
+// 세로로 스크롤되는 리스트
+export function VerticalList({
+  dataList,
   url,
-  text,
 }: {
-  historyValue: any;
+  dataList: Diary[];
   url: string;
-  text?: string;
 }) {
+  const setDiaries = useSingleDiaryStore((state) => state.setDiary);
+  const onClickRightButton = (data: Diary) => {
+    router.push(`/${url}` as Href);
+    setDiaries(data);
+  };
   return (
     <View style={styles.historyCardContainer}>
-      {historyValue.map((value: any, index: number) => (
-        <View key={index} style={styles.historyCard}>
-          <Image source={value.mainImageUri} style={styles.historyImage} />
-          <Text style={styles.historyText}>강아지 이름, 일기장 제목 등</Text>
-          {/* <Text style={styles.historyText}>{text}</Text> */}
-          <View style={styles.historyNextButton}>
-            <Pressable onPress={() => router.push(`/${url}` as Href)}>
-              <Entypo name="chevron-right" size={24} color="white" />
-            </Pressable>
+      {dataList.map((value: Diary, index: number) => {
+        // ImageSourcePropType 사용하여 이미지 소스 설정
+        const imageSource: ImageSourcePropType = {
+          uri: value.files[0].fileURL,
+        };
+
+        return (
+          <View key={index} style={styles.historyCard}>
+            <Image source={imageSource} style={styles.historyImage} />
+            <View>
+              <Text style={styles.historyText}>
+                Date: {value.createdAt?.slice(0, 10) || "2024-00-00"}
+              </Text>
+              <Text style={styles.historyText}>
+                Teacher: {value.authorId || "teacher1"}
+              </Text>
+            </View>
+            <View style={styles.historyNextButton}>
+              <Pressable onPress={() => onClickRightButton(value)}>
+                <Entypo name="chevron-right" size={24} color="white" />
+              </Pressable>
+            </View>
           </View>
-        </View>
-      ))}
+        );
+      })}
     </View>
   );
 }
 
-export function HorizontalImageGallery({ imageData }: { imageData: any }) {
+// 가로로 스크롤되는 이미지 갤러리
+export function HorizontalImageGallery({ imageData }: { imageData: string[] }) {
+  console.log(imageData);
   return (
     <ScrollView style={styles.imageGallery} horizontal={true}>
-      {imageData.map((_data: any, index: React.Key | null | undefined) => (
+      {imageData?.map((data: any, index: React.Key | null | undefined) => (
         <View key={index} style={styles.imageContainer}>
-          <Image
-            source={require("../../assets/images/icon.png")}
-            style={styles.image}
-          />
+          <Image source={{ uri: data }} style={styles.image} />
         </View>
       ))}
     </ScrollView>
@@ -129,10 +142,10 @@ const styles = StyleSheet.create({
     elevation: 4, // 그림자 효과 (Android)
   },
   ImageContainer: {
+    width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
     gap: 23,
-    margin: "auto",
   },
   cardWrapper: {
     width: 130,
