@@ -6,7 +6,6 @@ export const mainStyles = StyleSheet.create({
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
-    padding: 20,
   },
   welcomeContainer: {
     alignItems: "center",

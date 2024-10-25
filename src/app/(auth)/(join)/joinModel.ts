@@ -4,7 +4,12 @@ import { postFormData } from "@/src/utils/apiUtils";
 import { createAuthFormData } from "@/src/utils/formDataUtils";
 import { createUserWithEmailAndPassword, getIdToken } from "firebase/auth";
 
-export async function registerByFirebase(email: string, password: string) {
+export interface AuthCredentials {
+  email: string;
+  password: string;
+}
+
+export async function registerByFirebase({ email, password }: AuthCredentials) {
   try {
     const userCredential = await createUserWithEmailAndPassword(
       auth,
@@ -17,13 +22,13 @@ export async function registerByFirebase(email: string, password: string) {
     return token;
   } catch (error) {
     console.error("Registration Failed At registerByFirebase");
-    throw error; // 원본 error 던지기
+    throw error;
   }
 }
 
-export async function registerByBackend(token: string, name: string) {
+export async function registerByBackend(token: string, username: string) {
   try {
-    const formData = await createAuthFormData(token, name);
+    const formData = await createAuthFormData(token, username);
     const response = await postFormData(`${API_URL}/diary/add`, formData);
     console.log("Registration Success At registerByBackend");
 

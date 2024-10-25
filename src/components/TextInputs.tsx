@@ -13,7 +13,7 @@ interface InputProps extends TextInputProps {
   label: string;
   isPassword?: boolean;
   text: string;
-  setText: React.Dispatch<React.SetStateAction<string>>;
+  setText: (email: string) => void;
 }
 
 export function AuthTextInput({

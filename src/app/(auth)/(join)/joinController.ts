@@ -1,5 +1,9 @@
 import { Alert } from "react-native";
-import { registerByBackend, registerByFirebase } from "./joinModel";
+import {
+  AuthCredentials,
+  registerByBackend,
+  registerByFirebase,
+} from "./joinModel";
 
 const showErrorAlert = (title: string, message: string) => {
   Alert.alert(title, message);
@@ -8,13 +12,12 @@ const showErrorAlert = (title: string, message: string) => {
 export const joinController = {
   // Firebase Check
   async firebaseCheck(
-    email: string,
-    password: string,
+    { email, password }: AuthCredentials,
     setToken: (token: string) => void,
     setFirebaseSuccess: (success: boolean) => void
   ) {
     try {
-      const token = await registerByFirebase(email, password); // Firebase 처리
+      const token = await registerByFirebase({ email, password }); // Firebase 처리
       if (token) {
         setToken(token); // 토큰 설정
         setFirebaseSuccess(true); // 성공 플래그 설정
@@ -23,7 +26,7 @@ export const joinController = {
       }
     } catch (error) {
       console.error("Firebase Error:", error);
-      showErrorAlert("Error", "Firebase authentication failed.");
+      showErrorAlert("Error", `Firebase authentication failed: ${error}`);
     }
   },
 
