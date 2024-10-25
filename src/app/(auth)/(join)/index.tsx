@@ -1,35 +1,56 @@
 import React, { useState } from "react";
-import { joinController } from "./joinController"; // Controller import
-import { JoinFirebaseView } from "./joinFirebaseView";
-import { JoinBackendView } from "./joinBackendView";
-import { AuthContainer } from "../authContainer";
+import { AuthPrompt } from "@/src/components/AuthPrompt";
+import { CheckboxRow } from "@/src/components/CheckBox";
+import { RadioButtons } from "@/src/components/RadioButtons";
+import { JoinFormView, TwoSideButtons } from "./joinView";
+import { AuthContainer } from "../authView";
+import { navigationController } from "../authController";
 
-export default function JoinScreen() {
-  const [token, setToken] = useState<string>("");
+export default function JoinView() {
   const [firebaseSuccess, setFirebaseSuccess] = useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = useState<string>("Parent");
+  const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
+  const [username, setUsername] = useState<string>("");
+
+  const roles = ["Parent", "Teacher", "Director"];
 
   return (
-    <AuthContainer title="Join">
-      <JoinFirebaseView
-        firebaseSuccess={firebaseSuccess}
-        // Firebase check를 Controller에 위임
-        onFirebaseCheck={(email: string, password: string) =>
-          joinController.firebaseCheck(
-            email,
-            password,
-            setToken,
-            setFirebaseSuccess
-          )
-        }
+    <AuthContainer title="Create account">
+      {/* 역할 선택 */}
+      <RadioButtons
+        roles={roles}
+        selectedRole={selectedRole}
+        onSelectRole={setSelectedRole}
       />
-      {firebaseSuccess && (
-        <JoinBackendView
-          firebaseSuccess={firebaseSuccess}
-          handleJoinToBackend={(username: string) =>
-            joinController.backendJoin(token, username)
-          }
-        />
-      )}
+
+      {/* 유저 정보 입력 View */}
+      <JoinFormView
+        firebaseSuccess={firebaseSuccess}
+        username={username}
+        setUsername={setUsername}
+      />
+
+      {/* 약관 동의 체크박스 */}
+      <CheckboxRow
+        message="I accept the terms and privacy policy"
+        isChecked={acceptedTerms}
+        setIsChecked={setAcceptedTerms}
+      />
+
+      {/* 회원가입 버튼, 처음엔 firebase 회원가입 체크, 성공시 백엔드 회원가입 */}
+      <TwoSideButtons
+        firebaseSuccess={firebaseSuccess}
+        setFirebaseSuccess={setFirebaseSuccess}
+        username={username}
+        acceptedTerms={acceptedTerms}
+      />
+
+      {/* 로그인 링크 */}
+      <AuthPrompt
+        message="Already have an account?"
+        linkText="Sign In"
+        onPress={navigationController.goToSignIn}
+      />
     </AuthContainer>
   );
 }
