@@ -1,6 +1,6 @@
 import { auth } from "@/firebaseConfig";
 import { API_URL } from "@/src/apis/apiDiary";
-import { postFormData } from "@/src/utils/apiUtils";
+import { postData } from "@/src/utils/apiUtils";
 import { createAuthFormData } from "@/src/utils/formDataUtils";
 import { createUserWithEmailAndPassword, getIdToken } from "firebase/auth";
 
@@ -29,7 +29,7 @@ export async function registerByFirebase({ email, password }: AuthCredentials) {
 export async function registerByBackend(token: string, username: string) {
   try {
     const formData = await createAuthFormData(token, username);
-    const response = await postFormData(`${API_URL}/diary/add`, formData);
+    const response = await postData(`${API_URL}/diary/add`, formData);
     console.log("Registration Success At registerByBackend");
 
     return response?.data;

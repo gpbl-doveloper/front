@@ -6,18 +6,23 @@ import { View } from "react-native";
 export default function MainLayout() {
   return (
     <View style={{ flex: 1 }}>
-      <Tabs
+      <Stack
         screenOptions={{
-          tabBarActiveTintColor: "#FCB3AD",
-          headerShown: true,
+          // tabBarActiveTintColor: "#FCB3AD",
+          headerShown: false,
         }}
       >
-        <Tabs.Screen name="(home)" options={{ title: "Home" }} />
-        <Tabs.Screen
+        <Stack.Screen
+          name="(home)"
+          options={{
+            title: "Home",
+          }}
+        />
+        <Stack.Screen
           name="(teacher-home)"
           options={{ title: "Teacher's Home" }}
         />
-      </Tabs>
+      </Stack>
     </View>
   );
 }

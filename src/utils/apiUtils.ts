@@ -5,10 +5,16 @@ export const getData = async (url: string) => {
   return response;
 };
 
-export const postFormData = async (url: string, formData: FormData) => {
-  const response = await axios.post(url, formData, {
+type ContentType = 'application/json' | 'multipart/form-data';
+
+export const postData = async (
+  url: string, 
+  data: any, 
+  contentType: ContentType = 'application/json'
+) => {
+  const response = await axios.post(url, data, {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": contentType,
     },
   });
   return response;
