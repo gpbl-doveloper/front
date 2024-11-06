@@ -5,10 +5,9 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  Button,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Href, useRouter } from "expo-router";
+import { Href, router, useNavigation, useRouter } from "expo-router";
 import {
   DOG_STATUS,
   type Dog,
@@ -60,13 +59,13 @@ export default function TeacherHomePage() {
 }
 
 function SearchBar() {
-  const router = useRouter();
+  const navigation = useNavigation();
 
   return (
     <TouchableOpacity
       style={styles.searchContainer}
-      onPress={() => router.push(`/profile` as Href)}
-    >
+      onPress={() => navigation.navigate("Search" as never)}
+>
       <Ionicons
         name="search-outline"
         size={20}

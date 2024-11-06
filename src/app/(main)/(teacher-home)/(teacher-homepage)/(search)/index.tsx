@@ -1,25 +1,38 @@
 import React from "react";
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 
 const recentSearches = [
-  { id: '1', name: 'Coco' },
-  { id: '2', name: 'Kellan' },
-  { id: '3', name: 'Happy' },
+  { id: "1", name: "Coco" },
+  { id: "2", name: "Kellan" },
+  { id: "3", name: "Happy" },
 ];
 
-const SearchPage = () => {
+export default function SearchPage() {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       {/* 검색창 */}
-      <View style={styles.searchContainer}>
+      <TouchableOpacity
+        style={styles.searchContainer}
+        onPress={() => navigation.goBack()}
+      >
         <Ionicons name="arrow-back" size={24} color="black" />
         <TextInput
           style={styles.searchInput}
           placeholder="Dog name"
           placeholderTextColor="#D9D9D9"
         />
-      </View>
+      </TouchableOpacity>
 
       {/* 최근 검색어 */}
       <Text style={styles.recentSearchesTitle}>Recent searches</Text>
@@ -37,13 +50,13 @@ const SearchPage = () => {
       />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    paddingTop: 50,
+    paddingTop: 20,
     paddingHorizontal: 20,
   },
   searchContainer: {
@@ -81,5 +94,3 @@ const styles = StyleSheet.create({
     color: "#333333",
   },
 });
-
-export default SearchPage;

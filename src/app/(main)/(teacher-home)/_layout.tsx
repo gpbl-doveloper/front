@@ -4,6 +4,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
+import TeacherHomeLayout from "./(teacher-homepage)/_layout";
+import ReservationScreen from "./(reservation)/index";
+import ProfilePage from "./(profile)/index";
 
 export default function MainLayout() {
   return (
@@ -11,9 +14,9 @@ export default function MainLayout() {
       <Tab.Navigator
         screenOptions={({ route }) => {
           const tabIcons: Record<string, keyof typeof Ionicons.glyphMap> = {
-            "(home)": "home-outline", // name 속성과 일치하도록 수정
-            "(reservation)": "calendar-outline",
-            "(profile)": "person-outline",
+            Home: "home-outline", // name 속성과 일치하도록 수정
+            Reservation: "calendar-outline",
+            Profile: "person-outline",
           };
 
           return {
@@ -27,21 +30,9 @@ export default function MainLayout() {
           };
         }}
       >
-        <Tab.Screen
-          name="(home)"
-          options={{ tabBarLabel: "Home" }}
-          component={require("./(teacher-homepage)/index").default}
-        />
-        <Tab.Screen
-          name="(reservation)"
-          options={{ tabBarLabel: "Reservation" }}
-          component={require("./(reservation)/index").default}
-        />
-        <Tab.Screen
-          name="(profile)"
-          options={{ tabBarLabel: "My Profile" }}
-          component={require("./(profile)/index").default}
-        />
+        <Tab.Screen name="Home" component={TeacherHomeLayout} />
+        <Tab.Screen name="Reservation" component={ReservationScreen} />
+        <Tab.Screen name="Profile" component={ProfilePage} />
       </Tab.Navigator>
     </SafeAreaView>
   );
