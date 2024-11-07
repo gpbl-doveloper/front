@@ -1,96 +1,62 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { FlatList } from "react-native";
+import { useSearchStore } from "@/src/store/searchStore";
+import { TeacherHomeContainer } from "../../teacherHomeStyles";
 import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
-
-const recentSearches = [
-  { id: "1", name: "Coco" },
-  { id: "2", name: "Kellan" },
-  { id: "3", name: "Happy" },
-];
+  RecentSearchesAndClear,
+  SearchData,
+  SearchInputBar,
+  SearchResult,
+} from "./searchView";
+import { DogForTeacherHomeList, useDogStore } from "@/src/store/dogStore";
 
 export default function SearchPage() {
-  const navigation = useNavigation();
+  const { recentSearches, addSearch } = useSearchStore();
+  const [searchText, setSearchText] = useState("");
+  const [filteredDogs, setFilteredDogs] = useState<DogForTeacherHomeList[]>([]);
+  const { dogs } = useDogStore();
+
+  const filterDogsByName = (searchText: string) => {
+    return dogs.filter((dog) =>
+      dog.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+  };
+
+  useEffect(() => {
+    const filteredDogs = filterDogsByName(searchText);
+    setFilteredDogs(filteredDogs);
+  }, [searchText, dogs]);
+
+  const handleSearchSubmit = () => {
+    addSearch(searchText);
+    setSearchText("");
+    const filteredDogs = filterDogsByName(searchText);
+    setFilteredDogs(filteredDogs);
+  };
 
   return (
-    <View style={styles.container}>
+    <TeacherHomeContainer>
       {/* 검색창 */}
-      <TouchableOpacity
-        style={styles.searchContainer}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="arrow-back" size={24} color="black" />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Dog name"
-          placeholderTextColor="#D9D9D9"
-        />
-      </TouchableOpacity>
+      <SearchInputBar
+        searchText={searchText}
+        setSearchText={setSearchText}
+        handleSearchSubmit={handleSearchSubmit}
+      />
 
       {/* 최근 검색어 */}
-      <Text style={styles.recentSearchesTitle}>Recent searches</Text>
-      <FlatList
-        data={recentSearches}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <View style={styles.searchItem}>
-            <Text style={styles.searchItemText}>{item.name}</Text>
-            <TouchableOpacity>
-              <Ionicons name="close-circle-outline" size={20} color="#A3A3A3" />
-            </TouchableOpacity>
-          </View>
-        )}
-      />
-    </View>
+      <RecentSearchesAndClear />
+
+      {searchText.length === 0 ? (
+        <FlatList
+          data={recentSearches.slice().reverse()}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <SearchData item={item} setSearchText={setSearchText} />
+          )}
+        />
+      ) : (
+        <SearchResult filteredDogs={filteredDogs} />
+      )}
+    </TeacherHomeContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    paddingTop: 20,
-    paddingHorizontal: 20,
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F6F7FB",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    height: 40,
-    marginBottom: 20,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    marginLeft: 10,
-    color: "#333333",
-  },
-  recentSearchesTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#A3A3A3",
-    marginBottom: 10,
-  },
-  searchItem: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#F0F0F0",
-  },
-  searchItemText: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#333333",
-  },
-});

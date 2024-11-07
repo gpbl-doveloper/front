@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { ButtonCircleShape } from "@/src/components/Buttons";
 
 function ProfilePage() {
   return (
@@ -31,9 +32,18 @@ function ProfilePage() {
       </View>
 
       {/* 로그아웃 버튼 */}
-      <TouchableOpacity style={styles.logoutButton}>
-        <Text style={styles.logoutText}>Sign out</Text>
-      </TouchableOpacity>
+      <ButtonCircleShape
+        text="Edit"
+        buttonColor="whiteBlack"
+        onPress={() => {}}
+        width="100%"
+      />
+      <ButtonCircleShape
+        text="Sign out"
+        buttonColor="black"
+        onPress={() => {}}
+        width="100%"
+      />
     </View>
   );
 }
@@ -108,9 +118,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
   },
   logoutButton: {
-    backgroundColor: "#FF3B30",
-    borderRadius: 10,
-    paddingVertical: 15,
+    backgroundColor: "#000000",
+    borderRadius: 100,
+    paddingVertical: 12,
     paddingHorizontal: 100,
     marginBottom: 30,
     width: "90%",

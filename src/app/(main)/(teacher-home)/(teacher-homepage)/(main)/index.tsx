@@ -1,108 +1,96 @@
-import React, { useState, useEffect } from "react";
-import {
-  View,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Href, router, useNavigation, useRouter } from "expo-router";
-import {
-  DOG_STATUS,
-  type Dog,
-  type DogStatus,
-  getDogsByStatus,
-  getStatusOptions,
-} from "./teacherHomePageModel";
-import { StatusFilter } from "@/src/components/statusFilter";
-import { DogItem } from "@/src/components/DogItem";
+import React, { useEffect, useState } from "react";
+import { FlatList } from "react-native";
+import { StatusFilter } from "@/components/FilterBar";
+import { DogItem } from "./DogItem";
+import { mainStyles, SearchBarAndPictureButton } from "./mainView";
+import { DogForTeacherHomeList, useDogStore } from "@/src/store/dogStore";
+import { useUserStore } from "@/src/store/userStore";
+import { getAllDogs } from "./mainModel";
+import { DogStatus, useFilterStore } from "@/src/store/filterStore";
+import { TeacherHomeContainer } from "../../teacherHomeStyles";
 
 export default function TeacherHomePage() {
-  const [selectedStatus, setSelectedStatus] = useState<DogStatus>(
-    DOG_STATUS.ALL
-  );
-  const [dogs, setDogs] = useState<Dog[]>([]);
+  const { status } = useFilterStore(); // Zustand에서 상태 가져오기
+  const [filteredDogs, setFilteredDogs] = useState<DogForTeacherHomeList[]>([]);
+  const { dogs, setDogs } = useDogStore();
 
   useEffect(() => {
-    async function loadDogs() {
-      try {
-        const filteredDogs = await getDogsByStatus(selectedStatus);
-        setDogs(filteredDogs);
-      } catch (error) {
-        console.error("Failed to fetch dogs:", error);
-        // 에러 처리 (예: 에러 메시지 표시)
+    const fetchData = async () => {
+      const dogsData = await getDogData();
+      if (dogsData) {
+        setDogs(dogsData);
+        setFilteredDogs(dogsData); // 초기 상태에 모든 강아지 리스트 표시
       }
-    }
+    };
+    fetchData();
+  }, []);
 
-    loadDogs();
-  }, [selectedStatus]);
+  useEffect(() => {
+    const filteredData = filterDogsByStatus(status, dogs);
+    setFilteredDogs(filteredData);
+  }, [status, dogs]);
 
   return (
-    <View style={styles.container}>
-      <SearchBar />
+    <TeacherHomeContainer>
+      <SearchBarAndPictureButton />
 
       <StatusFilter
-        selectedStatus={selectedStatus}
-        onStatusChange={setSelectedStatus}
-        statusOptions={getStatusOptions()}
+        statusOptions={Object.values(DogStatus)}
+        onStatusChange={(status: DogStatus) =>
+          useFilterStore.getState().setStatus(status)
+        }
       />
 
       <FlatList
-        data={dogs}
+        data={filteredDogs}
         renderItem={({ item }) => <DogItem dog={item} />}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
+        keyExtractor={(item) => item.id.toString()}
+        contentContainerStyle={mainStyles.listContainer}
       />
-    </View>
+    </TeacherHomeContainer>
   );
 }
 
-function SearchBar() {
-  const navigation = useNavigation();
+// 사용자 ID 확인
+const checkUserId = () => {
+  const userId = useUserStore.getState().user?.id; // Zustand에서 유저 ID 가져오기
+  if (!userId) {
+    throw new Error("사용자 ID가 없습니다");
+  }
+  return userId;
+};
 
-  return (
-    <TouchableOpacity
-      style={styles.searchContainer}
-      onPress={() => navigation.navigate("Search" as never)}
->
-      <Ionicons
-        name="search-outline"
-        size={20}
-        color="#A3A3A3"
-        style={{ marginRight: 10 }}
-      />
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search By Name"
-        placeholderTextColor="#D3D3D3"
-        editable={false}
-      />
-    </TouchableOpacity>
-  );
-}
+const getDogData = async () => {
+  try {
+    // const userId = checkUserId();
+    const userId = 1;
+    const dogsData = await getAllDogs(userId);
+    console.log("dogsData", dogsData);
+    return dogsData;
+  } catch (error) {
+    console.error("Failed to fetch dogs:", error);
+  }
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F9F9F9",
-    paddingHorizontal: 20,
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F1F1F1",
-    borderRadius: 10,
-    padding: 10,
-    marginTop: 20,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    color: "#000",
-  },
-  listContainer: {
-    flexGrow: 1,
-    marginTop: 18,
-  },
-});
+// 필터링 함수
+export const filterDogsByStatus = (
+  status: DogStatus,
+  dogs: DogForTeacherHomeList[]
+): DogForTeacherHomeList[] => {
+  switch (status) {
+    case DogStatus.ALL:
+      return dogs;
+    case DogStatus.NOT_STARTED:
+      return dogs.filter((dog) => !dog.isClassified && !dog.isDocumented);
+    case DogStatus.DRAFT:
+      return dogs.filter(
+        (dog) =>
+          (dog.isClassified && !dog.isDocumented) ||
+          (!dog.isClassified && dog.isDocumented)
+      );
+    case DogStatus.SENT:
+      return dogs.filter((dog) => dog.isClassified && dog.isDocumented);
+    default:
+      return dogs;
+  }
+};
