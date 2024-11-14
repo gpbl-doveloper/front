@@ -1,3 +1,6 @@
+// 구식 코드
+// 현재는 index.tsx 파일로 대체됨
+
 import { StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import React from "react";

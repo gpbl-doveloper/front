@@ -2,7 +2,9 @@ import { create } from "zustand";
 
 // 사용자 상태 타입 정의
 export interface User {
+  id: number;
   name: string;
+  role: "PARENT" | "TEACHER"; // 유저의 역할
   email: string | null;
 }
 
