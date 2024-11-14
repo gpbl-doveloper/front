@@ -10,7 +10,7 @@ import { DogStatus, useFilterStore } from "@/src/store/filterStore";
 import { TeacherHomeContainer } from "../../teacherHomeStyles";
 
 export default function TeacherHomePage() {
-  const { status } = useFilterStore(); // Zustand에서 상태 가져오기
+  const { status } = useFilterStore();
   const [filteredDogs, setFilteredDogs] = useState<DogForTeacherHomeList[]>([]);
   const { dogs, setDogs } = useDogStore();
 

@@ -1,15 +1,20 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { DogForTeacherHomeList } from "@/src/store/dogStore";
+import { useNavigation } from "expo-router";
 
 interface DogItemProps {
   dog: DogForTeacherHomeList;
 }
 
 export function DogItem({ dog }: DogItemProps) {
+  const navigation = useNavigation();
   return (
-    <View style={styles.dogItemContainer}>
+    <TouchableOpacity
+      style={styles.dogItemContainer}
+      onPress={() => navigation.navigate("DogDetail" as never)}
+    >
       <DogImagePlaceholder />
       <View style={styles.dogInfo}>
         <Text style={styles.dogName}>{dog.name}</Text>
@@ -24,7 +29,7 @@ export function DogItem({ dog }: DogItemProps) {
           />
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

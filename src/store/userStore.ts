@@ -6,6 +6,7 @@ export interface User {
   name: string;
   role: "PARENT" | "TEACHER"; // 유저의 역할
   email: string | null;
+  phone: string | null;
 }
 
 export interface UserState {
@@ -19,13 +20,18 @@ export const useUserStore = create<UserState>((set) => ({
   resetUser: () => set({ user: null }),
 }));
 
+// 회원가입 할 때 입력할 정보 저장소
 export interface AuthState {
   email: string;
   password: string;
   token: string;
+  name: string;
+  phone: string;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   setToken: (token: string) => void;
+  setName: (name: string) => void;
+  setPhone: (phone: string) => void;
 }
 
 // 로그인 후, 유저 정보 저장소
@@ -33,7 +39,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   email: "",
   password: "",
   token: "",
+  name: "",
+  phone: "",
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
   setToken: (token) => set({ token }),
+  setName: (name) => set({ name }),
+  setPhone: (phone) => set({ phone }),
 }));

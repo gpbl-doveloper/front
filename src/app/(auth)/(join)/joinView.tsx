@@ -7,18 +7,31 @@ import { AuthTextInput } from "@/src/components/TextInputs";
 import { authStyles, EmailPWTextInput } from "../authView";
 
 // 유저 정보 입력 View
-export function JoinFormView({ firebaseSuccess, username, setUsername }: any) {
+export function JoinFormView({
+  firebaseSuccess,
+  username,
+  setUsername,
+  phone,
+  setPhone,
+}: any) {
   return (
     <View style={authStyles.authFormContainer}>
       <EmailPWTextInput />
       {firebaseSuccess ? (
-        <AddInfos username={username} setUsername={setUsername} />
+        <>
+          <AddInfos
+            username={username}
+            setUsername={setUsername}
+            phone={phone}
+            setPhone={setPhone}
+          />
+        </>
       ) : null}
     </View>
   );
 }
 
-export function AddInfos({ username, setUsername }: any) {
+export function AddInfos({ username, setUsername, phone, setPhone }: any) {
   return (
     <View style={authStyles.authFormContainer}>
       <AuthTextInput
@@ -28,6 +41,13 @@ export function AddInfos({ username, setUsername }: any) {
         setText={setUsername}
         placeholder="Your Name"
       />
+      <AuthTextInput
+        label="Phone"
+        isPassword={false}
+        text={phone}
+        setText={setPhone}
+        placeholder="Your Phone"
+      />
     </View>
   );
 }
@@ -36,18 +56,18 @@ export function AddInfos({ username, setUsername }: any) {
 export function TwoSideButtons({
   firebaseSuccess,
   setFirebaseSuccess,
-  username,
   acceptedTerms,
 }: any) {
-  const { email, password, token, setToken } = useAuthStore();
+  const { email, password, token, setToken, name, phone } = useAuthStore();
+  const data = { name: name, role: "Parent", phone: phone };
   return (
     <>
       {firebaseSuccess ? (
         <ButtonBigSize
           text="Sign Up"
-          onPress={() => joinController.backendJoin(token, username)}
+          onPress={() => joinController.signUp(token, data)}
           buttonColor="purple"
-          disabled={!email || !password || !username || !acceptedTerms}
+          disabled={!email || !password || !name || !phone || !acceptedTerms}
         />
       ) : (
         <ButtonBigSize

@@ -5,12 +5,13 @@ import { RadioButtons } from "@/src/components/RadioButtons";
 import { JoinFormView, TwoSideButtons } from "./joinView";
 import { AuthContainer } from "../authView";
 import { navigationController } from "../authController";
+import { useAuthStore } from "@/src/store/userStore";
 
 export default function JoinView() {
   const [firebaseSuccess, setFirebaseSuccess] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<string>("Parent");
   const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
-  const [username, setUsername] = useState<string>("");
+  const { name, setName, phone, setPhone } = useAuthStore();
 
   const roles = ["Parent", "Center"];
 
@@ -26,8 +27,10 @@ export default function JoinView() {
       {/* 유저 정보 입력 View */}
       <JoinFormView
         firebaseSuccess={firebaseSuccess}
-        username={username}
-        setUsername={setUsername}
+        username={name}
+        setUsername={setName}
+        phone={phone}
+        setPhone={setPhone}
       />
 
       {/* 약관 동의 체크박스 */}
@@ -41,7 +44,7 @@ export default function JoinView() {
       <TwoSideButtons
         firebaseSuccess={firebaseSuccess}
         setFirebaseSuccess={setFirebaseSuccess}
-        username={username}
+        username={name}
         acceptedTerms={acceptedTerms}
       />
 

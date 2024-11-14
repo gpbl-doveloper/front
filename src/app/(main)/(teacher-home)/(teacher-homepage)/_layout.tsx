@@ -1,10 +1,10 @@
 import React from "react";
-// import { Stack } from "expo-router/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import TeacherHomePage from "./(main)";
 import SearchPage from "./(search)";
 import DogDetailLayout from "./(dog-detail)/_layout";
+import PhotoSelector from "../../../(photo-selector)";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +26,11 @@ export default function TeacherHomeLayout() {
           name="DogDetail"
           component={DogDetailLayout}
           options={{ title: "Detail" }}
+        />
+        <Stack.Screen
+          name="PhotoSelector"
+          component={PhotoSelector}
+          options={{ title: "Select Photos" }}
         />
       </Stack.Navigator>
     </NavigationContainer>

@@ -35,8 +35,12 @@ function SearchBar() {
   );
 }
 function PictureButton() {
+  const navigator = useNavigation();
   return (
-    <TouchableOpacity style={mainStyles.pictureButton}>
+    <TouchableOpacity
+      style={mainStyles.pictureButton}
+      onPress={() => navigator.navigate("PhotoSelector" as never)}
+    >
       <Ionicons name="camera-outline" size={20} color="#FFF" />
     </TouchableOpacity>
   );
