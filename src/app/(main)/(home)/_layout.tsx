@@ -9,7 +9,7 @@ import ReservationPage from "./(reservation)";
 
 const Tab = createBottomTabNavigator();
 
-export default function MainLayout() {
+export default function ParentsHomeLayout() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Tab.Navigator

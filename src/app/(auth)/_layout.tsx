@@ -1,12 +1,16 @@
 // app/(auth)/_layout.tsx
+import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
-import { Stack } from "expo-router";
+import JoinView from "./(join)";
+import LoginView from "./(login)";
+
+const Stack = createStackNavigator();
 
 export default function AuthLayout() {
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(login)/index" options={{ headerShown: false }} />
-      <Stack.Screen name="(join)/index" options={{ headerShown: false }} />
-    </Stack>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="SignIn" component={LoginView} />
+      <Stack.Screen name="SignUp" component={JoinView} />
+    </Stack.Navigator>
   );
 }

@@ -1,9 +1,7 @@
 import { Alert } from "react-native";
-import {
-  AuthCredentials,
-  registerByBackend,
-  registerByFirebase,
-} from "./joinModel";
+import { AuthCredentials, registerByFirebase } from "./joinModel";
+import { postSignUp } from "@/src/apis/apiAuth";
+import { useNavigation } from "expo-router";
 
 const showErrorAlert = (title: string, message: string) => {
   Alert.alert(title, message);
@@ -31,12 +29,20 @@ export const joinController = {
   },
 
   // Backend Join
-  async backendJoin(token: string, username: string) {
+  async signUp(token: string, data: SignUpData) {
+    const navigator = useNavigation();
     try {
-      await registerByBackend(token, username); // Backend 처리
+      let SignUpData = await postSignUp(token, data); // Backend 처리
+      console.log("Backend join success.");
     } catch (error) {
       console.error("Backend Error:", error);
       showErrorAlert("Error", "Backend join failed.");
     }
   },
 };
+
+interface SignUpData {
+  name: string;
+  role: string;
+  phone: string;
+}

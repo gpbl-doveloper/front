@@ -9,7 +9,7 @@ import {
 
 interface StatusFilterProps<T extends string> {
   statusOptions: T[]; // 다양한 상태 옵션을 위한 제네릭 타입 T 사용
-  onStatusChange: (status: T) => void;
+  onStatusChange: any;
 }
 
 export function StatusFilter<T extends string>({

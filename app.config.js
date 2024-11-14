@@ -12,6 +12,7 @@ export default ({ config }) => {
       router: {
         exclude: ["**/_*.tsx", "**/inner/[**]"], // 제외할 경로 추가
       },
+      apiUrl: process.env.REACT_APP_API_URL,
     },
   };
 };
