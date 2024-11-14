@@ -1,5 +1,6 @@
 // _layout.tsx
 import React from "react";
+import "@/global.css";
 import "../../global.css";
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";

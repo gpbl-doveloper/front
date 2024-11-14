@@ -50,6 +50,16 @@ function MainButtonContainer() {
         onPress={navigationController.goToJoin}
         text={"Create account"}
       />
+      <ButtonBigSize
+        buttonColor={"white"}
+        onPress={navigationController.goToTest}
+        text={"Center"}
+      />
+      <ButtonBigSize
+        buttonColor={"white"}
+        onPress={navigationController.goToParent}
+        text={"Parents"}
+      />
     </View>
   );
 }

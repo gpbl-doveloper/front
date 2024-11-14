@@ -12,7 +12,7 @@ export default function JoinView() {
   const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
 
-  const roles = ["Parent", "Teacher", "Director"];
+  const roles = ["Parent", "Center"];
 
   return (
     <AuthContainer title="Create account">
