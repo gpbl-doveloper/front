@@ -34,6 +34,7 @@ export default function PhotoSelector() {
       return { ...asset, uri: assetInfo.localUri || asset.uri }; // localUri 사용, 없으면 기본 uri 사용
     });
 
+    // 가져온 사진들 photos에 저장해서 보여주기
     const updatedAssets = await Promise.all(assetInfoPromises);
     setPhotos(updatedAssets); // 변환된 URI 저장
   };
@@ -53,16 +54,14 @@ export default function PhotoSelector() {
         console.error("User is not available.");
         return;
       }
-
       const idToken = user.uid;
-      console.log("selectedPhotos", selectedPhotos);
-
       // 사진 업로드 호출
       const response = await postPictures({ idToken, selectedPhotos });
       console.log("Photos uploaded successfully:", response);
 
       // 업로드된 사진을 전역 상태에 저장
       setSendedPhotos(selectedPhotos);
+      navigator.goBack();
     } catch (error) {
       console.error("Error in handleRightButtonPress:", error);
       alert("Failed to upload photos. Please try again.");

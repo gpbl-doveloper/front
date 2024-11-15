@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
-import { FontAwesome } from "@expo/vector-icons"; // 아이콘을 위해 설치 필요
+import { FontAwesome } from "@expo/vector-icons";
 import { DogItem } from "../(teacher-home)/(teacher-homepage)/(main)/DogItem";
 
 export default function DogProfileScreen() {

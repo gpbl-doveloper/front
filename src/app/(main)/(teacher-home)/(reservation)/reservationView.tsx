@@ -5,7 +5,6 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  Modal,
 } from "react-native";
 import { ButtonCircleShape } from "@/src/components/Buttons";
 import { DogForReservation } from "@/src/store/reservationStore";

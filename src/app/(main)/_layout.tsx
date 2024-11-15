@@ -15,23 +15,9 @@ export default function MainLayout() {
           headerShown: false,
         }}
       >
-        <Stack.Screen
-          name="(home)"
-          options={{
-            title: "Home",
-          }}
-          component={ParentsHomeLayout}
-        />
-        <Stack.Screen
-          name="(teacher-home)"
-          options={{ title: "Teacher's Home" }}
-          component={TeacherHomeLayout}
-        />
-        <Stack.Screen
-          name="(dogs)"
-          options={{ title: "Dogs" }}
-          component={DogProfileScreen}
-        />
+        <Stack.Screen name="(home)" component={ParentsHomeLayout} />
+        <Stack.Screen name="(teacher-home)" component={TeacherHomeLayout} />
+        <Stack.Screen name="(dogs)" component={DogProfileScreen} />
       </Stack.Navigator>
     </View>
   );

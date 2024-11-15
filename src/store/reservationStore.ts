@@ -1,5 +1,6 @@
 import { create } from "zustand";
 
+//나중에 갈아엎을듯함요
 interface Owner {
   name: string;
   phone: string;

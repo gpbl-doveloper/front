@@ -4,8 +4,8 @@ import "@/global.css";
 import "../../global.css";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { createStackNavigator } from "@react-navigation/stack";
-import MainLayout from "./(main)/_layout";
 import AuthLayout from "./(auth)/_layout";
+import MainLayout from "./(main)/_layout";
 import MainScreen from ".";
 
 const Stack = createStackNavigator();

@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import DiaryLayout from "./(diary)/_layout";
 import ReservationPage from "./(reservation)";
-import ProfilePage from "../../(profile)";
+import ProfilePage from "../../(auth)/(profile)";
 
 const Tab = createBottomTabNavigator();
 

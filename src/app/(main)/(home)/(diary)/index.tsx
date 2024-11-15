@@ -1,13 +1,20 @@
 import React from "react";
-import { View, Image, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { ParentHomeContainer } from "../parentHomeStyles";
 import { ReservationDate } from "../../(teacher-home)/(reservation)/reservationView";
-import { cardData, DiaryCards } from "./parentDiaryView";
+import {
+  ActivityCard,
+  FeedingCard,
+  NoteCard,
+  SleepCard,
+} from "./parentDiaryView";
 import CustomCarousel from "@/src/components/Carousel";
 import { useNavigation } from "expo-router";
+import { useSingleDiaryStore } from "@/src/store/diaryStore";
 
 export default function TodayScreen() {
   const navigation = useNavigation();
+  const { diary } = useSingleDiaryStore();
   return (
     <ParentHomeContainer>
       <ReservationDate>
@@ -25,16 +32,14 @@ export default function TodayScreen() {
         <CustomCarousel />
       </View>
       <View style={styles.diaryCards}>
-        {cardData.map((card) => (
-          <DiaryCards
-            key={card.id}
-            id={card.id}
-            subtitle={card.hasSubTitle ? "subtitle" : undefined}
-            description="description"
-          />
-        ))}
+        <ActivityCard activities={diary.activities} />
+        <SleepCard napStart={diary.napStart} napEnd={diary.napEnd} />
+        <FeedingCard
+          feedingTime={diary.feedingTime}
+          feedingAmt={diary.feedingAmt}
+        />
+        <NoteCard note={diary.note} />
       </View>
-      {/* <Text style={styles.noteText}>Today's Note</Text> */}
     </ParentHomeContainer>
   );
 }
@@ -43,6 +48,11 @@ const styles = StyleSheet.create({
   carouselView: {
     marginVertical: 20,
   },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+  },
   diaryCards: {
     width: "100%",
     alignItems: "center",
@@ -50,11 +60,5 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginTop: 20,
     gap: 20,
-  },
-
-  profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
   },
 });

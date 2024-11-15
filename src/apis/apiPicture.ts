@@ -1,12 +1,6 @@
-import Constants from "expo-constants";
 import axios from "axios";
-
-const appConfig = Constants.expoConfig?.extra;
-
-if (!appConfig || !appConfig.apiUrl) {
-  console.error("API_URL이 설정되지 않았습니다.");
-  throw new Error("API_URL이 설정되지 않았습니다.");
-}
+import appConfig from "./utils/apiConfig";
+import { handleApiError } from "./utils/errorHandler";
 
 /**
  * 사진 업로드 함수
@@ -40,16 +34,7 @@ export const postPicture = async (idToken: string, photoURIs: string[]) => {
     console.log("Upload successful:", response.data);
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error(
-        "Upload failed:",
-        error.response?.status,
-        error.response?.data
-      );
-    } else {
-      console.error("Unknown error occurred:", error);
-    }
-    throw error;
+    handleApiError(error, "postPicture");
   }
 };
 

@@ -1,11 +1,9 @@
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { SafeAreaView } from "react-native-safe-area-context";
-
 import ReservationScreen from "./(reservation)/index";
 import TeacherHomePageLayout from "./(teacher-homepage)/_layout";
-import ProfilePage from "../../(profile)";
+import ProfilePage from "../../(auth)/(profile)";
 
 const Tab = createBottomTabNavigator();
 
