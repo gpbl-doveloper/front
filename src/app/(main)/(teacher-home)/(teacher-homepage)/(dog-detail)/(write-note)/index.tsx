@@ -8,24 +8,71 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from "react-native";
+import { postNotetoBackend } from "./writeNoteModel";
+import { useFirebaseAuth } from "@/src/store/userStore";
+import { useSelectedDogStore } from "@/src/store/dogStore";
+
+const convertToISO = ({
+  hour,
+  minute,
+  period,
+}: {
+  hour: string;
+  minute: string;
+  period: string;
+}): string => {
+  const date = new Date(); // 오늘 날짜 사용
+  const isPM = period.toUpperCase() === "PM";
+  const hour24 = isPM ? (parseInt(hour) % 12) + 12 : parseInt(hour) % 12;
+
+  // 날짜에 시간 설정
+  date.setHours(hour24, parseInt(minute), 0, 0);
+
+  return date.toISOString(); // ISO 8601 형식 반환
+};
 
 function NoteScreen() {
-  const [activity, setActivity] = useState("");
-  const [additionalNotes, setAdditionalNotes] = useState("");
-  const [feedingTime, setFeedingTime] = useState<number | null>(null);
-  const [feedingAmount, setFeedingAmount] = useState("Nothing");
-  const [napStartTime, setNapStartTime] = useState({
+  const [activities, setActivities] = useState("");
+  const [note, setNote] = useState("");
+  const [feedingTime, setFeedingTime] = useState<number>(0);
+  const [feedingAmt, setFeedingAmt] = useState("Nothing");
+  const [napStart, setNapStart] = useState({
     hour: "10",
     minute: "00",
     period: "AM",
   });
-  const [napEndTime, setNapEndTime] = useState({
+  const [napEnd, setNapEnd] = useState({
     hour: "10",
     minute: "00",
     period: "AM",
   });
   const navigation = useNavigation();
+  const { idToken } = useFirebaseAuth();
+  const { selectedDog } = useSelectedDogStore();
+  if (!selectedDog) {
+    navigation.goBack();
+    return null;
+  }
+
+  const handleSubmit = () => {
+    try {
+      const diaryData = {
+        activities,
+        feedingTime,
+        feedingAmt,
+        napStart: convertToISO(napStart),
+        napEnd: convertToISO(napEnd),
+        note,
+        dogId: selectedDog.id,
+      };
+      postNotetoBackend({ diaryData, idToken });
+      navigation.goBack();
+    } catch (error) {
+      console.log("Failed to send note", error);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -38,65 +85,112 @@ function NoteScreen() {
       </TouchableOpacity>
 
       {/* Activities Section */}
-      <ActivitiesSection activity={activity} setActivity={setActivity} />
+      <ActivitiesSection activity={activities} setActivity={setActivities} />
 
       {/* Feeding Section */}
       <FeedingSection
         feedingTime={feedingTime}
         setFeedingTime={setFeedingTime}
-        feedingAmount={feedingAmount}
-        setFeedingAmount={setFeedingAmount}
+        feedingAmount={feedingAmt}
+        setFeedingAmount={setFeedingAmt}
       />
 
       {/* Nap Time Section */}
-      <NapTimeSection napStartTime={napStartTime} napEndTime={napEndTime} />
+      <NapTimeSection
+        napStartTime={napStart}
+        napEndTime={napEnd}
+        setNapStartTime={setNapStart}
+        setNapEndTime={setNapEnd}
+      />
 
       {/* Additional Notes Section */}
       <AdditionalNotesSection
-        additionalNotes={additionalNotes}
-        setAdditionalNotes={setAdditionalNotes}
+        additionalNotes={note}
+        setAdditionalNotes={setNote}
       />
 
       {/* Save and Send Buttons */}
       <View style={styles.saveButtonContainer}>
-        <ButtonBigSize
+        {/* <ButtonBigSize
           text="Save Draft"
           buttonColor="white"
           onPress={() => {}}
-        />
-        <ButtonBigSize text="Send" buttonColor="white" onPress={() => {}} />
+        /> */}
+        <ButtonBigSize text="Send" buttonColor="white" onPress={handleSubmit} />
       </View>
     </ScrollView>
   );
 }
 
-function NapTimeSection({ napStartTime, napEndTime }: any) {
+function NapTimeSection({
+  napStartTime,
+  napEndTime,
+  setNapStartTime,
+  setNapEndTime,
+}: {
+  napStartTime: { hour: string; minute: string; period: string };
+  napEndTime: { hour: string; minute: string; period: string };
+  setNapStartTime: React.Dispatch<
+    React.SetStateAction<{ hour: string; minute: string; period: string }>
+  >;
+  setNapEndTime: React.Dispatch<
+    React.SetStateAction<{ hour: string; minute: string; period: string }>
+  >;
+}) {
   return (
     <>
       <Text style={styles.sectionTitle}>Nap Time</Text>
       <View style={styles.timePickers}>
         <Text style={styles.subTitle}>From</Text>
         <View style={styles.timePickerRow}>
-          {/* Start Time */}
-          <TextInput style={styles.timePickerInput} value={napStartTime.hour} />
+          <TextInput
+            style={styles.timePickerInput}
+            value={napStartTime.hour}
+            onChangeText={(text) =>
+              setNapStartTime((prev) => ({ ...prev, hour: text }))
+            }
+          />
           <Text>:</Text>
           <TextInput
             style={styles.timePickerInput}
             value={napStartTime.minute}
+            onChangeText={(text) =>
+              setNapStartTime((prev) => ({ ...prev, minute: text }))
+            }
           />
           <TextInput
             style={styles.timePickerInput}
             value={napStartTime.period}
+            onChangeText={(text) =>
+              setNapStartTime((prev) => ({ ...prev, period: text }))
+            }
           />
         </View>
 
         <Text style={styles.subTitle}>Until</Text>
         <View style={styles.timePickerRow}>
-          {/* End Time */}
-          <TextInput style={styles.timePickerInput} value={napEndTime.hour} />
+          <TextInput
+            style={styles.timePickerInput}
+            value={napEndTime.hour}
+            onChangeText={(text) =>
+              setNapEndTime((prev) => ({ ...prev, hour: text }))
+            }
+          />
           <Text>:</Text>
-          <TextInput style={styles.timePickerInput} value={napEndTime.minute} />
-          <TextInput style={styles.timePickerInput} value={napEndTime.period} />
+          <TextInput
+            style={styles.timePickerInput}
+            value={napEndTime.minute}
+            onChangeText={(text) =>
+              setNapEndTime((prev) => ({ ...prev, minute: text }))
+            }
+          />
+          <TextInput
+            style={styles.timePickerInput}
+            value={napEndTime.period}
+            onChangeText={(text) =>
+              setNapEndTime((prev) => ({ ...prev, period: text }))
+            }
+          />
         </View>
       </View>
     </>
@@ -284,3 +378,13 @@ const styles = StyleSheet.create({
 });
 
 export default NoteScreen;
+
+const a = {
+  activities: "Fff",
+  dogId: 2,
+  feedingAmt: "Nothing",
+  feedingTime: 0,
+  napEnd: "2024-11-15T17:00:00.000Z",
+  napStart: "2024-11-15T16:00:00.000Z",
+  note: "Ddd",
+};

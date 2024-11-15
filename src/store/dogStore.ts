@@ -1,29 +1,46 @@
 import { create } from "zustand";
 
-// Dog 기본 데이터
+// Dog 기본 데이터, 강아지 상세 페이지 확인 시 사용
 export interface Dog {
   id: number; // 강아지 ID
-  image: string; // 강아지 이미지 URL
+  img: string; // 강아지 이미지 URL
   name: string; // 강아지 이름
   sex: string; // 성별
   isNeutered: boolean; // 중성화 여부
   bod: string; // 생년월일
   breed: string; // 견종
   medication: string; // 복용 중인 약
-  lastNoteAt: string; // 마지막 메모 작성일
-  lastPicsAt: string; // 마지막 사진 업로드일
-  ownerId: 1; // 주인 ID
+  lastNoteAt: string | null; // 마지막 메모 작성일
+  lastPicsAt: string | null; // 마지막 사진 업로드일
+  ownerId: number; // 주인 ID
+}
+export interface DogFromBackend extends Dog {
+  diaryNoteId: number; // 없으면0
+  diaryPhotoId: number;
+  photoLength: number;
+  diaryNoteStatus: number;
+  diaryPhotoStatus: number;
 }
 
 // [center] 강아지 리스트 저장소
 interface DogStore {
-  dogs: Dog[];
-  setDogs: (dogs: Dog[]) => void;
+  dogs: DogFromBackend[];
+  setDogs: (dogs: DogFromBackend[]) => void;
 }
 
 export const useDogStore = create<DogStore>((set) => ({
   dogs: [],
   setDogs: (dogs) => set({ dogs }),
+}));
+
+// [center] 선택된 단일 강아지 저장소
+interface SelectedDogStore {
+  selectedDog: DogFromBackend | null;
+  setSelectedDog: (dog: DogFromBackend) => void;
+}
+export const useSelectedDogStore = create<SelectedDogStore>((set) => ({
+  selectedDog: null,
+  setSelectedDog: (selectedDog) => set({ selectedDog }),
 }));
 
 // 굳이 필요 없을것 같아서 사용 안함

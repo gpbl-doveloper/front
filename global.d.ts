@@ -8,6 +8,7 @@ export type RootStackParamList = {
   "(main)": undefined;
   "(home)": undefined;
   "(teacher-home)": undefined;
+  DogDetail: undefined;
   // 다른 화면들 추가 가능
   // 예: Home: { userId: string };
 };

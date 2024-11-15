@@ -1,19 +1,25 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { DogForTeacherHomeList } from "@/src/store/dogStore";
+import { DogFromBackend, useSelectedDogStore } from "@/src/store/dogStore";
 import { useNavigation } from "expo-router";
 
 interface DogItemProps {
-  dog: DogForTeacherHomeList;
+  dog: DogFromBackend;
 }
 
 export function DogItem({ dog }: DogItemProps) {
   const navigation = useNavigation();
+  const { setSelectedDog } = useSelectedDogStore();
+
+  const handleTouch = () => {
+    setSelectedDog(dog);
+    navigation.navigate("DogDetail");
+  };
   return (
     <TouchableOpacity
       style={styles.dogItemContainer}
-      onPress={() => navigation.navigate("DogDetail" as never)}
+      onPress={handleTouch}
     >
       <DogImagePlaceholder />
       <View style={styles.dogInfo}>
@@ -21,11 +27,11 @@ export function DogItem({ dog }: DogItemProps) {
         <View style={styles.tasksStatusContainer}>
           <DogStatusInfo
             type="image"
-            statusText={dog.isClassified ? "Classified" : "Not started"}
+            statusText={dog.diaryPhotoStatus ? "Classified" : "Not started"}
           />
           <DogStatusInfo
             type="document"
-            statusText={dog.isDocumented ? "Documented" : "Not started"}
+            statusText={dog.diaryNoteStatus ? "Documented" : "Not started"}
           />
         </View>
       </View>
