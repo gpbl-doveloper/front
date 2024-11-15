@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { ButtonBigSize } from "@/src/components/Buttons";
 import { useAuthStore } from "@/src/store/userStore";
-import { joinController } from "./joinController";
+import { joinController } from "./joinModel";
 import { View } from "react-native";
 import { AuthTextInput } from "@/src/components/TextInputs";
 import { authStyles, EmailPWTextInput } from "../authView";
@@ -63,6 +63,7 @@ export function TwoSideButtons({
   return (
     <>
       {firebaseSuccess ? (
+        // Sign Up By Backend
         <ButtonBigSize
           text="Sign Up"
           onPress={() => joinController.signUp(token, data)}
@@ -70,6 +71,7 @@ export function TwoSideButtons({
           disabled={!email || !password || !name || !phone || !acceptedTerms}
         />
       ) : (
+        // Check Email and Password By Firebase
         <ButtonBigSize
           text="Check Email and Password"
           onPress={() =>

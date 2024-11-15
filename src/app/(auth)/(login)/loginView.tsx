@@ -2,7 +2,7 @@ import { useAuthStore } from "@/src/store/userStore";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { EmailPWTextInput } from "../authView";
 import { ButtonBigSize } from "@/src/components/Buttons";
-import { loginByFirebase } from "./loginModel";
+import { loginTasks } from "./loginModel";
 import { navigationController } from "../authController";
 
 export function LoginFormContainer() {
@@ -14,7 +14,7 @@ export function LoginFormContainer() {
 
       <ButtonBigSize
         text="Sign In"
-        onPress={() => loginByFirebase({ email, password })}
+        onPress={() => loginTasks({ email, password })}
         buttonColor="purple"
         disabled={!email || !password}
       />
