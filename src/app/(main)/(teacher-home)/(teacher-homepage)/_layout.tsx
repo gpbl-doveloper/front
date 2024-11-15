@@ -4,11 +4,11 @@ import { createStackNavigator } from "@react-navigation/stack";
 import TeacherHomePage from "./(main)";
 import SearchPage from "./(search)";
 import DogDetailLayout from "./(dog-detail)/_layout";
-import PhotoSelector from "../../../(photo-selector)";
+import PhotoSelector from "./(dog-detail)/(dog-photo-select)";
 
 const Stack = createStackNavigator();
 
-export default function TeacherHomeLayout() {
+export default function TeacherHomePageLayout() {
   return (
     <NavigationContainer independent={true}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>

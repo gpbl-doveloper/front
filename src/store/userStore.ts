@@ -3,10 +3,13 @@ import { create } from "zustand";
 // 사용자 상태 타입 정의
 export interface User {
   id: number;
+  uid: string; // Firebase Auth의 uid
   name: string;
   role: "PARENT" | "TEACHER"; // 유저의 역할
-  email: string | null;
-  phone: string | null;
+  email: string;
+  phone: string;
+  centerId: number | null;
+  createdAt: string;
 }
 
 export interface UserState {
@@ -27,11 +30,13 @@ export interface AuthState {
   token: string;
   name: string;
   phone: string;
+  role: string;
   setEmail: (email: string) => void;
   setPassword: (password: string) => void;
   setToken: (token: string) => void;
   setName: (name: string) => void;
   setPhone: (phone: string) => void;
+  setRole: (role: string) => void;
 }
 
 // 로그인 후, 유저 정보 저장소
@@ -41,9 +46,11 @@ export const useAuthStore = create<AuthState>((set) => ({
   token: "",
   name: "",
   phone: "",
+  role: "",
   setEmail: (email) => set({ email }),
   setPassword: (password) => set({ password }),
   setToken: (token) => set({ token }),
   setName: (name) => set({ name }),
   setPhone: (phone) => set({ phone }),
+  setRole: (role) => set({ role }),
 }));

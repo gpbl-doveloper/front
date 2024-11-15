@@ -4,25 +4,21 @@ import { CheckboxRow } from "@/src/components/CheckBox";
 import { RadioButtons } from "@/src/components/RadioButtons";
 import { JoinFormView, TwoSideButtons } from "./joinView";
 import { AuthContainer } from "../authView";
-import { navigationController } from "../authController";
 import { useAuthStore } from "@/src/store/userStore";
+import { authNavigationController } from "../../NavigationControllers";
 
 export default function JoinView() {
   const [firebaseSuccess, setFirebaseSuccess] = useState<boolean>(false);
-  const [selectedRole, setSelectedRole] = useState<string>("Parent");
   const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
   const { name, setName, phone, setPhone } = useAuthStore();
+  const { goToSignIn } = authNavigationController();
 
   const roles = ["Parent", "Center"];
 
   return (
     <AuthContainer title="Create account">
       {/* 역할 선택 */}
-      <RadioButtons
-        roles={roles}
-        selectedRole={selectedRole}
-        onSelectRole={setSelectedRole}
-      />
+      <RadioButtons roles={roles} />
 
       {/* 유저 정보 입력 View */}
       <JoinFormView
@@ -44,7 +40,6 @@ export default function JoinView() {
       <TwoSideButtons
         firebaseSuccess={firebaseSuccess}
         setFirebaseSuccess={setFirebaseSuccess}
-        username={name}
         acceptedTerms={acceptedTerms}
       />
 
@@ -52,7 +47,7 @@ export default function JoinView() {
       <AuthPrompt
         message="Already have an account?"
         linkText="Sign In"
-        onPress={navigationController.goToSignIn}
+        onPress={goToSignIn}
       />
     </AuthContainer>
   );

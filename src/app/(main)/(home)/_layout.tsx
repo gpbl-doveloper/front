@@ -3,9 +3,9 @@ import React from "react";
 import { SafeAreaView, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
-import ProfilePage from "./(profile)";
 import DiaryLayout from "./(diary)/_layout";
 import ReservationPage from "./(reservation)";
+import ProfilePage from "../../(profile)";
 
 const Tab = createBottomTabNavigator();
 

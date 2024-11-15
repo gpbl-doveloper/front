@@ -31,7 +31,6 @@ export const joinController = {
 
   // Backend Join
   async signUp(token: string, data: SignUpData) {
-    console.log(token, data);
     try {
       let SignUpData = await postSignUp(token, data); // Backend 처리
       console.log(SignUpData);

@@ -1,5 +1,23 @@
 import "react";
 
+// global.d.ts
+import { NavigatorScreenParams } from "@react-navigation/native";
+
+export type RootStackParamList = {
+  SignIn: undefined;
+  "(main)": undefined;
+  "(home)": undefined;
+  "(teacher-home)": undefined;
+  // 다른 화면들 추가 가능
+  // 예: Home: { userId: string };
+};
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
+
 declare module "react" {
   interface Attributes {
     className?: string;
@@ -15,13 +33,9 @@ declare module "*.png" {
   const value: any;
   export default value;
 }
-declare module 'react-native-snap-carousel' {
-  import { Component } from 'react';
-  import {
-    ViewStyle,
-    StyleProp,
-    FlatListProps,
-  } from 'react-native';
+declare module "react-native-snap-carousel" {
+  import { Component } from "react";
+  import { ViewStyle, StyleProp, FlatListProps } from "react-native";
 
   export interface CarouselProps<T> extends FlatListProps<T> {
     data: T[];
@@ -42,8 +56,15 @@ declare module 'react-native-snap-carousel' {
     containerCustomStyle?: StyleProp<ViewStyle>;
     contentContainerCustomStyle?: StyleProp<ViewStyle>;
     inactiveSlideShift?: number;
-    scrollInterpolator?: (index: number, carouselProps: CarouselProps<T>) => any;
-    slideInterpolatedStyle?: (index: number, animatedValue: any, carouselProps: CarouselProps<T>) => StyleProp<ViewStyle>;
+    scrollInterpolator?: (
+      index: number,
+      carouselProps: CarouselProps<T>
+    ) => any;
+    slideInterpolatedStyle?: (
+      index: number,
+      animatedValue: any,
+      carouselProps: CarouselProps<T>
+    ) => StyleProp<ViewStyle>;
     useScrollView?: boolean;
   }
 
