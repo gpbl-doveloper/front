@@ -1,61 +1,52 @@
+import { FontAwesome } from "@expo/vector-icons";
 import { Image, StyleSheet, Text, View } from "react-native";
 
-// 이거 데이터 들어오는거 보고 수정
+const formatTime = (dateString: string): string => {
+  const date = new Date(dateString);
+  const hours = date.getHours().toString().padStart(2, "0");
+  const minutes = date.getMinutes().toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
 
-interface InfoCardProps {
-  id: number; // 카드 ID
-  subtitle?: string; // 부제목 (선택사항)
-  description: string; // 설명 텍스트
-}
+// 활동 카드 컴포넌트
+export const ActivityCard = ({ activities }: any) => (
+  <View style={styles.diaryCardContainer}>
+    <FontAwesome name="paw" size={24} color="black" />
+    <Text style={styles.diaryCardTitle}>Activities</Text>
+    <Text style={styles.diaryCardDetail}>{activities}</Text>
+  </View>
+);
 
-export function DiaryCards({ id, subtitle, description }: InfoCardProps) {
-  const card = cardData.find((item) => item.id === id);
-  if (!card) return null;
-  return (
-    <View style={styles.diaryCardContainer}>
-      <View style={styles.diaryCardPicText}>
-        <Image
-          source={{ uri: "https://picsum.photos/seed/picsum/200/300" }}
-          style={styles.cardPhotoImage}
-        />
-        <View style={styles.diaryCardTitles}>
-          <Text style={styles.diaryCardTitle}>{card.title}</Text>
-          {card.hasSubTitle && <Text>{subtitle}</Text>}
-        </View>
-      </View>
+// 수면 카드 컴포넌트
+export const SleepCard = ({ napStart, napEnd }: any) => (
+  <View style={styles.diaryCardContainer}>
+    <FontAwesome name="bed" size={24} color="black" />
+    <Text style={styles.diaryCardTitle}>Sleep</Text>
+    <Text style={styles.diaryCardDetail}>
+      {`Took a nap from ${formatTime(napStart)} to ${formatTime(napEnd)}`}
+    </Text>
+  </View>
+);
 
-      <View style={styles.diaryCardDetail}>
-        <Text>{description}</Text>
-      </View>
-    </View>
-  );
-}
-export const cardData = [
-  {
-    id: 1,
-    icon: { uri: "https://picsum.photos/seed/picsum/200/300" },
-    title: "Activities",
-    hasSubTitle: false,
-  },
-  {
-    id: 2,
-    icon: { uri: "https://picsum.photos/seed/picsum/200/300" },
-    title: "Sleep",
-    hasSubTitle: true,
-  },
-  {
-    id: 3,
-    icon: { uri: "https://picsum.photos/seed/picsum/200/300" },
-    title: "Feeding",
-    hasSubTitle: true,
-  },
-  {
-    id: 4,
-    icon: { uri: "https://picsum.photos/seed/picsum/200/300" },
-    title: "Additional Notes",
-    hasSubTitle: false,
-  },
-];
+// 급식 카드 컴포넌트
+export const FeedingCard = ({ feedingTime, feedingAmt }: any) => (
+  <View style={styles.diaryCardContainer}>
+    <FontAwesome name="cutlery" size={24} color="black" />
+    <Text style={styles.diaryCardTitle}>Feeding</Text>
+    <Text style={styles.diaryCardDetail}>
+      {`Had ${feedingTime} meal(s). Ate ${feedingAmt.toLowerCase()} of the food given.`}
+    </Text>
+  </View>
+);
+
+// 추가 메모 카드 컴포넌트
+export const NoteCard = ({ note }: any) => (
+  <View style={styles.diaryCardContainer}>
+    <FontAwesome name="sticky-note" size={24} color="black" />
+    <Text style={styles.diaryCardTitle}>Additional Notes</Text>
+    <Text style={styles.diaryCardDetail}>{note}</Text>
+  </View>
+);
 
 const styles = StyleSheet.create({
   diaryCardTitles: {

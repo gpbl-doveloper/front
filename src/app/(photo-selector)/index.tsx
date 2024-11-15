@@ -1,56 +1,42 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text } from "react-native";
 import * as MediaLibrary from "expo-media-library";
-import { router, useNavigation } from "expo-router";
-import { PhotoList } from "@/src/components/photoGallery/PhotoList";
-import { useAddDiaryStore } from "@/src/store/diaryStore";
+import { useNavigation } from "expo-router";
 import { Header2Buttons } from "@/src/components/Header";
+import { PhotoList } from "./PhotoList";
+import { usePhotoStore } from "@/src/store/photoStore";
+import { getPhotos, postPictures, requestPermission } from "./photoModel";
+import { useUserStore } from "@/src/store/userStore";
 
 export default function PhotoSelector() {
-  const [photos, setPhotos] = useState<MediaLibrary.Asset[]>([]);
-  const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
   const navigator = useNavigation();
+  // 가져온 사진
+  const [photos, setPhotos] = useState<MediaLibrary.Asset[]>([]);
+  // 선택된 사진
+  const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
 
-  //사진 저장할 전역변수
-  const { setInputDiaryFiles } = useAddDiaryStore();
+  // 보낸 사진 저장한 전역변수 (나중에 이거에 해당하는애들은 칠해줌)
+  const { sendedPhotos, setSendedPhotos } = usePhotoStore();
+  const { user } = useUserStore();
 
   //오늘 찍은 사진들만 가져오는 함수
   const getTodayPhotos = async () => {
     // 미디어 권한 요청
-    const { status } = await MediaLibrary.requestPermissionsAsync();
-    if (status !== "granted") {
-      alert("Media library permission is required");
-      return;
-    }
-
-    // 오늘 날짜 가져오기 및 해당 사진들 가져오는 함수
-    const startOfDay = new Date().setHours(-720, 0, 0, 0); //3일 전 날짜, 0으로 변경 예정
+    requestPermission();
 
     // 오늘 찍은 사진들만 가져오기
-    const assets = await MediaLibrary.getAssetsAsync({
-      mediaType: "photo",
-      createdAfter: startOfDay,
-      sortBy: [["creationTime", false]],
-    });
+    const assets = await getPhotos();
 
     // URI 변환을 위한 함수
+    //가져온 사진(asset)들에 대해 추가적인 정보(localUri)를 불러와서 사용
     const assetInfoPromises = assets.assets.map(async (asset) => {
-      const assetInfo = await MediaLibrary.getAssetInfoAsync(asset);
+      const assetInfo = await MediaLibrary.getAssetInfoAsync(asset); //getAssetInfoAsync() -> 개별 asset에 대한 추가적인 정보를 가져오는 함수
       return { ...asset, uri: assetInfo.localUri || asset.uri }; // localUri 사용, 없으면 기본 uri 사용
     });
 
+    // 가져온 사진들 photos에 저장해서 보여주기
     const updatedAssets = await Promise.all(assetInfoPromises);
     setPhotos(updatedAssets); // 변환된 URI 저장
-  };
-
-  useEffect(() => {
-    getTodayPhotos();
-  }, []);
-
-  // 오른쪽 버튼 클릭 시 선택된 사진 전역변수에 저장 후 뒤로가기
-  const handleRightButtonPress = () => {
-    setInputDiaryFiles(selectedPhotos);
-    router.back();
   };
 
   const toggleSelectPhoto = (id: string) => {
@@ -60,6 +46,31 @@ export default function PhotoSelector() {
         : [...prevSelected, id]
     );
   };
+
+  // Upload 버튼 클릭 시 선택된 사진 전역변수에 저장 후 뒤로가기
+  const handleRightButtonPress = async () => {
+    try {
+      if (!user) {
+        console.error("User is not available.");
+        return;
+      }
+      const idToken = user.uid;
+      // 사진 업로드 호출
+      const response = await postPictures({ idToken, selectedPhotos });
+      console.log("Photos uploaded successfully:", response);
+
+      // 업로드된 사진을 전역 상태에 저장
+      setSendedPhotos(selectedPhotos);
+      navigator.goBack();
+    } catch (error) {
+      console.error("Error in handleRightButtonPress:", error);
+      alert("Failed to upload photos. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    getTodayPhotos();
+  }, []);
 
   return (
     <View style={styles.container}>

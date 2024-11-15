@@ -1,32 +1,31 @@
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useAuthStore } from "../store/userStore";
 
 interface RadioButtonsProps {
   roles: string[];
-  selectedRole: string;
-  onSelectRole: (role: string) => void;
 }
-export function RadioButtons({
-  roles,
-  selectedRole,
-  onSelectRole,
-}: RadioButtonsProps) {
+export function RadioButtons({ roles }: RadioButtonsProps) {
+  const { role, setRole } = useAuthStore();
+
   return (
     <View style={styles.roleSelectionContainer}>
-      {roles.map((role) => (
+      {roles.map((keyRole) => (
         <TouchableOpacity
-          key={role}
+          key={keyRole}
           style={styles.roleButton}
-          onPress={() => onSelectRole(role)}
+          onPress={() => setRole(keyRole.toUpperCase())}
         >
           <Ionicons
             name={
-              selectedRole === role ? "radio-button-on" : "radio-button-off"
+              role.toUpperCase() === keyRole.toUpperCase()
+                ? "radio-button-on"
+                : "radio-button-off"
             }
             size={20}
             color="black"
           />
-          <Text style={styles.roleText}>{role}</Text>
+          <Text style={styles.roleText}>{keyRole}</Text>
         </TouchableOpacity>
       ))}
     </View>

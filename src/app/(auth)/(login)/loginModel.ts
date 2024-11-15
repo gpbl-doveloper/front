@@ -1,44 +1,22 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/firebaseConfig";
-import { createAuthFormData } from "@/src/utils/formDataUtils";
-import { API_URL } from "@/src/apis/apiDiary";
-import { postData } from "@/src/utils/apiUtils";
+import { postSignIn } from "@/src/apis/apiAuth";
+import { loginByFirebase } from "@/src/apis/apiFirebase";
 
-interface LoginModelProps {
+export interface LoginModelProps {
   email: string;
   password: string;
+  setIdToken: (idToken: string) => void;
 }
 
-export const loginByFirebase = async ({ email, password }: LoginModelProps) => {
-  try {
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
+export const loginTasks = async ({
+  email,
+  password,
+  setIdToken,
+}: LoginModelProps) => {
+  // email, password 사용해서 Firebase에서 idToken 불러오기
+  const idToken = loginByFirebase({ email, password, setIdToken });
+  setIdToken(await idToken);
+  // idToken을 사용해서 백엔드 로그인 처리
+  const userData = await postSignIn(await idToken);
 
-    const user = userCredential.user;
-    console.log("Login Success At loginByFirebase");
-    return user;
-  } catch (error) {
-    console.error("Login Failed", error);
-    throw error;
-  }
+  return userData;
 };
-
-export async function loginByBackend(email: string, password: string) {
-  try {
-    const loginData = {
-      user_id: email,
-      password: password,
-    };
-
-    const response = await postData(`${API_URL}/auth/login`, loginData);
-    console.log("Login Success At loginByBackend");
-
-    return response?.data;
-  } catch (error) {
-    console.error("Login Failed At loginByBackend");
-    throw error;
-  }
-}

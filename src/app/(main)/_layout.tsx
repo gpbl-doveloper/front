@@ -3,7 +3,8 @@ import React from "react";
 import { View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import ParentsHomeLayout from "./(home)/_layout";
-import TeacherHomeLayout from "./(teacher-home)/(teacher-homepage)/_layout";
+import DogProfileScreen from "./(dogs)";
+import TeacherHomeLayout from "./(teacher-home)/_layout";
 
 const Stack = createStackNavigator();
 export default function MainLayout() {
@@ -14,18 +15,9 @@ export default function MainLayout() {
           headerShown: false,
         }}
       >
-        <Stack.Screen
-          name="(home)"
-          options={{
-            title: "Home",
-          }}
-          component={ParentsHomeLayout}
-        />
-        <Stack.Screen
-          name="(teacher-home)"
-          options={{ title: "Teacher's Home" }}
-          component={TeacherHomeLayout}
-        />
+        <Stack.Screen name="(home)" component={ParentsHomeLayout} />
+        <Stack.Screen name="(teacher-home)" component={TeacherHomeLayout} />
+        <Stack.Screen name="(dogs)" component={DogProfileScreen} />
       </Stack.Navigator>
     </View>
   );

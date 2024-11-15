@@ -1,35 +1,44 @@
-import axios from "axios";
-import Constants from "expo-constants";
+import { AxiosRequestConfig } from "axios";
+import { handleApiError } from "./utils/errorHandler";
+import axiosInstance from "./utils/axiosInstance";
 
-const appConfig = Constants.expoConfig?.extra;
-
-export const postSignUp = async (idToken: any, data: any) => {
-  // error in apiURL
-  if (!appConfig || !appConfig.apiUrl) {
-    console.error("API_URL이 설정되지 않았습니다.");
-    throw new Error("API_URL이 설정되지 않았습니다.");
-  }
-
+/**
+ * 재사용 가능한 API 요청 함수
+ * @param endpoint API 엔드포인트
+ * @param idToken 인증 토큰
+ * @param data 요청 본문 데이터 (선택 사항)
+ * @returns API 응답 데이터
+ */
+export const apiAuthRequest = async (
+  endpoint: string,
+  idToken: string,
+  data?: any,
+  method: AxiosRequestConfig["method"] = "post"
+) => {
   try {
-    const response = await axios.post("api/auth/signup", data, {
-      baseURL: `${appConfig.apiUrl}`,
+    const response = await axiosInstance({
+      url: endpoint,
+      method,
       headers: {
         Authorization: `Bearer ${idToken}`,
-        "Content-Type": "application/json",
       },
+      data,
     });
     console.log(response.data);
     return response.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error(
-        "Axios error:",
-        error.response?.status,
-        error.response?.data
-      );
-    } else {
-      console.error("Unknown error:", error);
-    }
-    throw error;
+    handleApiError(error, "apiAuth"); // 공통 에러 처리 함수 호출
   }
 };
+
+// postSignIn 함수
+export const postSignIn = async (idToken: string) => {
+  // console.log(idToken);
+  return apiAuthRequest("api/auth/login", idToken);
+};
+
+// postSignUp 함수
+export const postSignUp = async (idToken: string, data: any) => {
+  return apiAuthRequest("api/auth/signup", idToken, data);
+};
+

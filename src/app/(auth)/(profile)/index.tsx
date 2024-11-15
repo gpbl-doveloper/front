@@ -2,8 +2,13 @@ import React from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ButtonCircleShape } from "@/src/components/Buttons";
+import { useUserStore } from "@/src/store/userStore";
 
 function ProfilePage() {
+  const { user, resetUser } = useUserStore();
+
+  if (!user) return;
+
   return (
     <View style={styles.container}>
       {/* 프로필 이미지 및 수정 아이콘 */}
@@ -21,14 +26,9 @@ function ProfilePage() {
 
       {/* 프로필 정보 */}
       <View style={styles.infoContainer}>
-        <ProfileInfo label="Name" value="PBL A" />
-        <ProfileInfo label="Username" value="Dovelopers" />
-        <ProfileInfo label="Phone" value="+1 123 456 7890" />
-        <ProfileInfo label="Email" value="name@domain.com" />
-        <ProfileInfo
-          label="Address"
-          value={`400 Spectrum Center\nwework\nCA, Irvine , US`}
-        />
+        <ProfileInfo label="Name" value={user.name} />
+        <ProfileInfo label="Phone" value={user.phone} />
+        <ProfileInfo label="Email" value={user.email} />
       </View>
 
       {/* 로그아웃 버튼 */}
@@ -41,7 +41,9 @@ function ProfilePage() {
       <ButtonCircleShape
         text="Sign out"
         buttonColor="black"
-        onPress={() => {}}
+        onPress={() => {
+          resetUser();
+        }}
         width="100%"
       />
     </View>
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 50,
     alignItems: "center",
-    justifyContent: "space-between",
+    gap: 20,
   },
   imageContainer: {
     position: "relative",
