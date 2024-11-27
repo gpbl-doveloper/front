@@ -17,7 +17,8 @@ function ProfilePage() {
         <Image
           style={styles.profileImage}
           source={{
-            uri: "https://picsum.photos/seed/picsum/200/300", // 기본 프로필 이미지 URL
+            // uri: selectedDog.img, // 기본 프로필 이미지 URL
+            uri: "https://picsum.photos/id/237/200/300", // 기본 프로필 이미지 URL
           }}
         />
       </View>

@@ -1,11 +1,19 @@
-import { getDiary } from "@/src/apis/apiDiary";
+import {DiaryRequestParams, getParentDiary} from "../../../../apis/apiDiaries/get";
 
-export const getDiaryfromAPI = async () => {
-  try {
-    const result = getDiary({ id: 1, date: "2024-11-15", idToken: "1234" });
+export const getDiaryfromAPI = async ({
+                                          dogId,
+                                          date,
+                                          idToken,
+                                      }: DiaryRequestParams) => {
+    try {
+        const result = await getParentDiary({
+            dogId: dogId,
+            date: date,
+            idToken: idToken,
+        });
 
-    return result;
-  } catch (error) {
-    console.error(error);
-  }
+        return result;
+    } catch (error) {
+        console.error(error);
+    }
 };

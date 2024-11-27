@@ -8,7 +8,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Alert,
 } from "react-native";
 import { postNotetoBackend } from "./writeNoteModel";
 import { useFirebaseAuth } from "@/src/store/userStore";

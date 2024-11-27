@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
 import { ParentHomeContainer } from "../parentHomeStyles";
 import { ReservationDate } from "../../(teacher-home)/(reservation)/reservationView";
@@ -11,10 +11,30 @@ import {
 import CustomCarousel from "@/src/components/Carousel";
 import { useNavigation } from "expo-router";
 import { useSingleDiaryStore } from "@/src/store/diaryStore";
+import { getDiaryfromAPI } from "./parentDiaryModel";
+import { useFirebaseAuth } from "@/src/store/userStore";
 
 export default function TodayScreen() {
   const navigation = useNavigation();
-  const { diary } = useSingleDiaryStore();
+  const { diary, setDiary } = useSingleDiaryStore();
+  const { idToken } = useFirebaseAuth();
+
+  const getDiary = async () => {
+    const getDiaryResult = await getDiaryfromAPI({
+      dogId: 1,
+      // date: "2024-11-15",
+      idToken: idToken,
+    });
+    return getDiaryResult;
+  };
+
+  useEffect(() => {
+    getDiary().then((result) => {
+      setDiary(result.data.diaryNote);
+      console.log("diary : ", result);
+    });
+  }, []);
+
   return (
     <ParentHomeContainer>
       <ReservationDate>
@@ -22,7 +42,7 @@ export default function TodayScreen() {
           onPress={() => navigation.navigate("/(dog-profile)/index" as never)}
         >
           <Image
-            source={{ uri: "https://picsum.photos/seed/picsum/200/300" }}
+            source={{ uri: "https://picsum.photos/id/237/200/300" }}
             style={styles.profileImage}
           />
         </TouchableOpacity>
@@ -31,15 +51,19 @@ export default function TodayScreen() {
       <View style={styles.carouselView}>
         <CustomCarousel />
       </View>
-      <View style={styles.diaryCards}>
-        <ActivityCard activities={diary.activities} />
-        <SleepCard napStart={diary.napStart} napEnd={diary.napEnd} />
-        <FeedingCard
-          feedingTime={diary.feedingTime}
-          feedingAmt={diary.feedingAmt}
-        />
-        <NoteCard note={diary.note} />
-      </View>
+      {diary ? (
+        <View style={styles.diaryCards}>
+          <ActivityCard activities={diary.activities} />
+          <SleepCard napStart={diary.napStart} napEnd={diary.napEnd} />
+          <FeedingCard
+            feedingTime={diary.feedingTime}
+            feedingAmt={diary.feedingAmt}
+          />
+          <NoteCard note={diary.note} />
+        </View>
+      ) : (
+        <Text>loading...</Text>
+      )}
     </ParentHomeContainer>
   );
 }

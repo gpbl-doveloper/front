@@ -77,7 +77,8 @@ export default function DogDetailScreen() {
       {/* Report Options */}
       <InfoCard
         title={"Photo"}
-        description={`${selectedDog.photoLength} photos`}
+        description={`0 photos`}
+        // description={`${selectedDog.photoLength} photos`}
         onPress={() => {
           navigation.navigate("PhotoSelector" as never);
         }}

@@ -35,30 +35,10 @@ export const useDogStore = create<DogStore>((set) => ({
 
 // [center] 선택된 단일 강아지 저장소
 interface SelectedDogStore {
-  selectedDog: DogFromBackend | null;
-  setSelectedDog: (dog: DogFromBackend) => void;
+  selectedDog: DogFromBackend | Dog | null;
+  setSelectedDog: (dog: DogFromBackend | Dog) => void;
 }
 export const useSelectedDogStore = create<SelectedDogStore>((set) => ({
   selectedDog: null,
   setSelectedDog: (selectedDog) => set({ selectedDog }),
 }));
-
-// 굳이 필요 없을것 같아서 사용 안함
-// 어차피 한 페이지 내에서 추가할 데이터를 여기다 저장할 필요 x
-// // [parent] 강아지 정보 입력 저장소
-// export const useDogFormStore = create((set) => ({
-//   dog: {
-//     id: 1,
-//     image: "",
-//     name: "",
-//     Sex: "",
-//     isNeutered: false,
-//     bod: "",
-//     breed: "",
-//     medication: "",
-//     lastNoteAt: "",
-//     lastPicsAt: "",
-//     ownerId: 1,
-//   },
-//   setDog: (dog: Dog) => set({ dog }),
-// }));

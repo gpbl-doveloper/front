@@ -6,7 +6,7 @@ import { Header2Buttons } from "@/src/components/Header";
 import { PhotoList } from "./PhotoList";
 import { usePhotoStore } from "@/src/store/photoStore";
 import { getPhotos, postPictures, requestPermission } from "./photoModel";
-import { useUserStore } from "@/src/store/userStore";
+import { useFirebaseAuth } from "@/src/store/userStore";
 
 export default function PhotoSelector() {
   const navigator = useNavigation();
@@ -17,7 +17,7 @@ export default function PhotoSelector() {
 
   // 보낸 사진 저장한 전역변수 (나중에 이거에 해당하는애들은 칠해줌)
   const { sendedPhotos, setSendedPhotos } = usePhotoStore();
-  const { user } = useUserStore();
+  const { idToken } = useFirebaseAuth();
 
   //오늘 찍은 사진들만 가져오는 함수
   const getTodayPhotos = async () => {
@@ -50,11 +50,6 @@ export default function PhotoSelector() {
   // Upload 버튼 클릭 시 선택된 사진 전역변수에 저장 후 뒤로가기
   const handleRightButtonPress = async () => {
     try {
-      if (!user) {
-        console.error("User is not available.");
-        return;
-      }
-      const idToken = user.uid;
       // 사진 업로드 호출
       const response = await postPictures({ idToken, selectedPhotos });
       console.log("Photos uploaded successfully:", response);

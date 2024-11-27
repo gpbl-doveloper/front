@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, View } from "react-native";
 import { StatusFilter } from "@/components/FilterBar";
-import { DogItem } from "./DogItem";
+import { DogItem, DogStatusInfoList } from "./DogItem";
 import { mainStyles, SearchBarAndPictureButton } from "./mainView";
 import { DogFromBackend, useDogStore } from "@/src/store/dogStore";
 import { useFirebaseAuth, useUserStore } from "@/src/store/userStore";
@@ -79,7 +79,17 @@ export default function TeacherHomePage() {
 
       <FlatList
         data={filteredDogs}
-        renderItem={({ item }) => <DogItem dog={item} />}
+        renderItem={({ item }) => (
+          <DogItem
+            dog={item}
+            children={
+              <DogStatusInfoList
+                diaryPhotoStatus={item.diaryPhotoStatus}
+                diaryNoteStatus={item.diaryNoteStatus}
+              />
+            }
+          />
+        )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={mainStyles.listContainer}
       />

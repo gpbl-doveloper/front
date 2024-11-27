@@ -21,9 +21,9 @@ const CustomCarousel = () => {
   const flatListRef = useRef<FlatList>(null);
 
   const images: ImageItem[] = [
-    { uri: "https://picsum.photos/seed/picsum/200/300" },
-    { uri: "https://picsum.photos/seed/picsum/200/300" },
-    { uri: "https://picsum.photos/seed/picsum/200/300" },
+    { uri: "https://picsum.photos/id/237/200/300" },
+    { uri: "https://fastly.picsum.photos/id/40/4106/2806.jpg?hmac=MY3ra98ut044LaWPEKwZowgydHZ_rZZUuOHrc3mL5mI" },
+    { uri: "https://fastly.picsum.photos/id/169/2500/1662.jpg?hmac=3DBeyQbiPxO88hBdhIuFPbvy2ff7cm9vmnq8lPIL9Ug" },
   ];
 
   const onViewableItemsChanged = useRef(
