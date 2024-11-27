@@ -62,7 +62,7 @@ export default function TodayScreen() {
           <NoteCard note={diary.note} />
         </View>
       ) : (
-        <Text>loading...</Text>
+        <Text>Today Diary is not found...</Text>
       )}
     </ParentHomeContainer>
   );

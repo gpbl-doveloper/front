@@ -77,7 +77,6 @@ export default function AddDog() {
   };
 
   const renderPhotoPreview = () => {
-    console.log("Selected Photos ㄹ:", selectedPhotos);
     if (selectedPhotos.length === 0) {
       return (
         <TouchableOpacity
@@ -120,26 +119,42 @@ export default function AddDog() {
   };
 
   const HandleSubmit = async () => {
-    const isoDate = new Date(
-      `${birthYear}-${birthMonth}-${birthDay}T00:00:00.000Z`
-    ).toISOString();
+    try {
+      // 데이터 유효성 검증
+      if (!dogName || !gender || !breed || !selectedPhotos.length) {
+        throw new Error("필수 정보를 모두 입력해주세요.");
+      }
 
-    const dogDetailsData: PostParentDogProps = {
-      name: dogName,
-      sex: gender,
-      isNeutered: neutering === "Done",
-      breed: breed,
-      bod: isoDate,
-    };
+      const isoDate = new Date(
+        `${birthYear}-${birthMonth}-${birthDay}T00:00:00.000Z`
+      ).toISOString();
 
-    const result = await postParentDogAPI(
-      idToken,
-      selectedPhotos,
-      dogDetailsData
-    );
-    console.log("result", result);
+      const dogDetailsData: PostParentDogProps = {
+        name: dogName,
+        sex: gender,
+        isNeutered: neutering === "Done",
+        breed: breed,
+        bod: isoDate,
+      };
+
+      const result = await postParentDogAPI(
+        idToken,
+        selectedPhotos,
+        dogDetailsData
+      );
+
+      // 성공 처리
+      alert("강아지 등록이 완료되었습니다!");
+      console.log("결과다 임마 : ", result);
+      // 필요한 페이지로 이동
+      navigation.navigate("SelectDog" as never);
+    } catch (error) {
+      // 사용자에게 에러 메시지 표시
+      alert(
+        error instanceof Error ? error.message : "강아지 등록에 실패했습니다."
+      );
+    }
   };
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Add Dog</Text>

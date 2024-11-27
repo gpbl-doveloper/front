@@ -18,6 +18,7 @@ export type RootStackParamList = {
   AddDog: undefined;
   AddCenterPage: undefined;
   PhotoSelector: undefined;
+  
 
   // 공통
   Home: undefined;

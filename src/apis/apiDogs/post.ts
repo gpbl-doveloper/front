@@ -17,17 +17,23 @@ export const postParentDog = async (
   dogDetails: PostParentDogProps
 ) => {
   try {
+    console.log("photoUris : ", photoUris);
     // FormData 생성
     const formData = new FormData();
 
     // 사진 파일 추가
+    // 각 사진 URI를 직접 FormData에 추가
     photoUris.forEach((photoUri, index) => {
-      const photoFile = {
-        uri: photoUri, // 사진의 로컬 URI
-        type: "image/jpeg", // MIME 타입 (jpg인 경우)
-        name: `dog_photo_${index + 1}.jpg`, // 각 사진의 파일 이름
-      };
-      formData.append("photos", photoFile as any); // 서버에서 기대하는 배열 필드 이름 사용
+      // 파일 이름 추출
+      const originalFileName =
+        photoUri.split("/").pop() || `dog_photo_${index + 1}`;
+
+      // FormData에 직접 파일 객체 추가
+      formData.append("files", {
+        uri: photoUri,
+        name: originalFileName,
+        type: "image/jpeg", // 또는 파일 타입에 따라 동적으로 설정
+      } as any);
     });
 
     // 강아지 정보 추가
