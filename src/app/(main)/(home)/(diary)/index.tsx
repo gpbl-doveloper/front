@@ -1,5 +1,12 @@
-import React, { useEffect } from "react";
-import { View, Image, StyleSheet, TouchableOpacity, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import { ParentHomeContainer } from "../parentHomeStyles";
 import { ReservationDate } from "../../(teacher-home)/(reservation)/reservationView";
 import {
@@ -13,27 +20,47 @@ import { useNavigation } from "expo-router";
 import { useSingleDiaryStore } from "@/src/store/diaryStore";
 import { getDiaryfromAPI } from "./parentDiaryModel";
 import { useFirebaseAuth } from "@/src/store/userStore";
+import { useSelectedDogStore } from "@/src/store/dogStore";
 
 export default function TodayScreen() {
   const navigation = useNavigation();
   const { diary, setDiary } = useSingleDiaryStore();
   const { idToken } = useFirebaseAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { selectedDog } = useSelectedDogStore();
 
   const getDiary = async () => {
-    const getDiaryResult = await getDiaryfromAPI({
-      dogId: 1,
-      // date: "2024-11-15",
-      idToken: idToken,
-    });
-    return getDiaryResult;
+    try {
+      if (!selectedDog) {
+        setError("선택된 강아지가 없습니다.");
+        return;
+      }
+      setIsLoading(true);
+      setError(null);
+      const getDiaryResult = await getDiaryfromAPI({
+        dogId: selectedDog.id,
+        idToken: idToken,
+      });
+      return getDiaryResult;
+    } catch (error) {
+      setError("다이어리를 불러오는데 실패했습니다.");
+      console.error("Diary fetch error:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    getDiary().then((result) => {
-      setDiary(result.data.diaryNote);
-      console.log("diary : ", result);
-    });
-  }, []);
+    if (idToken) {
+      getDiary().then((result) => {
+        if (result?.data?.diaryNote) {
+          setDiary(result.data.diaryNote);
+          console.log("diary : ", result);
+        }
+      });
+    }
+  }, [idToken]);
 
   return (
     <ParentHomeContainer>
@@ -51,7 +78,11 @@ export default function TodayScreen() {
       <View style={styles.carouselView}>
         <CustomCarousel />
       </View>
-      {diary ? (
+      {isLoading ? (
+        <ActivityIndicator size="large" />
+      ) : error ? (
+        <Text style={styles.errorText}>{error}</Text>
+      ) : diary ? (
         <View style={styles.diaryCards}>
           <ActivityCard activities={diary.activities} />
           <SleepCard napStart={diary.napStart} napEnd={diary.napEnd} />
@@ -84,5 +115,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     marginTop: 20,
     gap: 20,
+  },
+  errorText: {
+    color: "red",
+    textAlign: "center",
+    marginTop: 20,
   },
 });

@@ -10,7 +10,7 @@ export function AuthContainer({ children, title, logo }: any) {
       <View style={authStyles.paddingContainer}>
         {logo ? (
           <View style={authStyles.logoContainer}>
-            <MainLogo width={200} height={60} />
+            <MainLogo width={280} height={100} />
           </View>
         ) : (
           <Text style={authStyles.title}>{title}</Text>
@@ -48,11 +48,11 @@ export function EmailPWTextInput() {
 export const authStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#FFF7E9",
     justifyContent: "center",
   },
   paddingContainer: {
-    padding: 12,
+    paddingHorizontal: 12,
   },
   title: {
     fontSize: 32,
@@ -60,8 +60,9 @@ export const authStyles = StyleSheet.create({
     marginBottom: 20,
   },
   logoContainer: {
-    marginBottom: 10,
     alignItems: "center",
+    marginTop: -60,
+    marginBottom: -40,
   },
   authFormContainer: {
     gap: 16,

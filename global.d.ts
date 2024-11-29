@@ -12,13 +12,15 @@ export type RootStackParamList = {
   SignUp: undefined;
 
   // home - parents
+  ParentsHome: undefined; // 부모 홈 레이아웃
   "(home)": undefined;
   "(main)": { screen: string };
   SelectDogLayout: undefined;
   AddDog: undefined;
   AddCenterPage: undefined;
   PhotoSelector: undefined;
-  
+  AddReservation: undefined;
+  ChooseDate: undefined;
 
   // 공통
   Home: undefined;

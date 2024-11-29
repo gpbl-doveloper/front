@@ -6,6 +6,7 @@ type SizeProps = {
   width: number;
   height: number;
 };
+
 export function MainLogo({ width, height }: SizeProps) {
   return (
     <View style={logoStyles.container}>

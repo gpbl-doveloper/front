@@ -1,6 +1,7 @@
 import axios from "axios";
 import appConfig from "../utils/apiConfig";
 import { handleApiError } from "../utils/errorHandler";
+import * as ImageManipulator from "expo-image-manipulator";
 
 export interface PostParentDogProps {
   name: string;
@@ -17,22 +18,32 @@ export const postParentDog = async (
   dogDetails: PostParentDogProps
 ) => {
   try {
-    console.log("photoUris : ", photoUris);
+    // 이미지 변환 처리
+    const processedPhotos = await Promise.all(
+      photoUris.map(async (photoUri) => {
+        const manipResult = await ImageManipulator.manipulateAsync(
+          photoUri,
+          [], // 추가적인 변환 작업이 필요하다면 여기에 추가
+          {
+            compress: 0.7, // 압축률 (0-1)
+            format: ImageManipulator.SaveFormat.JPEG,
+          }
+        );
+        return manipResult.uri;
+      })
+    );
     // FormData 생성
     const formData = new FormData();
 
-    // 사진 파일 추가
-    // 각 사진 URI를 직접 FormData에 추가
-    photoUris.forEach((photoUri, index) => {
-      // 파일 이름 추출
+    // 이미지 파일 추가
+    // jpg 파일로 통일
+    processedPhotos.forEach((photoUri, index) => {
       const originalFileName =
         photoUri.split("/").pop() || `dog_photo_${index + 1}`;
-
-      // FormData에 직접 파일 객체 추가
       formData.append("files", {
         uri: photoUri,
         name: originalFileName,
-        type: "image/jpeg", // 또는 파일 타입에 따라 동적으로 설정
+        type: "image/jpeg",
       } as any);
     });
 

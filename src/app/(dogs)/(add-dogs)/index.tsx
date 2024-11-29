@@ -145,7 +145,6 @@ export default function AddDog() {
 
       // 성공 처리
       alert("강아지 등록이 완료되었습니다!");
-      console.log("결과다 임마 : ", result);
       // 필요한 페이지로 이동
       navigation.navigate("SelectDog" as never);
     } catch (error) {
@@ -214,7 +213,7 @@ export default function AddDog() {
       {/* Submit Button */}
       <ButtonBigSize
         text={"Submit"}
-        buttonColor={"black"}
+        buttonColor={"brown"}
         onPress={HandleSubmit}
         disabled={false}
       />
@@ -332,11 +331,12 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     padding: 20,
+    paddingTop: 50,
     backgroundColor: "#fdf3e7", // 배경색
     gap: 8,
   },
   title: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: "bold",
     marginBottom: 10,
   },

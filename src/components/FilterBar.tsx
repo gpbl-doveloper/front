@@ -59,14 +59,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 24,
-    backgroundColor: "#E5E5E5",
+    backgroundColor: "#FEDDCC",
     marginHorizontal: 5,
   },
   selectedButton: {
-    backgroundColor: "#000",
+    backgroundColor: "#55382A",
   },
   text: {
-    color: "#A3A3A3",
+    color: "#55382A",
     fontWeight: "600",
     fontSize: 16,
   },

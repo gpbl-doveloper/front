@@ -18,7 +18,6 @@ export const loginByFirebase = async ({
     );
     const idToken = await userCredential.user.getIdToken();
 
-    console.log("Login Success At Firebase");
     return idToken;
   } catch (error) {
     console.error("Login Failed At Firebase", error);
