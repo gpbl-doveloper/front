@@ -1,6 +1,6 @@
 import { SearchInputBar } from "@/src/components/SearchInputBar";
 import { useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { findCenterAPI } from "./addReservationModel";
 import { useFirebaseAuth } from "@/src/store/userStore";
 import { ReservationCard } from "../reservationView";
@@ -32,7 +32,7 @@ export function AddReservationPage() {
       />
       <ScrollView style={styles.centerList}>
         {centerList.map((center: Center) => (
-          <ReservationCard center={center} />
+          <ReservationCard key={center.id} center={center} />
         ))}
       </ScrollView>
     </View>

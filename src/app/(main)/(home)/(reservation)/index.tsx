@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from "react-native";
-import { BookedCard } from "./reservationView";
+import { BookedCard, NoCardComponent } from "./reservationView";
 import { StatusFilter } from "@/src/components/FilterBar";
 import { useFirebaseAuth } from "@/src/store/userStore";
 import { parentReservationAPI } from "./reservationModel";
@@ -30,10 +30,10 @@ export function ReservationPage() {
   const [reservationList, setReservationList] = useState<Reservation[]>([]);
   const [historyList, setHistoryList] = useState<Reservation[]>([]);
   const { idToken } = useFirebaseAuth();
+
   const getReservationData = async () => {
     const response = await parentReservationAPI(idToken);
     setReservationList(response);
-    console.log(response);
   };
 
   useEffect(() => {
@@ -48,22 +48,32 @@ export function ReservationPage() {
         onStatusChange={setStatus}
       />
       <ScrollView style={styles.content}>
-        <TouchableOpacity
-          style={styles.reservationButton}
-          onPress={() => navigation.navigate("AddReservation")}
-        >
-          <Text style={styles.buttonText}>Make Reservation</Text>
-          <Ionicons name="chevron-forward" size={24} color="#55382A" />
-        </TouchableOpacity>
-        {status === "History"
-          ? historyList.map((reservation: Reservation) => {
+        {status === "History" ? (
+          historyList.length === 0 ? (
+            <NoCardComponent text="history" />
+          ) : (
+            historyList.map((reservation: Reservation) => {
               return (
                 <BookedCard key={reservation.id} reservation={reservation} />
               );
             })
-          : reservationList.map((reservation: Reservation) => (
+          )
+        ) : reservationList.length === 0 ? (
+          <NoCardComponent text="reservation" />
+        ) : (
+          <>
+            <TouchableOpacity
+              style={styles.reservationButton}
+              onPress={() => navigation.navigate("AddReservation")}
+            >
+              <Text style={styles.buttonText}>Make Reservation</Text>
+              <Ionicons name="chevron-forward" size={24} color="#55382A" />
+            </TouchableOpacity>
+            {reservationList.map((reservation: Reservation) => (
               <BookedCard key={reservation.id} reservation={reservation} />
             ))}
+          </>
+        )}
       </ScrollView>
     </View>
   );

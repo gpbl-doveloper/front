@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Dog, DogFromBackend, useSelectedDogStore } from "@/src/store/dogStore";
 import { useNavigation } from "expo-router";
-import { RootStackParamList } from "@/global";
 
 interface DogItemProps {
   dog: DogFromBackend | Dog;

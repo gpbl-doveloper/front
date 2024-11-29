@@ -1,7 +1,8 @@
-import { useNavigation } from "@react-navigation/native";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Center } from "./(add-reservation)";
 import { Reservation } from ".";
+import { useSelectedCenterStore } from "@/src/store/centerStore";
 
 export function BookedCard({ reservation }: { reservation: Reservation }) {
   return (
@@ -26,7 +27,9 @@ export function BookedCard({ reservation }: { reservation: Reservation }) {
 // search 결과 카드 <- 나중에 이거 갖다버리고 하나의 Card로 통일하기
 export function ReservationCard({ center }: { center: Center }) {
   const navigation = useNavigation();
+  const { setCenterId } = useSelectedCenterStore();
   const handleReservation = () => {
+    setCenterId(center.id);
     navigation.navigate("ChooseDate");
   };
 
@@ -45,6 +48,14 @@ export function ReservationCard({ center }: { center: Center }) {
       <TouchableOpacity style={styles.callButton} onPress={handleReservation}>
         <Text style={styles.callButtonText}>RESERVE</Text>
       </TouchableOpacity>
+    </View>
+  );
+}
+
+export function NoCardComponent({ text }: { text: string }) {
+  return (
+    <View style={styles.noHistory}>
+      <Text style={styles.noHistoryText}>No {text}</Text>
     </View>
   );
 }
@@ -104,5 +115,13 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontWeight: "bold",
     fontSize: 14,
+  },
+  noHistory: {
+    justifyContent: "center",
+    alignItems: "center",
+    minHeight: "100%",
+  },
+  noHistoryText: {
+    fontSize: 16,
   },
 });
