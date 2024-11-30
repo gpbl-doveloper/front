@@ -13,17 +13,18 @@ export const getParentDiary = async ({
   date,
   idToken,
 }: DiaryRequestParams) => {
-  let apiURL = `api/diary?dog=${dogId}&date=${date}`;
+  const params = new URLSearchParams({
+    dog: dogId.toString(),
+    ...(date && { date }),
+  });
+
+  const apiURL = `api/diary?${params.toString()}`;
   try {
-    if (!date) {
-      apiURL = `api/diary?dog=${dogId}`;
-    }
     const response = await axiosInstance.get(apiURL, {
       headers: {
         Authorization: `Bearer ${idToken}`,
       },
     });
-    // console.log("Get Diary successful:", response.data);
     return response.data;
   } catch (error) {
     handleApiError(error, "getDiary");

@@ -21,13 +21,14 @@ const authStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    gap: 10,
   },
   signUpText: {
     color: "#666",
     fontSize: 14,
   },
   signUpLink: {
-    color: "#6B4EFF",
+    color: "#55382A",
     fontSize: 14,
     fontWeight: "600",
   },

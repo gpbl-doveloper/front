@@ -2,13 +2,11 @@ import { SearchItem, useSearchStore } from "@/src/store/searchStore";
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   FlatList,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
 import { DogItem } from "../(main)/DogItem";
 import { DogForTeacherHomeList } from "@/src/store/dogStore";
 
@@ -24,41 +22,6 @@ export function SearchResult({
       keyExtractor={(item) => item.id.toString()}
       contentContainerStyle={styles.listContainer}
     />
-  );
-}
-
-export function SearchInputBar({
-  searchText,
-  setSearchText,
-  handleSearchSubmit,
-}: {
-  searchText: string;
-  setSearchText: (text: string) => void;
-  handleSearchSubmit: () => void;
-}) {
-  const navigation = useNavigation();
-
-  return (
-    <View style={styles.searchHeader}>
-      <TouchableOpacity
-        style={styles.searchBackButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
-
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Dog name"
-          placeholderTextColor="#A3A3A3"
-          value={searchText}
-          onChangeText={setSearchText}
-          onSubmitEditing={handleSearchSubmit} // 엔터 키 동작 설정
-          returnKeyType="search" // 키보드에서 'search' 버튼 표시
-        />
-      </View>
-    </View>
   );
 }
 
@@ -102,26 +65,6 @@ export function SearchData({
 }
 
 const styles = StyleSheet.create({
-  searchHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    gap: 10,
-    marginBottom: 10,
-  },
-  searchBackButton: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  searchContainer: {
-    flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#F8F9FE",
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    height: 40,
-  },
   searchDeleteButton: {
     width: 40,
     height: 40,
@@ -136,12 +79,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     marginBottom: 4,
-  },
-  searchInput: {
-    flex: 1,
-    fontSize: 16,
-    marginLeft: 10,
-    color: "#333333",
   },
   recentSearchesTitle: {
     fontSize: 16,

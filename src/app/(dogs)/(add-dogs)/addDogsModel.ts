@@ -10,7 +10,6 @@ export const postParentDogAPI = async (
     const result = await postParentDog(idToken, photoUris, dogDetails);
     return result;
   } catch (error) {
-    console.log(error);
     throw error; // 에러를 상위로 전파
   }
 };

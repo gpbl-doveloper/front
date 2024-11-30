@@ -74,6 +74,7 @@ const inputStyles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     fontSize: 16,
+    backgroundColor: "#fff",
   },
   passwordContainer: {
     flexDirection: "row",

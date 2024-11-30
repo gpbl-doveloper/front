@@ -1,138 +1,167 @@
-import React, {useState} from "react";
-import {View, Text, TextInput, StyleSheet, TouchableOpacity} from "react-native";
-import {useNavigation} from "expo-router";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { useNavigation } from "expo-router";
+import { postCenterInfoAPI } from "./centerModel";
+import { useFirebaseAuth } from "@/src/store/userStore";
+
+interface CenterForm {
+  name: string;
+  phone: string;
+  street: string;
+  city: string;
+  zipCode: string;
+  state: string;
+  description: string;
+}
+
+function formatAddress(
+  addressInfo: Pick<CenterForm, "street" | "city" | "state" | "zipCode">
+): string {
+  const { street, city, state, zipCode } = addressInfo;
+  return `${street}, ${city}, ${state} ${zipCode}`;
+}
 
 export default function AddCenterPage() {
-    const navigation = useNavigation();
-    const [form, setForm] = useState({
-        centerName: "",
-        phoneNumber: "",
-        street: "",
-        city: "",
-        zipCode: "",
-        state: "",
-        businessNumber: "",
-        centerDescription: "",
+  const navigation = useNavigation();
+  const [form, setForm] = useState({
+    name: "",
+    phone: "",
+    street: "",
+    city: "",
+    zipCode: "",
+    state: "",
+    description: "",
+  });
+  const { idToken } = useFirebaseAuth();
+
+  const handleInputChange = (key: string, value: string) => {
+    setForm({ ...form, [key]: value });
+  };
+
+  const handleSubmit = () => {
+    const formattedAddress = formatAddress({
+      street: form.street,
+      city: form.city,
+      state: form.state,
+      zipCode: form.zipCode,
     });
 
-    const handleInputChange = (key: string, value: string) => {
-        setForm({...form, [key]: value});
+    const formattedForm = {
+      ...form,
+      address: formattedAddress, // 포매팅된 주소 추가
     };
 
-    const handleSubmit = () => {
-        console.log("Form submitted:", form);
-        // Handle form submission logic
-        navigation.reset({
-            index: 0,
-            routes: [{name: "(main)", params: {screen: "(teacher-home)"}}],
-        });
-    };
+    console.log("Form submitted at AddCenterPage:", formattedForm);
 
-    return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Add Center</Text>
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "(main)", params: { screen: "(teacher-home)" } }],
+    });
+    postCenterInfoAPI(idToken, formattedForm);
+  };
 
-            <TextInput
-                style={styles.input}
-                placeholder="Center name"
-                value={form.centerName}
-                onChangeText={(value) => handleInputChange("centerName", value)}
-            />
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Add Center</Text>
 
-            <TextInput
-                style={styles.input}
-                placeholder="Phone number"
-                keyboardType="phone-pad"
-                value={form.phoneNumber}
-                onChangeText={(value) => handleInputChange("phoneNumber", value)}
-            />
+      <TextInput
+        style={styles.input}
+        placeholder="Center name"
+        value={form.name}
+        onChangeText={(value) => handleInputChange("name", value)}
+      />
 
-            <Text style={styles.label}>Address</Text>
-            <TextInput
-                style={styles.input}
-                placeholder="Street"
-                value={form.street}
-                onChangeText={(value) => handleInputChange("street", value)}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="City"
-                value={form.city}
-                onChangeText={(value) => handleInputChange("city", value)}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="Zip code"
-                keyboardType="number-pad"
-                value={form.zipCode}
-                onChangeText={(value) => handleInputChange("zipCode", value)}
-            />
-            <TextInput
-                style={styles.input}
-                placeholder="State"
-                value={form.state}
-                onChangeText={(value) => handleInputChange("state", value)}
-            />
+      <TextInput
+        style={styles.input}
+        placeholder="Phone number"
+        keyboardType="phone-pad"
+        value={form.phone}
+        onChangeText={(value) => handleInputChange("phone", value)}
+      />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Business number"
-                keyboardType="number-pad"
-                value={form.businessNumber}
-                onChangeText={(value) => handleInputChange("businessNumber", value)}
-            />
+      <Text style={styles.label}>Address</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Street"
+        value={form.street}
+        onChangeText={(value) => handleInputChange("street", value)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="City"
+        value={form.city}
+        onChangeText={(value) => handleInputChange("city", value)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Zip code"
+        keyboardType="number-pad"
+        value={form.zipCode}
+        onChangeText={(value) => handleInputChange("zipCode", value)}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="State"
+        value={form.state}
+        onChangeText={(value) => handleInputChange("state", value)}
+      />
 
-            <TextInput
-                style={styles.input}
-                placeholder="Center Description"
-                value={form.centerDescription}
-                onChangeText={(value) => handleInputChange("centerDescription", value)}
-                multiline
-            />
+      <TextInput
+        style={styles.input}
+        placeholder="Center Description"
+        value={form.description}
+        onChangeText={(value) => handleInputChange("description", value)}
+        multiline
+      />
 
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity>
-        </View>
-    );
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>Submit</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#FFF8E7",
-        padding: 20,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 20,
-        color: "#000",
-    },
-    label: {
-        fontSize: 16,
-        marginVertical: 10,
-        color: "#555",
-    },
-    input: {
-        backgroundColor: "#FFF",
-        borderWidth: 1,
-        borderColor: "#DDD",
-        borderRadius: 5,
-        padding: 10,
-        fontSize: 16,
-        marginBottom: 15,
-    },
-    button: {
-        backgroundColor: "#6B4226",
-        paddingVertical: 15,
-        borderRadius: 5,
-        alignItems: "center",
-    },
-    buttonText: {
-        color: "#FFF",
-        fontSize: 18,
-        fontWeight: "bold",
-    },
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF8E7",
+    padding: 20,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 20,
+    color: "#000",
+  },
+  label: {
+    fontSize: 16,
+    marginVertical: 10,
+    color: "#555",
+  },
+  input: {
+    backgroundColor: "#FFF",
+    borderWidth: 1,
+    borderColor: "#DDD",
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 15,
+  },
+  button: {
+    backgroundColor: "#6B4226",
+    paddingVertical: 15,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#FFF",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
 });
-

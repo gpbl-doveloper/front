@@ -13,7 +13,7 @@ export function ParentHomeContainer({
 export const parentHomeStyles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    backgroundColor: "#F9F9F9",
+    backgroundColor: "#FFF7E9",
     paddingTop: 10,
   },
 });

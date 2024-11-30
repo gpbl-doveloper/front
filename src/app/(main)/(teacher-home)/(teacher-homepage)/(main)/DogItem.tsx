@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Dog, DogFromBackend, useSelectedDogStore } from "@/src/store/dogStore";
 import { useNavigation } from "expo-router";
-import { RootStackParamList } from "@/global";
 
 interface DogItemProps {
   dog: DogFromBackend | Dog;
@@ -16,11 +15,9 @@ export function DogItem({ dog, children }: DogItemProps) {
 
   const handleTouch = () => {
     setSelectedDog(dog);
-    navigation.reset({
-      index: 0,
-      routes: [{ name: "DogDetail" }],
-    });
+    navigation.navigate("DogDetail");
   };
+
   return (
     <TouchableOpacity style={styles.dogItemContainer} onPress={handleTouch}>
       <DogImagePlaceholder />
@@ -65,7 +62,7 @@ export function DogStatusInfoList({
 }
 
 interface DogStatusInfoProps {
-  type: "image" | "document"; // 아이콘 타입을 지정
+  type: "image" | "document";
   statusText: string;
 }
 

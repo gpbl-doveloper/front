@@ -1,15 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ButtonCircleShape } from "@/src/components/Buttons";
 import { useSelectedDogStore } from "@/src/store/dogStore";
+import { StatusFilter } from "@/src/components/FilterBar";
 
 function ProfilePage() {
   const { selectedDog } = useSelectedDogStore();
   if (selectedDog === null) {
     return null;
   }
-  console.log("hi:", selectedDog);
   return (
     <View style={styles.container}>
       {/* 프로필 이미지 및 수정 아이콘 */}
@@ -17,11 +17,16 @@ function ProfilePage() {
         <Image
           style={styles.profileImage}
           source={{
-            uri: "https://picsum.photos/id/237/200/300", // 기본 프로필 이미지 URL
-            // uri: selectedDog.img, // 기본 프로필 이미지 URL
+            uri: selectedDog.img || "https://picsum.photos/id/237/200/300",
           }}
         />
-        <TouchableOpacity style={styles.editIconContainer}>
+        <TouchableOpacity
+          style={styles.editIconContainer}
+          onPress={() => {
+            // 이미지 편집 로직 추가
+            console.log("Edit profile image");
+          }}
+        >
           <Ionicons name="pencil" size={16} color="black" />
         </TouchableOpacity>
       </View>
@@ -38,13 +43,18 @@ function ProfilePage() {
         />
       </View>
 
-      {/* 로그아웃 버튼 */}
-      <ButtonCircleShape
-        text="Edit"
-        buttonColor="whiteBlack"
-        onPress={() => {}}
-        width="100%"
-      />
+      <View style={styles.buttonContainer}>
+        {/* 정보 수정 버튼 */}
+        <ButtonCircleShape
+          text="Edit"
+          buttonColor="whiteBlack"
+          onPress={() => {
+            // 프로필 편집 페이지로 이동
+            console.log("Navigate to edit profile");
+          }}
+          width="100%"
+        />
+      </View>
     </View>
   );
 }
@@ -62,11 +72,11 @@ function ProfileInfo({ label, value }: { label: string; value: string }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 20,
+    backgroundColor: "#FFF7E9",
+    paddingHorizontal: 10,
     paddingTop: 50,
     alignItems: "center",
-    justifyContent: "space-between",
+    gap: 12,
   },
   imageContainer: {
     position: "relative",
@@ -97,6 +107,9 @@ const styles = StyleSheet.create({
   infoContainer: {
     width: "100%",
     marginTop: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 10,
   },
   infoRow: {
     flexDirection: "row",
@@ -118,19 +131,10 @@ const styles = StyleSheet.create({
     width: "60%",
     flexWrap: "wrap",
   },
-  logoutButton: {
-    backgroundColor: "#000000",
-    borderRadius: 100,
-    paddingVertical: 12,
-    paddingHorizontal: 100,
-    marginBottom: 30,
-    width: "90%",
-    alignItems: "center",
-  },
-  logoutText: {
-    fontSize: 16,
-    color: "#FFFFFF",
-    fontWeight: "bold",
+  buttonContainer: {
+    width: "100%",
+    marginTop: 20,
+    gap: 12,
   },
 });
 

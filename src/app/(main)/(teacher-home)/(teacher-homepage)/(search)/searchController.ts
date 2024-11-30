@@ -6,7 +6,6 @@ import {
   addRecentSearch,
 } from "./searchModel";
 
-
 export class SearchController {
   async getSearches(): Promise<RecentSearch[]> {
     try {

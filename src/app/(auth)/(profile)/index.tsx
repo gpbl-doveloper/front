@@ -43,7 +43,7 @@ function ProfilePage() {
       />
       <ButtonCircleShape
         text="Sign out"
-        buttonColor="black"
+        buttonColor="brown"
         onPress={() => {
           navigator.replace("index");
           resetUser();
@@ -67,8 +67,8 @@ function ProfileInfo({ label, value }: { label: string; value: string }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 20,
+    backgroundColor: "#fdf3e7", // 배경색
+    paddingHorizontal: 10,
     paddingTop: 50,
     alignItems: "center",
     gap: 20,
@@ -102,6 +102,9 @@ const styles = StyleSheet.create({
   infoContainer: {
     width: "100%",
     marginTop: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 10,
   },
   infoRow: {
     flexDirection: "row",

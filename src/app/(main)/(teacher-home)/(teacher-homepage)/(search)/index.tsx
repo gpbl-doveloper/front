@@ -5,10 +5,10 @@ import { TeacherHomeContainer } from "../../teacherHomeStyles";
 import {
   RecentSearchesAndClear,
   SearchData,
-  SearchInputBar,
   SearchResult,
 } from "./searchView";
 import { DogForTeacherHomeList, useDogStore } from "@/src/store/dogStore";
+import { SearchInputBar } from "@/src/components/SearchInputBar";
 
 export default function SearchPage() {
   const { recentSearches, addSearch } = useSearchStore();

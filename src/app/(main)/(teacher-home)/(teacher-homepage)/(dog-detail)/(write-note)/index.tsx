@@ -29,7 +29,7 @@ const convertToISO = ({
   // 날짜에 시간 설정
   date.setHours(hour24, parseInt(minute), 0, 0);
 
-  return date.toISOString(); // ISO 8601 형식 반환
+  return date.toISOString();
 };
 
 function NoteScreen() {
@@ -55,18 +55,20 @@ function NoteScreen() {
     return null;
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const diaryData = {
+      activities,
+      feedingTime,
+      feedingAmt,
+      napStart: convertToISO(napStart),
+      napEnd: convertToISO(napEnd),
+      note,
+      dogId: selectedDog.id,
+    };
+
     try {
-      const diaryData = {
-        activities,
-        feedingTime,
-        feedingAmt,
-        napStart: convertToISO(napStart),
-        napEnd: convertToISO(napEnd),
-        note,
-        dogId: selectedDog.id,
-      };
-      postNotetoBackend({ diaryData, idToken });
+      const result = await postNotetoBackend({ diaryData, idToken });
+      console.log("Note sent successfully:", result);
       navigation.goBack();
     } catch (error) {
       console.log("Failed to send note", error);

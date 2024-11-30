@@ -21,6 +21,11 @@ type ButtonColorStyles = {
 };
 
 const buttonColors: ButtonColorStyles = {
+  brown: {
+    borderColor: "#55382A",
+    backgroundColor: "#55382A",
+    textColor: "#fff",
+  },
   white: {
     borderColor: "#ddd",
     backgroundColor: "#fff",

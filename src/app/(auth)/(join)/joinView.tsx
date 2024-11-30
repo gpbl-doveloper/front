@@ -80,7 +80,6 @@ export function TwoSideButtons({
         index: 0, // 스택의 인덱스를 0으로 설정하여 첫 화면으로 만듭니다.
         routes: [{ name: "SignIn" }], // SignIn 화면을 스택에 추가
       });
-      
     } catch (error) {
       console.error("Sign Up Failed", error);
     }
@@ -93,7 +92,7 @@ export function TwoSideButtons({
         <ButtonBigSize
           text="Sign Up"
           onPress={handleSignUp}
-          buttonColor="purple"
+          buttonColor="brown"
           disabled={!email || !password || !name || !phone || !acceptedTerms}
         />
       ) : (
@@ -107,7 +106,7 @@ export function TwoSideButtons({
               setFirebaseSuccess
             )
           }
-          buttonColor="purple"
+          buttonColor="brown"
           disabled={!email || !password || !acceptedTerms}
         />
       )}

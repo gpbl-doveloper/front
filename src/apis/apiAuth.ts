@@ -24,7 +24,6 @@ export const apiAuthRequest = async (
       },
       data,
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     handleApiError(error, "apiAuth"); // 공통 에러 처리 함수 호출
@@ -33,7 +32,6 @@ export const apiAuthRequest = async (
 
 // postSignIn 함수
 export const postSignIn = async (idToken: string) => {
-  // console.log(idToken);
   return apiAuthRequest("api/auth/login", idToken);
 };
 
@@ -41,4 +39,3 @@ export const postSignIn = async (idToken: string) => {
 export const postSignUp = async (idToken: string, data: any) => {
   return apiAuthRequest("api/auth/signup", idToken, data);
 };
-
