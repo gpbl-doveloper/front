@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { StatusFilter } from "@/src/components/FilterBar";
+import { useSelectedDogStore } from "@/src/store/dogStore";
 
 function ProfilePage() {
   const [status, setStatus] = useState<"Dog" | "Parent">("Dog");
+  const { selectedDog } = useSelectedDogStore();
+  if (selectedDog === null) {
+    return null;
+  }
+
   return (
     <View style={styles.container}>
       {/* 프로필 이미지 및 수정 아이콘 */}
@@ -11,7 +17,8 @@ function ProfilePage() {
         <Image
           style={styles.profileImage}
           source={{
-            uri: "https://picsum.photos/seed/picsum/200/300", // 기본 프로필 이미지 URL
+            // uri: selectedDog.img, // 기본 프로필 이미지 URL
+            uri: "https://picsum.photos/id/237/200/300", // 기본 프로필 이미지 URL
           }}
         />
       </View>
@@ -23,16 +30,18 @@ function ProfilePage() {
       />
       {status === "Dog" ? (
         <View style={styles.infoContainer}>
-          <ProfileInfo label="Medication" value="Peniciline (at 3pm)" />
-          <ProfileInfo label="Name" value="Chloe" />
-          <ProfileInfo label="Gender" value="boy" />
-          <ProfileInfo label="Breed" value="Ritriever" />
-          <ProfileInfo label="Nuetering" value="Done" />
+          <ProfileInfo label="Medication" value={selectedDog.medication} />
+          <ProfileInfo label="Name" value={selectedDog.name} />
+          <ProfileInfo label="Gender" value={selectedDog.sex} />
+          <ProfileInfo label="Breed" value={selectedDog.breed} />
+          <ProfileInfo
+            label="Nuetering"
+            value={selectedDog.isNeutered ? "Done" : "Not Yet"}
+          />
         </View>
       ) : (
         <View style={styles.infoContainer}>
-          <ProfileInfo label="Name" value="AAA" />
-          <ProfileInfo label="Center" value="CenterName" />
+          <ProfileInfo label="Name" value="NOT YET @ Dog Profile" />
           <ProfileInfo label="Phone" value="+123 456 789" />
           <ProfileInfo label="Email" value="name@mdm.com" />
         </View>

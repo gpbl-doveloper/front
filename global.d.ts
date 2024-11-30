@@ -4,13 +4,40 @@ import "react";
 import { NavigatorScreenParams } from "@react-navigation/native";
 
 export type RootStackParamList = {
+  // 초기 화면
+  index: undefined;
+  // auth
+  "(auth)": { screen: string };
   SignIn: undefined;
-  "(main)": undefined;
+  SignUp: undefined;
+
+  // home - parents
   "(home)": undefined;
+  "(main)": { screen: string };
+  SelectDogLayout: undefined;
+  AddDog: undefined;
+  AddCenterPage: undefined;
+  PhotoSelector: undefined;
+  
+
+  // 공통
+  Home: undefined;
+  Reservation: undefined;
+  Profile: undefined;
+
+  // home - teacher
   "(teacher-home)": undefined;
-  // 다른 화면들 추가 가능
-  // 예: Home: { userId: string };
+  TeacherMain: undefined;
+  Search: undefined;
+  PhotoSelector: undefined;
+  DogDetail: undefined;
+  SelectDog: undefined;
 };
+
+export type NavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  "(auth)"
+>;
 
 declare global {
   namespace ReactNavigation {

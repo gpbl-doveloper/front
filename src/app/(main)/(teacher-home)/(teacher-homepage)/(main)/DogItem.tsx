@@ -1,45 +1,65 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { DogForTeacherHomeList } from "@/src/store/dogStore";
+import { Dog, DogFromBackend, useSelectedDogStore } from "@/src/store/dogStore";
 import { useNavigation } from "expo-router";
+import { RootStackParamList } from "@/global";
 
 interface DogItemProps {
-  dog: DogForTeacherHomeList;
+  dog: DogFromBackend | Dog;
+  children?: React.ReactNode;
 }
 
-export function DogItem({ dog }: DogItemProps) {
+export function DogItem({ dog, children }: DogItemProps) {
   const navigation = useNavigation();
+  const { setSelectedDog } = useSelectedDogStore();
+
+  const handleTouch = () => {
+    setSelectedDog(dog);
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "DogDetail" }],
+    });
+  };
   return (
-    <TouchableOpacity
-      style={styles.dogItemContainer}
-      onPress={() => navigation.navigate("DogDetail" as never)}
-    >
+    <TouchableOpacity style={styles.dogItemContainer} onPress={handleTouch}>
       <DogImagePlaceholder />
       <View style={styles.dogInfo}>
         <Text style={styles.dogName}>{dog.name}</Text>
-        <View style={styles.tasksStatusContainer}>
-          <DogStatusInfo
-            type="image"
-            statusText={dog.isClassified ? "Classified" : "Not started"}
-          />
-          <DogStatusInfo
-            type="document"
-            statusText={dog.isDocumented ? "Documented" : "Not started"}
-          />
-        </View>
+        {children}
       </View>
     </TouchableOpacity>
   );
 }
 
 // DogImagePlaceholder 컴포넌트
-function DogImagePlaceholder() {
+export function DogImagePlaceholder() {
   return (
     <View style={styles.dogImageContainer}>
       <View style={styles.dogImagePlaceholder}>
         <Ionicons name="image-outline" size={30} color="#A3C0F7" />
       </View>
+    </View>
+  );
+}
+
+export function DogStatusInfoList({
+  diaryPhotoStatus,
+  diaryNoteStatus,
+}: {
+  diaryPhotoStatus: number;
+  diaryNoteStatus: number;
+}) {
+  return (
+    <View style={styles.tasksStatusContainer}>
+      <DogStatusInfo
+        type="image"
+        statusText={diaryPhotoStatus ? "Classified" : "Not started"}
+      />
+      <DogStatusInfo
+        type="document"
+        statusText={diaryNoteStatus ? "Documented" : "Not started"}
+      />
     </View>
   );
 }

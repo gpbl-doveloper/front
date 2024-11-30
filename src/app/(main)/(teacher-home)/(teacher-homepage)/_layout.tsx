@@ -5,7 +5,6 @@ import TeacherHomePage from "./(main)";
 import SearchPage from "./(search)";
 import DogDetailLayout from "./(dog-detail)/_layout";
 import PhotoSelector from "@/src/app/(photo-selector)";
-// import PhotoSelector from "./(dog-detail)/(dog-photo-select)";
 
 const Stack = createStackNavigator();
 

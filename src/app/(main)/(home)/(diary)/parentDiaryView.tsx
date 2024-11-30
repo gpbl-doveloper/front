@@ -34,7 +34,7 @@ export const FeedingCard = ({ feedingTime, feedingAmt }: any) => (
     <FontAwesome name="cutlery" size={24} color="black" />
     <Text style={styles.diaryCardTitle}>Feeding</Text>
     <Text style={styles.diaryCardDetail}>
-      {`Had ${feedingTime} meal(s). Ate ${feedingAmt.toLowerCase()} of the food given.`}
+      {`Had ${feedingTime} meal(s). Ate ${feedingAmt} of the food given.`}
     </Text>
   </View>
 );

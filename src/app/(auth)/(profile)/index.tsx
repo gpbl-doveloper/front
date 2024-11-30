@@ -3,9 +3,12 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ButtonCircleShape } from "@/src/components/Buttons";
 import { useUserStore } from "@/src/store/userStore";
+import { useNavigation } from "expo-router";
+import { NavigationProp } from "@/global";
 
 function ProfilePage() {
   const { user, resetUser } = useUserStore();
+  const navigator = useNavigation<NavigationProp>();
 
   if (!user) return;
 
@@ -42,6 +45,7 @@ function ProfilePage() {
         text="Sign out"
         buttonColor="black"
         onPress={() => {
+          navigator.replace("index");
           resetUser();
         }}
         width="100%"
