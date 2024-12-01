@@ -2,23 +2,37 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { StatusFilter } from "@/src/components/FilterBar";
 import { useSelectedDogStore } from "@/src/store/dogStore";
+import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { useNavigation } from "expo-router";
+import { useUserStore } from "@/src/store/userStore";
 
 function ProfilePage() {
   const [status, setStatus] = useState<"Dog" | "Parent">("Dog");
   const { selectedDog } = useSelectedDogStore();
+  const { user } = useUserStore();
   if (selectedDog === null) {
     return null;
   }
+  if (user === null) {
+    return null;
+  }
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.headerContainer}
+        onPress={() => navigation.goBack()}
+      >
+        <Ionicons name="chevron-back" size={24} color="black" />
+      </TouchableOpacity>
       {/* 프로필 이미지 및 수정 아이콘 */}
       <View style={styles.imageContainer}>
         <Image
           style={styles.profileImage}
           source={{
-            // uri: selectedDog.img, // 기본 프로필 이미지 URL
-            uri: "https://picsum.photos/id/237/200/300", // 기본 프로필 이미지 URL
+            uri: selectedDog.img, // 기본 프로필 이미지 URL
           }}
         />
       </View>
@@ -41,9 +55,9 @@ function ProfilePage() {
         </View>
       ) : (
         <View style={styles.infoContainer}>
-          <ProfileInfo label="Name" value="NOT YET @ Dog Profile" />
-          <ProfileInfo label="Phone" value="+123 456 789" />
-          <ProfileInfo label="Email" value="name@mdm.com" />
+          <ProfileInfo label="Name" value={user.name} />
+          <ProfileInfo label="Phone" value={user.phone} />
+          <ProfileInfo label="Email" value={user.email} />
         </View>
       )}
     </View>
@@ -63,10 +77,14 @@ function ProfileInfo({ label, value }: { label: string; value: string }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
-    paddingHorizontal: 20,
+    backgroundColor: "#FFF7E9",
+    paddingHorizontal: 10,
     paddingTop: 50,
-    alignItems: "center",
+  },
+  headerContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "baseline",
   },
   imageContainer: {
     position: "relative",
@@ -97,6 +115,9 @@ const styles = StyleSheet.create({
   infoContainer: {
     width: "100%",
     marginTop: 20,
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 10,
   },
   infoRow: {
     flexDirection: "row",

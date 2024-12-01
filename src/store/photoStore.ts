@@ -15,3 +15,14 @@ export const usePhotoStore = create<PhotoStore>((set) => ({
   setSendedPhotos: (sendedPhotos) => set({ sendedPhotos }),
   setSelectedPhotos: (selectedPhotos) => set({ selectedPhotos }),
 }));
+
+// [parent] 다이어리 사진 받아올 시 상태 저장소
+interface DiaryPhotoStore {
+  diaryPhotos: string[];
+  setDiaryPhotos: (diaryPhotos: string[]) => void;
+}
+
+export const useDiaryPhotoStore = create<DiaryPhotoStore>((set) => ({
+  diaryPhotos: [],
+  setDiaryPhotos: (diaryPhotos) => set({ diaryPhotos }),
+}));

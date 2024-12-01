@@ -37,15 +37,12 @@ export default function DogDetailScreen() {
         style={styles.backButton}
         onPress={() => navigation.goBack()}
       >
-        <Ionicons name="arrow-back" size={24} color="brown" />
+        <Ionicons name="chevron-back" size={24} color="black" />
       </TouchableOpacity>
 
       {/* Dog Info Card */}
       <View style={styles.infoCard}>
-        <Image
-          source={{ uri: "https://example.com/dog1.jpg" }}
-          style={styles.dogImage}
-        />
+        <Image source={{ uri: selectedDog.img }} style={styles.dogImage} />
         <View style={styles.dogInfo}>
           <Text style={styles.dogName}>{selectedDog.name}</Text>
           <Text style={styles.dogDetails}>
@@ -60,11 +57,13 @@ export default function DogDetailScreen() {
               <Text style={styles.medicineInfo}> {selectedDog.medication}</Text>
             )}
           </View>
-          <TouchableOpacity
-            onPress={() => navigation.navigate("DogProfile" as never)}
-          >
-            <Text style={styles.seeMoreText}>See more</Text>
-          </TouchableOpacity>
+          <View style={styles.seeMoreContainer}>
+            <TouchableOpacity
+              onPress={() => navigation.navigate("DogProfile" as never)}
+            >
+              <Text style={styles.seeMoreText}>See more</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
 
@@ -160,6 +159,11 @@ const styles = StyleSheet.create({
   medicineInfo: {
     color: "#3C3C3C",
     fontSize: 14,
+  },
+  seeMoreContainer: {
+    marginTop: 10,
+    alignItems: "flex-end",
+    paddingHorizontal: 10,
   },
   seeMoreText: {
     color: "brown",

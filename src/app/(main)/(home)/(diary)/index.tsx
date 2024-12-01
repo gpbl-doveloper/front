@@ -12,15 +12,17 @@ import { ReservationDate } from "../../(teacher-home)/(reservation)/reservationV
 import {
   ActivityCard,
   FeedingCard,
+  NoDataCard,
   NoteCard,
   SleepCard,
 } from "./parentDiaryView";
 import CustomCarousel from "@/src/components/Carousel";
 import { useNavigation } from "expo-router";
 import { useSingleDiaryStore } from "@/src/store/diaryStore";
-import { getDiaryfromAPI } from "./parentDiaryModel";
+import { getDiaryAPI } from "./parentDiaryModel";
 import { useFirebaseAuth } from "@/src/store/userStore";
 import { useSelectedDogStore } from "@/src/store/dogStore";
+import { useDiaryPhotoStore } from "@/src/store/photoStore";
 
 export default function TodayScreen() {
   const navigation = useNavigation();
@@ -29,6 +31,7 @@ export default function TodayScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { selectedDog } = useSelectedDogStore();
+  const { diaryPhotos, setDiaryPhotos } = useDiaryPhotoStore();
 
   const getDiary = async () => {
     try {
@@ -38,10 +41,11 @@ export default function TodayScreen() {
       }
       setIsLoading(true);
       setError(null);
-      const getDiaryResult = await getDiaryfromAPI({
+      const getDiaryResult = await getDiaryAPI({
         dogId: selectedDog.id,
         idToken: idToken,
       });
+      console.log("getDiaryResult : ", getDiaryResult);
       return getDiaryResult;
     } catch (error) {
       setError("다이어리를 불러오는데 실패했습니다.");
@@ -60,7 +64,7 @@ export default function TodayScreen() {
         }
       });
     }
-  }, [idToken]);
+  }, []);
 
   return (
     <ParentHomeContainer>
@@ -69,31 +73,41 @@ export default function TodayScreen() {
           onPress={() => navigation.navigate("/(dog-profile)/index" as never)}
         >
           <Image
-            source={{ uri: "https://picsum.photos/id/237/200/300" }}
+            source={{ uri: selectedDog?.img }}
             style={styles.profileImage}
           />
         </TouchableOpacity>
       </ReservationDate>
 
-      <View style={styles.carouselView}>
-        <CustomCarousel />
-      </View>
       {isLoading ? (
         <ActivityIndicator size="large" />
       ) : error ? (
         <Text style={styles.errorText}>{error}</Text>
-      ) : diary ? (
-        <View style={styles.diaryCards}>
-          <ActivityCard activities={diary.activities} />
-          <SleepCard napStart={diary.napStart} napEnd={diary.napEnd} />
-          <FeedingCard
-            feedingTime={diary.feedingTime}
-            feedingAmt={diary.feedingAmt}
-          />
-          <NoteCard note={diary.note} />
-        </View>
+      ) : !diary && !diaryPhotos.length ? (
+        <NoDataCard text="No data for today" />
       ) : (
-        <Text>Today Diary is not found...</Text>
+        <>
+          <View style={styles.carouselView}>
+            {diaryPhotos.length > 0 ? (
+              <CustomCarousel />
+            ) : (
+              <NoDataCard text="Photo will be uploaded soon" />
+            )}
+          </View>
+          {diary ? (
+            <View style={styles.diaryCards}>
+              <ActivityCard activities={diary.activities} />
+              <SleepCard napStart={diary.napStart} napEnd={diary.napEnd} />
+              <FeedingCard
+                feedingTime={diary.feedingTime}
+                feedingAmt={diary.feedingAmt}
+              />
+              <NoteCard note={diary.note} />
+            </View>
+          ) : (
+            <NoDataCard text="Note will be uploaded soon" />
+          )}
+        </>
       )}
     </ParentHomeContainer>
   );

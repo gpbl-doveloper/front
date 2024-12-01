@@ -23,25 +23,13 @@ export interface Diary {
 }
 
 export interface SingleDiaryStore {
-  diary: Diary;
-  setDiary: (diary: Diary) => void;
+  diary: Diary | null;
+  setDiary: (diary: Diary | null) => void;
 }
 
 export const useSingleDiaryStore = create<SingleDiaryStore>((set) => ({
-  diary: {
-    id: 1,
-    activities: "Played fetch, walked around the park",
-    createdAt: "2024-11-14T09:30:00Z",
-    feedingTime: 2,
-    feedingAmt: "Some",
-    napStart: "2024-11-14T12:00:00Z",
-    napEnd: "2024-11-14T12:45:00Z",
-    note: "Had a great time playing, but seemed a bit tired afterward",
-    sentAt: "2024-11-14T13:00:00Z",
-    dogId: 1,
-    centerId: 1,
-  },
-  setDiary: (diary: any) => set({ diary }),
+  diary: null,
+  setDiary: (diary: Diary | null) => set({ diary }),
 }));
 
 // export interface DiaryStore {

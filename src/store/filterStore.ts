@@ -26,9 +26,9 @@ export const useFilterStore = create<FilterStore>((set) => ({
 
 // DogForReservationList enum
 export enum DogForReservationStatus {
-  PENDING = "Pending",
-  ACCEPTED = "Accepted",
-  DECLINED = "Declined",
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  DECLINED = "DECLINED",
 }
 
 // 예약 상태 관리용 인터페이스
@@ -37,7 +37,9 @@ interface ReservationFilterStore {
   setReservationStatus: (status: DogForReservationStatus) => void;
 }
 
-export const useReservationFilterStore = create<ReservationFilterStore>((set) => ({
-  reservationStatus: DogForReservationStatus.PENDING,
-  setReservationStatus: (status) => set({ reservationStatus: status }),
-}));
+export const useReservationFilterStore = create<ReservationFilterStore>(
+  (set) => ({
+    reservationStatus: DogForReservationStatus.PENDING,
+    setReservationStatus: (status) => set({ reservationStatus: status }),
+  })
+);

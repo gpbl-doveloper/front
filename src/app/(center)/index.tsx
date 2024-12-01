@@ -5,10 +5,12 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import { useNavigation } from "expo-router";
 import { postCenterInfoAPI } from "./centerModel";
 import { useFirebaseAuth } from "@/src/store/userStore";
+import { ButtonBigSize } from "@/src/components/Buttons";
 
 interface CenterForm {
   name: string;
@@ -65,6 +67,12 @@ export default function AddCenterPage() {
     });
     postCenterInfoAPI(idToken, formattedForm);
   };
+  const handlefuckyou = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "(main)", params: { screen: "(teacher-home)" } }],
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -120,9 +128,12 @@ export default function AddCenterPage() {
         multiline
       />
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+      <ButtonBigSize onPress={handleSubmit} text="Submit" buttonColor="brown" />
+      <ButtonBigSize
+        onPress={handlefuckyou}
+        text="gogogo"
+        buttonColor="brown"
+      />
     </View>
   );
 }

@@ -101,6 +101,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 8,
     justifyContent: "space-between",
+    backgroundColor: "#FFF7E9",
   },
   errorText: {
     textAlign: "center",

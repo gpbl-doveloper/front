@@ -1,36 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { StatusFilter } from "@/src/components/FilterBar";
-import { DogForReservation } from "@/src/store/reservationStore";
+import { CenterReservatedData } from "@/src/store/reservationStore";
 import { getReservationDogs } from "./reservationModel";
 import { DogForReservationStatus } from "@/src/store/filterStore";
-import { ReservationDate, ReservationList } from "./reservationView";
+import {
+  NoDataComponent,
+  ReservationDate,
+  ReservationList,
+} from "./reservationView";
 import { TeacherHomeContainer } from "../teacherHomeStyles";
-import { filterDogsByStatus } from "./reservationController";
+import { useFirebaseAuth } from "@/src/store/userStore";
 
-const getDogData = async () => {
-  try {
-    // const userId = checkUserId();
-    const userId = 1;
-    const dogsData = await getReservationDogs(userId);
-    return dogsData;
-  } catch (error) {
-    console.error("Failed to fetch dogs:", error);
-  }
-};
+const RESERVATION_STATUS_OPTIONS = ["PENDING", "ACCEPTED", "DECLINED"];
 
-// ReservationPage 컴포넌트
 export default function ReservationPage() {
-  const [selectedStatus, setSelectedStatus] = useState("Pending");
-  const [dogs, setDogs] = useState<DogForReservation[]>([]);
-  const [filteredData, setFilteredData] = useState<DogForReservation[]>([]);
+  const [selectedStatus, setSelectedStatus] = useState<
+    "PENDING" | "ACCEPTED" | "DECLINED"
+  >("PENDING");
+  const [dogs, setDogs] = useState<CenterReservatedData[]>([]);
+  const [filteredData, setFilteredData] = useState<CenterReservatedData[]>([]);
+  const { idToken } = useFirebaseAuth();
 
-  //데이터 백엔드에서 가져오기
+  const getDogData = async () => {
+    try {
+      const dogsData = await getReservationDogs(idToken);
+      return dogsData;
+    } catch (error) {
+      console.error("Failed to fetch dogs:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchReservationData = async () => {
       const dogsData = await getDogData();
       if (dogsData) {
         setDogs(dogsData);
-        setFilteredData(dogsData); // 초기 상태에 모든 강아지 리스트 표시
+        // 초기 상태에서 PENDING 상태의 데이터만 필터링
+        const initialFiltered = dogsData.filter(
+          (dog) => dog.status === "PENDING"
+        );
+        setFilteredData(initialFiltered);
       }
     };
     fetchReservationData();
@@ -38,21 +47,26 @@ export default function ReservationPage() {
 
   // 상태에 따른 필터링
   useEffect(() => {
-    const filteredData = filterDogsByStatus(
-      selectedStatus as DogForReservationStatus,
-      dogs
-    );
+    const filteredData = dogs.filter((dog) => dog.status === selectedStatus);
     setFilteredData(filteredData);
   }, [selectedStatus, dogs]);
+
+  const handleStatusChange = (status: DogForReservationStatus) => {
+    setSelectedStatus(status);
+  };
 
   return (
     <TeacherHomeContainer>
       <ReservationDate />
       <StatusFilter
-        statusOptions={["Pending", "Accepted", "Declined"]} // 새로운 상태 옵션 전달
-        onStatusChange={(selectedStatus) => setSelectedStatus(selectedStatus)}
+        statusOptions={RESERVATION_STATUS_OPTIONS}
+        onStatusChange={handleStatusChange}
       />
-      <ReservationList filteredData={filteredData} />
+      {filteredData.length === 0 ? (
+        <NoDataComponent text={selectedStatus.toLowerCase()} />
+      ) : (
+        <ReservationList filteredData={filteredData} />
+      )}
     </TeacherHomeContainer>
   );
 }

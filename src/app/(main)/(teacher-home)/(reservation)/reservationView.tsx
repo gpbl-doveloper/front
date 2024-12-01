@@ -7,13 +7,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { ButtonCircleShape } from "@/src/components/Buttons";
-import { DogForReservation } from "@/src/store/reservationStore";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import { CenterReservatedData } from "@/src/store/reservationStore";
 import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import RNDateTimePicker from "@react-native-community/datetimepicker";
+import { useFirebaseAuth } from "@/src/store/userStore";
+import {
+  acceptReservationAPI,
+  declineReservationAPI,
+} from "./reservationModel";
+import { Alert } from "react-native"; // Alert import 추가
 
-export function ReservationDate({ children }: { children: React.ReactNode }) {
+export function ReservationDate({ children }: { children?: React.ReactNode }) {
   const [date, setDate] = useState(new Date()); // 기본 날짜를 오늘 날짜로 설정
 
   const onChange = (event: any, selectedDate?: Date) => {
@@ -49,16 +54,27 @@ export function ReservationDate({ children }: { children: React.ReactNode }) {
 }
 
 // 예약 카드 컴포넌트
-export function AppointmentCard({ item }: { item: DogForReservation }) {
+export function AppointmentCard({ item }: { item: CenterReservatedData }) {
+  const { idToken } = useFirebaseAuth();
+  const AcceptReservation = async () => {
+    const result = await acceptReservationAPI(idToken, item.id);
+  };
+
+  const DeclineReservation = async () => {
+    const result = await declineReservationAPI(idToken, item.id);
+    // 성공하면 뭐 새로고침하든 뭘 하든 해줘야될듯
+  };
+
   return (
     <View style={styles.card}>
       <View style={styles.header}>
-        <Image source={{ uri: item.img }} style={styles.avatar} />
+        <Image source={{ uri: item.dog.img }} style={styles.avatar} />
         <View style={{ flex: 1 }}>
-          <Text style={styles.name}>{item.name}</Text>
+          <Text style={styles.name}>{item.dog.name}</Text>
           <Text style={styles.ageBreed}>
-            {new Date().getFullYear() - new Date(item.bod).getFullYear()} years,{" "}
-            {item.breed}
+            {new Date().getFullYear() - new Date(item.dog.bod).getFullYear()}{" "}
+            years,
+            {item.dog.breed}
           </Text>
         </View>
       </View>
@@ -66,23 +82,34 @@ export function AppointmentCard({ item }: { item: DogForReservation }) {
       <View style={styles.infoRow}>
         <Ionicons name="medkit" size={20} color="#FF6B6B" />
         <Text style={styles.label}> Medicine</Text>
-        <Text style={styles.value}>{item.medicine}</Text>
+        <Text style={styles.value}>{item.dog.medication}</Text>
       </View>
 
       <ReservationDetails item={item} />
 
-      <ReservationButtonContainer />
+      {/* 하단 버튼.
+        PENDING 상태일 시에는 수락/거절 보여주고,
+        ACCEPTED/DECLINED 상태일 시에는 Call/Cancel 보여주기
+      */}
+      {item.status === "PENDING" ? (
+        <ReservationButtonContainer
+          AcceptReservation={AcceptReservation}
+          DeclineReservation={DeclineReservation}
+        />
+      ) : item.status === "ACCEPTED" ? (
+        <CallCancelButtonContainer CancelFunction={DeclineReservation} />
+      ) : null}
     </View>
   );
 }
 
 // 주인 정보 모음 컴포넌트
-function ReservationDetails({ item }: { item: DogForReservation }) {
+function ReservationDetails({ item }: { item: CenterReservatedData }) {
   return (
     <View>
-      <InfoRow iconName="person" text={item.owner.name} />
-      <InfoRow iconName="call" text={item.owner.phone} />
-      <InfoRow iconName="mail" text={item.owner.email} />
+      <InfoRow iconName="person" text={item.dog.owner.name} />
+      <InfoRow iconName="call" text={item.dog.owner.phone} />
+      <InfoRow iconName="mail" text={item.dog.owner.email} />
     </View>
   );
 }
@@ -107,7 +134,7 @@ function InfoRow({ iconName, text, iconColor = "black" }: InfoRowProps) {
 export function ReservationList({
   filteredData,
 }: {
-  filteredData: DogForReservation[];
+  filteredData: CenterReservatedData[];
 }) {
   return (
     <FlatList
@@ -120,25 +147,92 @@ export function ReservationList({
 }
 
 // 예약 버튼 컴포넌트
-export function ReservationButtonContainer() {
+
+export function ReservationButtonContainer({
+  AcceptReservation,
+  DeclineReservation,
+}: {
+  AcceptReservation: () => Promise<void>;
+  DeclineReservation: () => Promise<void>;
+}) {
+  const handleAccept = () => {
+    Alert.alert("Are you sure?", "It can't be undone.", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Accept",
+        onPress: AcceptReservation,
+      },
+    ]);
+  };
+
+  const handleDecline = () => {
+    Alert.alert("Are you sure?", "Decline this reservation?", [
+      {
+        text: "Cancel",
+        style: "cancel",
+      },
+      {
+        text: "Decline",
+        style: "destructive",
+        onPress: DeclineReservation,
+      },
+    ]);
+  };
+
   return (
     <View style={styles.buttonContainer}>
       <ButtonCircleShape
         text="Decline"
         buttonColor="whiteBlack"
-        onPress={() => {}}
+        onPress={handleDecline}
         width="40%"
       />
       <ButtonCircleShape
         text="Accept"
-        buttonColor="black"
-        onPress={() => {}}
+        buttonColor="brown"
+        onPress={handleAccept}
+        width="40%"
+      />
+    </View>
+  );
+}
+// Accepted 상태일 때 보여주는 컴포넌트
+export function CallCancelButtonContainer({
+  CallFunction = () => Promise.resolve(),
+  CancelFunction,
+}: {
+  CallFunction?: () => Promise<void>;
+  CancelFunction: () => Promise<void>;
+}) {
+  return (
+    <View style={styles.buttonContainer}>
+      <ButtonCircleShape
+        text="Call"
+        buttonColor="whiteBlack"
+        onPress={CallFunction}
+        width="40%"
+      />
+      <ButtonCircleShape
+        text="Cancel"
+        buttonColor="brown"
+        onPress={CancelFunction}
         width="40%"
       />
     </View>
   );
 }
 
+export function NoDataComponent({ text }: { text: string }) {
+  return (
+    <View style={styles.noDataContainer}>
+      <Ionicons name="paw" size={24} color="black" />
+      <Text style={styles.noDataText}>No {text} reservations</Text>
+    </View>
+  );
+}
 const styles = StyleSheet.create({
   dateButton: {
     borderRadius: 10,
@@ -234,6 +328,14 @@ const styles = StyleSheet.create({
     color: "#FFF",
     fontWeight: "bold",
   },
-
+  noDataContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 20,
+  },
+  noDataText: {
+    fontSize: 20,
+  },
   datePicker: {},
 });

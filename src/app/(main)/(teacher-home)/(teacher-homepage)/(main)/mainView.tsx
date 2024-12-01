@@ -55,7 +55,7 @@ export const mainStyles = StyleSheet.create({
   searchContainer: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#F1F1F1",
+    backgroundColor: "white",
     borderRadius: 24,
     padding: 10,
     height: 38,
@@ -76,7 +76,7 @@ export const mainStyles = StyleSheet.create({
     gap: 8,
   },
   pictureButton: {
-    backgroundColor: "#000",
+    backgroundColor: "#55382A",
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 24,
