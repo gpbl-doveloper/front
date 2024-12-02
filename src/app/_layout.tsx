@@ -11,7 +11,7 @@ import MainScreen from ".";
 const Stack = createStackNavigator();
 export default function RootLayout() {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: "#FFF7E9" }}>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="index" component={MainScreen} />
         <Stack.Screen name="(auth)" component={AuthLayout} />

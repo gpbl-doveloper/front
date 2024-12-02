@@ -55,11 +55,8 @@ export function ChooseDatePage() {
       date: localDateTime.toISOString(),
       centerId: centerId,
     };
-    // console.log("선택된 날짜/시간:", localDateTime.toISOString());
-    // console.log("로컬 시간 확인:", localDateTime.toLocaleString()); // 디버깅용
 
     const response = await makeReservationAPI(idToken, reservationData);
-    console.log(response);
     navigation.navigate("index");
   };
 

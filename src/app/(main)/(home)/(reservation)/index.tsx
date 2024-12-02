@@ -31,9 +31,51 @@ export function ReservationPage() {
   const [historyList, setHistoryList] = useState<Reservation[]>([]);
   const { idToken } = useFirebaseAuth();
 
+  // 예약 데이터 불러오기
+  // 오늘 날짜 기준으로 예약 데이터 분리
+  // 최신순 정렬
   const getReservationData = async () => {
     const response = await parentReservationAPI(idToken);
-    setReservationList(response);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // 오늘 날짜의 시작시간으로 설정
+
+    // 예약 데이터 분리
+    const { futureReservations, pastReservations } = response.reduce(
+      (
+        acc: {
+          futureReservations: Reservation[];
+          pastReservations: Reservation[];
+        },
+        reservation: Reservation
+      ) => {
+        const reservationDate = new Date(reservation.date);
+        reservationDate.setHours(0, 0, 0, 0);
+
+        if (reservationDate >= today) {
+          acc.futureReservations.push(reservation);
+        } else {
+          acc.pastReservations.push(reservation);
+        }
+        return acc;
+      },
+      {
+        futureReservations: [],
+        pastReservations: [],
+      }
+    );
+
+    // 각각 날짜순 정렬 (최신순)
+    const sortedFuture = futureReservations.sort(
+      (a: Reservation, b: Reservation) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+    const sortedPast = pastReservations.sort(
+      (a: Reservation, b: Reservation) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
+
+    setReservationList(sortedFuture);
+    setHistoryList(sortedPast);
   };
 
   useEffect(() => {
@@ -50,16 +92,20 @@ export function ReservationPage() {
       <ScrollView style={styles.content}>
         {status === "History" ? (
           historyList.length === 0 ? (
-            <NoCardComponent text="history" />
+            <NoCardComponent text="past reservations" />
           ) : (
             historyList.map((reservation: Reservation) => {
               return (
-                <BookedCard key={reservation.id} reservation={reservation} />
+                <BookedCard
+                  key={reservation.id}
+                  reservation={reservation}
+                  buttonText="Reschedule"
+                />
               );
             })
           )
         ) : reservationList.length === 0 ? (
-          <NoCardComponent text="reservation" />
+          <NoCardComponent text="upcoming events" />
         ) : (
           <>
             <TouchableOpacity
@@ -70,7 +116,11 @@ export function ReservationPage() {
               <Ionicons name="chevron-forward" size={24} color="#55382A" />
             </TouchableOpacity>
             {reservationList.map((reservation: Reservation) => (
-              <BookedCard key={reservation.id} reservation={reservation} />
+              <BookedCard
+                key={reservation.id}
+                reservation={reservation}
+                buttonText="Call"
+              />
             ))}
           </>
         )}

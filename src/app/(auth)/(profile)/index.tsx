@@ -1,16 +1,89 @@
-import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ButtonCircleShape } from "@/src/components/Buttons";
-import { useUserStore } from "@/src/store/userStore";
+import { useFirebaseAuth, useUserStore } from "@/src/store/userStore";
 import { useNavigation } from "expo-router";
 import { NavigationProp } from "@/global";
+import { editProfileAPI } from "./profileModel";
 
 function ProfilePage() {
-  const { user, resetUser } = useUserStore();
+  const { user, resetUser, setUser } = useUserStore();
+  const { idToken } = useFirebaseAuth();
   const navigator = useNavigation<NavigationProp>();
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [editingUser, setEditingUser] = useState({
+    name: user?.name || "",
+    phone: user?.phone || "",
+    email: user?.email || "",
+  });
 
   if (!user) return;
+
+  // Alert 관련 상수 정의
+  const PROFILE_ALERTS = {
+    CONFIRM: {
+      title: "Edit Profile",
+      message: "Save the changes?",
+      buttons: {
+        cancel: "Cancel",
+        confirm: "Save",
+      },
+    },
+    RESULT: {
+      success: {
+        title: "Edit Complete",
+        message: "The profile has been successfully modified.",
+      },
+      error: {
+        title: "Error",
+        message: "An error occurred while modifying the profile.",
+      },
+    },
+  } as const;
+
+  // 프로필 저장 로직
+  const saveProfileChanges = async () => {
+    try {
+      const response = await editProfileAPI(idToken, editingUser);
+      setUser({ ...user, ...editingUser });
+      setIsEditing(false);
+
+      Alert.alert(
+        PROFILE_ALERTS.RESULT.success.title,
+        PROFILE_ALERTS.RESULT.success.message
+      );
+    } catch (error) {
+      console.error("Error updating user info:", error);
+      Alert.alert(
+        PROFILE_ALERTS.RESULT.error.title,
+        PROFILE_ALERTS.RESULT.error.message
+      );
+    }
+  };
+
+  // 메인 핸들러
+  const handleSave = () => {
+    Alert.alert(PROFILE_ALERTS.CONFIRM.title, PROFILE_ALERTS.CONFIRM.message, [
+      {
+        text: PROFILE_ALERTS.CONFIRM.buttons.cancel,
+        style: "cancel",
+      },
+      {
+        text: PROFILE_ALERTS.CONFIRM.buttons.confirm,
+        onPress: saveProfileChanges,
+      },
+    ]);
+  };
 
   return (
     <View style={styles.container}>
@@ -29,16 +102,39 @@ function ProfilePage() {
 
       {/* 프로필 정보 */}
       <View style={styles.infoContainer}>
-        <ProfileInfo label="Name" value={user.name} />
-        <ProfileInfo label="Phone" value={user.phone} />
-        <ProfileInfo label="Email" value={user.email} />
+        <ProfileInfo
+          label="Name"
+          value={editingUser.name}
+          isEditing={isEditing}
+          onChangeText={(text) => {
+            setEditingUser({ ...editingUser, name: text });
+          }}
+        />
+        <ProfileInfo
+          label="Phone"
+          value={editingUser.phone}
+          isEditing={isEditing}
+          onChangeText={(text) => {
+            setEditingUser({ ...editingUser, phone: text });
+          }}
+        />
+        <ProfileInfo
+          label="Email"
+          value={editingUser.email}
+          isEditing={isEditing}
+          onChangeText={(text) => {
+            setEditingUser({ ...editingUser, email: text });
+          }}
+        />
       </View>
 
       {/* 로그아웃 버튼 */}
       <ButtonCircleShape
-        text="Edit"
+        text={isEditing ? "Save" : "Edit"}
         buttonColor="whiteBlack"
-        onPress={() => {}}
+        onPress={() => {
+          isEditing ? handleSave() : setIsEditing(true);
+        }}
         width="100%"
       />
       <ButtonCircleShape
@@ -55,11 +151,29 @@ function ProfilePage() {
 }
 
 // 프로필 정보 표시 컴포넌트
-function ProfileInfo({ label, value }: { label: string; value: string }) {
+function ProfileInfo({
+  label,
+  value,
+  isEditing,
+  onChangeText,
+}: {
+  label: string;
+  value: string;
+  isEditing: boolean;
+  onChangeText: (text: string) => void;
+}) {
   return (
     <View style={styles.infoRow}>
       <Text style={styles.label}>{label}</Text>
-      <Text style={styles.value}>{value}</Text>
+      {isEditing ? (
+        <TextInput
+          style={[styles.value, styles.input]}
+          value={value}
+          onChangeText={onChangeText}
+        />
+      ) : (
+        <Text style={styles.value}>{value}</Text>
+      )}
     </View>
   );
 }
@@ -125,6 +239,12 @@ const styles = StyleSheet.create({
     color: "#666",
     width: "60%",
     flexWrap: "wrap",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    padding: 5,
   },
   logoutButton: {
     backgroundColor: "#000000",

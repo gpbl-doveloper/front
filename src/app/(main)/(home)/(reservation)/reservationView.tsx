@@ -1,10 +1,16 @@
-import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Center } from "./(add-reservation)";
 import { Reservation } from ".";
 import { useSelectedCenterStore } from "@/src/store/centerStore";
 
-export function BookedCard({ reservation }: { reservation: Reservation }) {
+export function BookedCard({
+  reservation,
+  buttonText,
+}: {
+  reservation: Reservation;
+  buttonText: string;
+}) {
   return (
     <View style={styles.card}>
       <View style={styles.content}>
@@ -18,7 +24,7 @@ export function BookedCard({ reservation }: { reservation: Reservation }) {
         </View>
       </View>
       <TouchableOpacity style={styles.callButton}>
-        <Text style={styles.callButtonText}>Call</Text>
+        <Text style={styles.callButtonText}>{buttonText}</Text>
       </TouchableOpacity>
     </View>
   );

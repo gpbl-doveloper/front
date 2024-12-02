@@ -1,5 +1,5 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 const formatTime = (dateString: string): string => {
   const date = new Date(dateString);
@@ -7,6 +7,16 @@ const formatTime = (dateString: string): string => {
   const minutes = date.getMinutes().toString().padStart(2, "0");
   return `${hours}:${minutes}`;
 };
+
+// 데이터 없을 때
+export function NoDataCard({ text }: { text: string }) {
+  return (
+    <View style={styles.noDataCardContainer}>
+      <FontAwesome name="paw" size={24} color="black" />
+      <Text>{text}</Text>
+    </View>
+  );
+}
 
 // 활동 카드 컴포넌트
 export const ActivityCard = ({ activities }: any) => (
@@ -49,6 +59,13 @@ export const NoteCard = ({ note }: any) => (
 );
 
 const styles = StyleSheet.create({
+  noDataCardContainer: {
+    gap: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    aspectRatio: "1/1", // 이렇게 하면 width와 height가 1:1
+  },
   diaryCardTitles: {
     gap: 10,
   },

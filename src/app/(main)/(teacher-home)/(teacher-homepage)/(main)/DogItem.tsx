@@ -1,7 +1,12 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Dog, DogFromBackend, useSelectedDogStore } from "@/src/store/dogStore";
+import {
+  Dog,
+  DogFromBackend,
+  useDogStore,
+  useSelectedDogStore,
+} from "@/src/store/dogStore";
 import { useNavigation } from "expo-router";
 
 interface DogItemProps {
@@ -20,7 +25,7 @@ export function DogItem({ dog, children }: DogItemProps) {
 
   return (
     <TouchableOpacity style={styles.dogItemContainer} onPress={handleTouch}>
-      <DogImagePlaceholder />
+      <DogImagePlaceholder dog={dog} />
       <View style={styles.dogInfo}>
         <Text style={styles.dogName}>{dog.name}</Text>
         {children}
@@ -30,11 +35,23 @@ export function DogItem({ dog, children }: DogItemProps) {
 }
 
 // DogImagePlaceholder 컴포넌트
-export function DogImagePlaceholder() {
+export function DogImagePlaceholder({ dog }: { dog: DogFromBackend | Dog }) {
   return (
     <View style={styles.dogImageContainer}>
       <View style={styles.dogImagePlaceholder}>
-        <Ionicons name="image-outline" size={30} color="#A3C0F7" />
+        {dog?.img ? (
+          <Image
+            source={{ uri: dog?.img }}
+            style={{
+              width: 100,
+              height: 114,
+              borderTopLeftRadius: 10,
+              borderBottomLeftRadius: 10,
+            }}
+          />
+        ) : (
+          <Ionicons name="image-outline" size={30} color="#A3C0F7" />
+        )}
       </View>
     </View>
   );
@@ -81,7 +98,7 @@ const styles = StyleSheet.create({
   dogItemContainer: {
     flexDirection: "row",
     borderRadius: 10,
-    backgroundColor: "#F3F7FF",
+    backgroundColor: "white",
     marginBottom: 10,
     alignItems: "center",
     paddingRight: 16,

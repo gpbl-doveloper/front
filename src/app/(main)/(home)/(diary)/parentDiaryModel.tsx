@@ -3,7 +3,7 @@ import {
   getParentDiary,
 } from "../../../../apis/apiDiaries/get";
 
-export const getDiaryfromAPI = async ({
+export const getDiaryAPI = async ({
   dogId,
   date,
   idToken,
@@ -14,11 +14,11 @@ export const getDiaryfromAPI = async ({
       date: date,
       idToken: idToken,
     });
-    console.log("getDiaryfromAPI result : ", result);
+    console.log("getDiaryAPI result : ", result);
 
     return result;
   } catch (error) {
-    console.error("getDiaryfromAPI error : ", error);
+    console.error("getDiaryAPI error : ", error);
     throw error;
   }
 };

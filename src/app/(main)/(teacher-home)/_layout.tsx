@@ -22,9 +22,12 @@ export default function TeacherHomeLayout() {
             const iconName = tabIcons[route.name] ?? "home-outline";
             return <Ionicons name={iconName} size={size} color={color} />;
           },
-          tabBarActiveTintColor: "#4A3AFF",
+          tabBarActiveTintColor: "#FEDDCC",
           tabBarInactiveTintColor: "gray",
           headerShown: false,
+          tabBarStyle: {
+            backgroundColor: "#55382A",
+          },
         };
       }}
     >
