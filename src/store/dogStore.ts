@@ -13,7 +13,17 @@ export interface Dog {
   lastNoteAt: string | null; // 마지막 메모 작성일
   lastPicsAt: string | null; // 마지막 사진 업로드일
   ownerId: number; // 주인 ID
+  diaryStatus: DiaryStatus | null;
 }
+
+export interface DiaryStatus {
+  noteId: number;
+  noteStatus: number;
+  photoStatus: number;
+  lastNoteAt: string | null;
+  lastPicsAt: string | null;
+}
+
 export interface DogFromBackend extends Dog {
   diaryNoteId: number; // 없으면0
   diaryPhotoId: number;

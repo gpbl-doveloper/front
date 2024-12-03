@@ -72,14 +72,21 @@ export function TwoSideButtons({
 
   const handleSignUp = async () => {
     try {
-      //회원가입 API 호출
       await joinController.signUp(token, data);
       console.log("Sign Up Successful");
-      // Sign Up 성공 시 SignIn 페이지로 이동
-      navigation.reset({
-        index: 0, // 스택의 인덱스를 0으로 설정하여 첫 화면으로 만듭니다.
-        routes: [{ name: "SignIn" }], // SignIn 화면을 스택에 추가
-      });
+
+      // role에 따라 다른 페이지로 이동
+      if (data.role === "CENTER") {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "AddCenterPage" }], // CENTER용 페이지
+        });
+      } else if (data.role === "PARENT") {
+        navigation.reset({
+          index: 0,
+          routes: [{ name: "SignIn" }], // PARENT는 기존처럼 SignIn으로
+        });
+      }
     } catch (error) {
       console.error("Sign Up Failed", error);
     }

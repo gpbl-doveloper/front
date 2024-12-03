@@ -9,7 +9,7 @@ import {
 import { BookedCard, NoCardComponent } from "./reservationView";
 import { StatusFilter } from "@/src/components/FilterBar";
 import { useFirebaseAuth } from "@/src/store/userStore";
-import { parentReservationAPI } from "./reservationModel";
+import { makePhoneCall, parentReservationAPI } from "./reservationModel";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Center } from "./(add-reservation)";
@@ -100,6 +100,7 @@ export function ReservationPage() {
                   key={reservation.id}
                   reservation={reservation}
                   buttonText="Reschedule"
+                  onPress={() => console.log("reschedule 해야함 ㅅㄱ")}
                 />
               );
             })
@@ -119,6 +120,7 @@ export function ReservationPage() {
               <BookedCard
                 key={reservation.id}
                 reservation={reservation}
+                onPress={() => makePhoneCall(reservation.center.phone)}
                 buttonText="Call"
               />
             ))}

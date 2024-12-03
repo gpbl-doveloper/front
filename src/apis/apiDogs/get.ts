@@ -28,7 +28,6 @@ export const getCenterDogList = async (idToken: string) => {
         },
       }
     );
-    console.log("Get Reserved Dog List successful");
     return response.data;
   } catch (error) {
     handleApiError(error, "getDogList");
@@ -36,7 +35,7 @@ export const getCenterDogList = async (idToken: string) => {
 };
 
 // [parent, center] 강아지 정보 가져오기
-export const getDogInfo = async (idToken: string, dogId: string) => {
+export const getDogInfo = async (idToken: string, dogId: number) => {
   try {
     const response = await axiosInstance.get(
       `${appConfig.apiUrl}api/dog/info/${dogId}`,

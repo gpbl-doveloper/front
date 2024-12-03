@@ -30,3 +30,15 @@ export const getParentDiary = async ({
     handleApiError(error, "getDiary");
   }
 };
+
+// [center] 알림장 받아오기
+export const getCenterDiary = async ({ idToken, dogId }: any) => {
+  try {
+    const result = await axiosInstance.get(`/api/diary/note/info/${dogId}`, {
+      headers: { Authorization: `Bearer ${idToken}` },
+    });
+    return result.data;
+  } catch (error) {
+    handleApiError(error, "getCenterDiary");
+  }
+};
