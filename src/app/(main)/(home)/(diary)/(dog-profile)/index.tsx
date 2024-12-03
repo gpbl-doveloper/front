@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { ButtonCircleShape } from "@/src/components/Buttons";
+import { ButtonBigSize, ButtonCircleShape } from "@/src/components/Buttons";
 import { useSelectedDogStore } from "@/src/store/dogStore";
 import { useFirebaseAuth } from "@/src/store/userStore";
 import { editDogProfileAPI } from "./dogProfileModel";
@@ -109,7 +109,7 @@ function ProfilePage() {
 
       <View style={styles.buttonContainer}>
         {/* 정보 수정 버튼 */}
-        <ButtonCircleShape
+        <ButtonBigSize
           text={isEditing ? "Save" : "Edit"}
           buttonColor="whiteBlack"
           onPress={() => {
@@ -119,7 +119,6 @@ function ProfilePage() {
               setIsEditing(true);
             }
           }}
-          width="100%"
         />
       </View>
     </View>

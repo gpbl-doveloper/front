@@ -9,7 +9,7 @@ import {
   Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { ButtonCircleShape } from "@/src/components/Buttons";
+import { ButtonBigSize, ButtonCircleShape } from "@/src/components/Buttons";
 import { useFirebaseAuth, useUserStore } from "@/src/store/userStore";
 import { useNavigation } from "expo-router";
 import { NavigationProp } from "@/global";
@@ -129,22 +129,20 @@ function ProfilePage() {
       </View>
 
       {/* 로그아웃 버튼 */}
-      <ButtonCircleShape
+      <ButtonBigSize
         text={isEditing ? "Save" : "Edit"}
         buttonColor="whiteBlack"
         onPress={() => {
           isEditing ? handleSave() : setIsEditing(true);
         }}
-        width="100%"
       />
-      <ButtonCircleShape
+      <ButtonBigSize
         text="Sign out"
         buttonColor="brown"
         onPress={() => {
           navigator.replace("index");
           resetUser();
         }}
-        width="100%"
       />
     </View>
   );

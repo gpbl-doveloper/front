@@ -133,7 +133,7 @@ export function NoteScreen() {
           />
         </View>
         <View style={writeNoteStyles.saveButtonContainer}>
-          <ButtonBigSize text="Send" buttonColor="white" onPress={handleSend} />
+          <ButtonBigSize text="Send" buttonColor="brown" onPress={handleSend} />
         </View>
       </View>
     </ScrollView>

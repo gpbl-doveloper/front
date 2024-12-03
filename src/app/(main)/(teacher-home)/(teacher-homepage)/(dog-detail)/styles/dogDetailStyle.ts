@@ -1,11 +1,6 @@
 import { StyleSheet } from "react-native";
 
 export const dogDetailStyles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FAF4EE",
-    padding: 20,
-  },
   backButton: {
     marginBottom: 10,
   },

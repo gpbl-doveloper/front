@@ -6,37 +6,59 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { DogItem } from "./DogItem";
 import { useFirebaseAuth } from "../../store/userStore";
 import { getParentDogListAPI } from "./dogListModel";
+import { SmallLogo } from "@/src/components/Logos";
 
 function SelectDogPage() {
+  const navigation = useNavigation();
   const [dogList, setDogList] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const { idToken } = useFirebaseAuth();
 
-  // [parent] 사용자의 강아지 목록을 가져오는 API 호출
-  useEffect(() => {
-    const dogListData = async () => {
-      try {
-        const data = await getParentDogListAPI(idToken);
-        setDogList(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+  const dogListData = async () => {
+    try {
+      const data = await getParentDogListAPI(idToken);
+      setDogList(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
     dogListData();
   }, []);
 
+  // [parent] 사용자의 강아지 목록을 가져오는 API 호출
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      dogListData();
+    });
+
+    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
+    return unsubscribe;
+  }, [navigation]);
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={require("../../assets/images/pawsome-logo-sm.svg")}
-          style={styles.logo}
+    <ScrollView
+      contentContainerStyle={styles.container}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+          colors={["#6C4F3E"]} // 안드로이드용 로딩 색상
+          tintColor="#6C4F3E" // iOS용 로딩 색상
         />
+      }
+    >
+      <View style={styles.header}>
+        <SmallLogo width={50} height={50} />
       </View>
 
       {dogList.map((dog) => (
@@ -63,7 +85,8 @@ function AddDogAtSelectDog() {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-    padding: 20,
+    paddingVertical: 40,
+    paddingHorizontal: 20,
     backgroundColor: "#FFF8EF",
     alignItems: "center",
   },
