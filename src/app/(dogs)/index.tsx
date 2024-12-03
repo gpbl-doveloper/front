@@ -62,9 +62,11 @@ function SelectDogPage() {
         <SmallLogo width={50} height={50} />
       </View>
 
-      {dogList.map((dog) => (
-        <DogItem key={dog.id} dog={dog} />
-      ))}
+      <View style={styles.dogListContainer}>
+        {dogList.map((dog) => (
+          <DogItem key={dog.id} dog={dog} />
+        ))}
+      </View>
 
       <AddDogAtSelectDog />
     </ScrollView>
@@ -91,12 +93,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF8EF",
     alignItems: "center",
   },
-  header: {
-    marginBottom: 20,
-  },
+  header: {},
   logo: {
     width: 50,
     height: 50,
+  },
+  dogListContainer: {
+    width: "100%",
   },
   profileCard: {
     flexDirection: "row",
