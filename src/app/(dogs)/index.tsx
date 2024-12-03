@@ -13,10 +13,11 @@ import { DogItem } from "./DogItem";
 import { useFirebaseAuth } from "../../store/userStore";
 import { getParentDogListAPI } from "./dogListModel";
 import { SmallLogo } from "@/src/components/Logos";
+import { Dog } from "@/src/store/dogStore";
 
 function SelectDogPage() {
   const navigation = useNavigation();
-  const [dogList, setDogList] = useState([]);
+  const [dogList, setDogList] = useState<Dog[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const { idToken } = useFirebaseAuth();
 
@@ -62,7 +63,7 @@ function SelectDogPage() {
       </View>
 
       {dogList.map((dog) => (
-        <DogItem dog={dog} />
+        <DogItem key={dog.id} dog={dog} />
       ))}
 
       <AddDogAtSelectDog />
