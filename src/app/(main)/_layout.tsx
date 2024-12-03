@@ -4,8 +4,6 @@ import { View } from "react-native";
 import { createStackNavigator } from "@react-navigation/stack";
 import ParentsHomeLayout from "./(home)/_layout";
 import TeacherHomeLayout from "./(teacher-home)/_layout";
-import SelectDogPage from "../(dogs)";
-import AuthLayout from "../(dogs)/_layout";
 
 const Stack = createStackNavigator();
 export default function MainLayout() {
@@ -14,6 +12,7 @@ export default function MainLayout() {
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
+          gestureEnabled: false,
         }}
       >
         <Stack.Screen name="(home)" component={ParentsHomeLayout} />

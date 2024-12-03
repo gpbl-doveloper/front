@@ -32,7 +32,10 @@ export function LoginFormContainer() {
       } else if (role === "Center" || role === "CENTER") {
         navigation.reset({
           index: 0,
-          routes: [{ name: "AddCenterPage" }],
+          routes: [{ name: "(teacher-home)" }],
+        });
+        navigation.setOptions({
+          gestureEnabled: false,
         });
       }
     } catch (error) {

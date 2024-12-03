@@ -22,6 +22,7 @@ export const postCenterDiary = async (
         Authorization: `Bearer ${idToken}`,
       },
     });
+    console.log("이거 보냄:", diaryData);
     console.log("Post Diary successful:", response.data);
     return response.data;
   } catch (error) {

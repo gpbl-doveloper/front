@@ -7,9 +7,11 @@ import { useSelectedCenterStore } from "@/src/store/centerStore";
 export function BookedCard({
   reservation,
   buttonText,
+  onPress,
 }: {
   reservation: Reservation;
   buttonText: string;
+  onPress?: () => void;
 }) {
   return (
     <View style={styles.card}>
@@ -23,7 +25,7 @@ export function BookedCard({
           <Text style={styles.label}>{reservation.center.address}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.callButton}>
+      <TouchableOpacity style={styles.callButton} onPress={onPress}>
         <Text style={styles.callButtonText}>{buttonText}</Text>
       </TouchableOpacity>
     </View>
@@ -51,6 +53,7 @@ export function ReservationCard({ center }: { center: Center }) {
           <Text style={styles.label}>{center.address}</Text>
         </View>
       </View>
+      {}
       <TouchableOpacity style={styles.callButton} onPress={handleReservation}>
         <Text style={styles.callButtonText}>RESERVE</Text>
       </TouchableOpacity>

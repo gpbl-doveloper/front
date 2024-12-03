@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Alert } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { useNavigation } from "expo-router";
 import { Header2Buttons } from "@/src/components/Header";
@@ -56,10 +56,20 @@ export default function PhotoSelector() {
 
       // 업로드된 사진을 전역 상태에 저장
       setSendedPhotos(selectedPhotos);
-      navigator.goBack();
+
+      // 성공 알림 표시
+      Alert.alert("업로드 성공", "사진이 성공적으로 업로드되었습니다.", [
+        {
+          text: "확인",
+          onPress: () => navigator.goBack(),
+        },
+      ]);
     } catch (error) {
       console.error("Error in handleRightButtonPress:", error);
-      alert("Failed to upload photos. Please try again.");
+      Alert.alert(
+        "업로드 실패",
+        "사진 업로드에 실패했습니다. 다시 시도해주세요."
+      );
     }
   };
 

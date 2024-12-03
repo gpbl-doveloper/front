@@ -1,13 +1,5 @@
 import { create } from "zustand";
 
-interface File {
-  id: number;
-  fileKey: string;
-  fileURL: string;
-  createdAt: string;
-  diaryId: number;
-}
-
 export interface Diary {
   id: number;
   activities: string;
@@ -25,35 +17,11 @@ export interface Diary {
 export interface SingleDiaryStore {
   diary: Diary | null;
   setDiary: (diary: Diary | null) => void;
+  resetDiary: () => void;
 }
-
+// (dog-detail) 받아온 단일 일기 여기다 저장,
 export const useSingleDiaryStore = create<SingleDiaryStore>((set) => ({
   diary: null,
   setDiary: (diary: Diary | null) => set({ diary }),
+  resetDiary: () => set({ diary: null }),
 }));
-
-// export interface DiaryStore {
-//   diaries: Diary[];
-//   setDiaries: (diaries: Diary[]) => void;
-// }
-// export const useDiaryStore = create<DiaryStore>((set) => ({
-//   diaries: [],
-//   setDiaries: (diaries) => set({ diaries }),
-// }));
-
-// export interface AddDiaryState {
-//   inputDiaryContent: string;
-//   inputDiaryFiles: string[];
-// }
-
-// interface AddDiaryStore extends AddDiaryState {
-//   setInputDiaryContent: (content: string) => void;
-//   setInputDiaryFiles: (files: string[]) => void;
-// }
-
-// export const useAddDiaryStore = create<AddDiaryStore>((set) => ({
-//   inputDiaryContent: "",
-//   inputDiaryFiles: [],
-//   setInputDiaryContent: (inputDiaryContent) => set({ inputDiaryContent }),
-//   setInputDiaryFiles: (inputDiaryFiles) => set({ inputDiaryFiles }),
-// }));

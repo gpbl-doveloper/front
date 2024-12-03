@@ -1,12 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  Dog,
-  DogFromBackend,
-  useDogStore,
-  useSelectedDogStore,
-} from "@/src/store/dogStore";
+import { Dog, DogFromBackend, useSelectedDogStore } from "@/src/store/dogStore";
 import { useNavigation } from "expo-router";
 
 interface DogItemProps {
@@ -72,7 +67,7 @@ export function DogStatusInfoList({
       />
       <DogStatusInfo
         type="document"
-        statusText={diaryNoteStatus ? "Documented" : "Not started"}
+        statusText={diaryNoteStatus ? "Draft" : "Not started"}
       />
     </View>
   );
