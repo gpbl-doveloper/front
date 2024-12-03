@@ -8,6 +8,7 @@ import { getDogDiaryAPI } from "./dogDetailModel";
 import { useSingleDiaryStore } from "@/src/store/diaryStore";
 import { calculateAge } from "./utils/calculateAge";
 import { dogDetailStyles } from "./styles/dogDetailStyle";
+import { TeacherHomeContainer } from "../../teacherHomeStyles";
 
 export default function DogDetailScreen() {
   const navigation = useNavigation();
@@ -41,7 +42,7 @@ export default function DogDetailScreen() {
   }, [selectedDog.id]);
 
   return (
-    <View style={dogDetailStyles.container}>
+    <TeacherHomeContainer>
       {/* Back Button */}
       <TouchableOpacity
         style={dogDetailStyles.backButton}
@@ -104,7 +105,7 @@ export default function DogDetailScreen() {
           navigation.navigate("WriteNote" as never);
         }}
       />
-    </View>
+    </TeacherHomeContainer>
   );
 }
 

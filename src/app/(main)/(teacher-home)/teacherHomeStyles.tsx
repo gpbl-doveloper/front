@@ -10,10 +10,9 @@ export function TeacherHomeContainer({
 
 export const teacherHomeStyles = StyleSheet.create({
   mainContainer: {
-    flex: 1,
     backgroundColor: "#FFF7E9",
     paddingHorizontal: 20,
-    paddingTop: 20,
-    gap: 10,
+    paddingTop: 36,
+    paddingBottom: 104,
   },
 });

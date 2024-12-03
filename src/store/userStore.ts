@@ -1,4 +1,6 @@
 import { create } from "zustand";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 // 사용자 상태 타입 정의
 export interface User {
@@ -18,30 +20,46 @@ export interface UserState {
   setUser: (user: User) => void; // 사용자 정보 설정 함수
   resetUser: () => void; // 사용자 정보 리셋 함수
 }
-export const useUserStore = create<UserState>((set) => ({
-  user: {
-    id: 0,
-    uid: "",
-    name: "",
-    role: "PARENT",
-    email: "",
-    phone: "",
-    centerId: null,
-    createdAt: "",
-  }, // 기본값
-  setUser: (user) => set({ user }),
-  resetUser: () => set({ user: null }),
-}));
+export const useUserStore = create(
+  persist<UserState>(
+    (set) => ({
+      user: {
+        id: 0,
+        uid: "",
+        name: "",
+        role: "PARENT",
+        email: "",
+        phone: "",
+        centerId: null,
+        createdAt: "",
+      },
+      setUser: (user) => set({ user }),
+      resetUser: () => set({ user: null }),
+    }),
+    {
+      name: "user-storage",
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);
 
 // [center, parent] 로그인 후 Firebase idToken 저장소
 export interface FirebaseUser {
   idToken: string;
   setIdToken: (idToken: string) => void;
 }
-export const useFirebaseAuth = create<FirebaseUser>((set) => ({
-  idToken: "", // Firebase Auth의 user 정보
-  setIdToken: (idToken: string) => set({ idToken }), // Firebase Auth의 user 정보 설정 함수
-}));
+export const useFirebaseAuth = create(
+  persist<FirebaseUser>(
+    (set) => ({
+      idToken: "",
+      setIdToken: (idToken: string) => set({ idToken }),
+    }),
+    {
+      name: "firebase-auth-storage",
+      storage: createJSONStorage(() => AsyncStorage),
+    }
+  )
+);
 
 // [center, parent] 회원가입 시 입력할 정보 저장소
 export interface AuthState {
