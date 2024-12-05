@@ -9,21 +9,6 @@ export enum DogStatus {
   MEDICINE = "Medicine",
 }
 
-export interface DogForTeacherHomeList {
-  id: number;
-  status: DogStatus;
-}
-
-interface FilterStore {
-  status: DogStatus;
-  setStatus: (status: DogStatus) => void;
-}
-
-export const useFilterStore = create<FilterStore>((set) => ({
-  status: DogStatus.ALL,
-  setStatus: (status) => set({ status }),
-}));
-
 // DogForReservationList enum
 export enum DogForReservationStatus {
   PENDING = "PENDING",
@@ -31,15 +16,19 @@ export enum DogForReservationStatus {
   DECLINED = "DECLINED",
 }
 
-// 예약 상태 관리용 인터페이스
-interface ReservationFilterStore {
-  reservationStatus: DogForReservationStatus;
-  setReservationStatus: (status: DogForReservationStatus) => void;
+export interface DogForTeacherHomeList {
+  id: number;
+  status: DogStatus;
 }
 
-export const useReservationFilterStore = create<ReservationFilterStore>(
-  (set) => ({
-    reservationStatus: DogForReservationStatus.PENDING,
-    setReservationStatus: (status) => set({ reservationStatus: status }),
-  })
-);
+// 베이스 스토어 타입
+interface BaseFilterStore<T> {
+  status: T;
+  setStatus: (status: T) => void;
+}
+
+type FilterStore = BaseFilterStore<DogStatus>;
+export const useFilterStore = create<FilterStore>((set) => ({
+  status: DogStatus.ALL,
+  setStatus: (status) => set({ status }),
+}));

@@ -8,7 +8,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { ParentHomeContainer } from "../parentHomeStyles";
-import { ReservationDate } from "../../(teacher-home)/(reservation)/reservationView";
 import {
   ActivityCard,
   FeedingCard,
@@ -23,6 +22,7 @@ import { getDiaryAPI } from "./parentDiaryModel";
 import { useFirebaseAuth } from "@/src/store/userStore";
 import { useSelectedDogStore } from "@/src/store/dogStore";
 import { useDiaryPhotoStore } from "@/src/store/photoStore";
+import { ReservationDate } from "@/src/components/DatePicker";
 
 export default function TodayScreen() {
   const navigation = useNavigation();

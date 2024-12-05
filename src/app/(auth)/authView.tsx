@@ -61,8 +61,6 @@ export const authStyles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: "center",
-    marginTop: -60,
-    marginBottom: -40,
   },
   authFormContainer: {
     gap: 16,

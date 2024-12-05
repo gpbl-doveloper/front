@@ -1,22 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, RefreshControl } from "react-native";
 import { StatusFilter } from "@/components/FilterBar";
 import { DogItem, DogStatusInfoList } from "./DogItem";
 import { mainStyles, SearchBarAndPictureButton } from "./mainView";
 import { DogFromBackend, useDogStore } from "@/src/store/dogStore";
-import { useFirebaseAuth, useUserStore } from "@/src/store/userStore";
+import { useFirebaseAuth } from "@/src/store/userStore";
 import { getAllDogs } from "./mainModel";
 import { DogStatus, useFilterStore } from "@/src/store/filterStore";
 import { TeacherHomeContainer } from "../../teacherHomeStyles";
-
-const getDogData = async (idToken: any) => {
-  try {
-    const dogsData = await getAllDogs(idToken);
-    return dogsData;
-  } catch (error) {
-    console.error("Failed to fetch dogs:", error);
-  }
-};
+import { fetchWithDelay } from "@/src/utils/fetchWithDelay";
 
 // 필터링 함수
 export const filterDogsByStatus = (
@@ -48,16 +40,25 @@ export default function TeacherHomePage() {
   const [filteredDogs, setFilteredDogs] = useState<DogFromBackend[]>([]);
   const { dogs, setDogs } = useDogStore();
   const { idToken } = useFirebaseAuth();
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const dogsData = await getDogData(idToken);
+  const fetchData = async () => {
+    setRefreshing(true);
+    try {
+      const dogsData = await fetchWithDelay(() => getAllDogs(idToken));
+
       if (dogsData) {
         setDogs(dogsData);
-        setFilteredDogs(dogsData); // 초기 상태에 모든 강아지 리스트 표시
+        setFilteredDogs(dogsData);
       }
-      // console.log("dogsData : ", dogsData); // 받아온 모든 강아지 리스트
-    };
+    } catch (error) {
+      console.error("Failed to fetch dogs:", error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -92,8 +93,15 @@ export default function TeacherHomePage() {
         )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={mainStyles.listContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={fetchData}
+            colors={["#6C4F3E"]}
+            tintColor="#6C4F3E"
+          />
+        }
       />
     </TeacherHomeContainer>
   );
 }
-

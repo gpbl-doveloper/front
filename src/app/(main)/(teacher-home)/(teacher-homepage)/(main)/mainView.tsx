@@ -69,6 +69,7 @@ export const mainStyles = StyleSheet.create({
   listContainer: {
     flexGrow: 1,
     marginTop: 18,
+    paddingBottom: 20,
   },
   searchAndPictureButtonContainer: {
     flexDirection: "row",

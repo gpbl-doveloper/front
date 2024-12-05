@@ -1,6 +1,6 @@
 // (main)/_layout.tsx
 import React from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
 import DiaryLayout from "./(diary)/_layout";

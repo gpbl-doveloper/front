@@ -1,29 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   View,
   Text,
   StyleSheet,
-  Image,
   TouchableOpacity,
   ScrollView,
   RefreshControl,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { DogItem } from "./DogItem";
 import { useFirebaseAuth } from "../../store/userStore";
 import { getParentDogListAPI } from "./dogListModel";
 import { SmallLogo } from "@/src/components/Logos";
 import { Dog } from "@/src/store/dogStore";
+import { fetchWithDelay } from "@/src/utils/fetchWithDelay";
 
 function SelectDogPage() {
-  const navigation = useNavigation();
   const [dogList, setDogList] = useState<Dog[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const { idToken } = useFirebaseAuth();
 
   const dogListData = async () => {
+    setRefreshing(true);
     try {
-      const data = await getParentDogListAPI(idToken);
+      const data = await fetchWithDelay(() => getParentDogListAPI(idToken));
       setDogList(data);
     } catch (error) {
       console.log(error);
@@ -32,44 +32,38 @@ function SelectDogPage() {
     }
   };
 
-  const onRefresh = React.useCallback(() => {
-    setRefreshing(true);
-    dogListData();
-  }, []);
-
   // [parent] 사용자의 강아지 목록을 가져오는 API 호출
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
+  useFocusEffect(
+    useCallback(() => {
       dogListData();
-    });
+    }, [])
+  );
 
-    // 컴포넌트가 언마운트될 때 이벤트 리스너 제거
-    return unsubscribe;
-  }, [navigation]);
   return (
-    <ScrollView
-      contentContainerStyle={styles.container}
-      refreshControl={
-        <RefreshControl
-          refreshing={refreshing}
-          onRefresh={onRefresh}
-          colors={["#6C4F3E"]} // 안드로이드용 로딩 색상
-          tintColor="#6C4F3E" // iOS용 로딩 색상
-        />
-      }
-    >
+    <View style={styles.container}>
       <View style={styles.header}>
         <SmallLogo width={50} height={50} />
       </View>
+      <ScrollView
+        contentContainerStyle={styles.listContainer}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={dogListData}
+            colors={["#6C4F3E"]} // 안드로이드용 로딩 색상
+            tintColor="#6C4F3E" // iOS용 로딩 색상
+          />
+        }
+      >
+        <View style={styles.dogListContainer}>
+          {dogList.map((dog) => (
+            <DogItem key={dog.id} dog={dog} />
+          ))}
+        </View>
 
-      <View style={styles.dogListContainer}>
-        {dogList.map((dog) => (
-          <DogItem key={dog.id} dog={dog} />
-        ))}
-      </View>
-
-      <AddDogAtSelectDog />
-    </ScrollView>
+        <AddDogAtSelectDog />
+      </ScrollView>
+    </View>
   );
 }
 
@@ -87,16 +81,17 @@ function AddDogAtSelectDog() {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     paddingVertical: 40,
     paddingHorizontal: 20,
     backgroundColor: "#FFF8EF",
-    alignItems: "center",
   },
-  header: {},
-  logo: {
-    width: 50,
-    height: 50,
+  listContainer: {
+    flexGrow: 1,
+  },
+  header: {
+    alignItems: "center",
+    paddingBottom: 20,
   },
   dogListContainer: {
     width: "100%",

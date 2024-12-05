@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import PawsomeLogo from "@/assets/images/pawsome-logo.svg";
 import PawsomeLogoSm from "@/assets/images/pawsome-logo-sm.svg";
-import { logoStyles } from "./LogosStyles";
+import { StyleSheet } from "react-native";
 
 type SizeProps = {
   width: number;
@@ -23,3 +23,10 @@ export function SmallLogo({ width, height }: SizeProps) {
     </View>
   );
 }
+
+export const logoStyles = StyleSheet.create({
+  container: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+});
