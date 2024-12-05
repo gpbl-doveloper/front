@@ -34,7 +34,6 @@ export default function DogDetailScreen() {
       if (result) {
         setDiary(result);
       } else {
-        console.log("널값으로바뀜ㅅㄱ");
         resetDiary();
       }
     };
@@ -95,14 +94,14 @@ export default function DogDetailScreen() {
         title={"Photo"}
         description={`${selectedDog.diaryPhotoStatus} photos`}
         onPress={() => {
-          navigation.navigate("PhotoSelector" as never);
+          navigation.navigate("NotePhotoSelector");
         }}
       />
       <InfoCard
         title={"Note"}
         description={diaryState[selectedDog.diaryNoteStatus]}
         onPress={() => {
-          navigation.navigate("WriteNote" as never);
+          navigation.navigate("WriteNote");
         }}
       />
     </TeacherHomeContainer>

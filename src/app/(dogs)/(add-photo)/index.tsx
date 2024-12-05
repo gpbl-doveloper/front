@@ -3,9 +3,9 @@ import { View, StyleSheet, Text } from "react-native";
 import * as MediaLibrary from "expo-media-library";
 import { useNavigation } from "expo-router";
 import { Header2Buttons } from "@/src/components/Header";
-import { PhotoList } from "./PhotoList";
 import { getPhotos, requestPermission } from "./photoModel";
 import { NavigationProp } from "@react-navigation/native";
+import { PhotoList } from "@/src/components/photoSelector/PhotoList";
 
 type NavigationParams = {
   AddDog: {

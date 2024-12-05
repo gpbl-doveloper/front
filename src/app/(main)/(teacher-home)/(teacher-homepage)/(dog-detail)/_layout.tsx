@@ -4,6 +4,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import DogDetailScreen from ".";
 import ProfilePage from "./(dog-profile)";
 import { NoteScreen } from "./(write-note)";
+import NotePhotoSelector from "./(note-photo)";
 
 const Stack = createStackNavigator();
 
@@ -13,6 +14,7 @@ export default function DogDetailLayout() {
       <Stack.Screen name="DogDetailScreen" component={DogDetailScreen} />
       <Stack.Screen name="DogProfile" component={ProfilePage} />
       <Stack.Screen name="WriteNote" component={NoteScreen} />
+      <Stack.Screen name="NotePhotoSelector" component={NotePhotoSelector} />
     </Stack.Navigator>
   );
 }

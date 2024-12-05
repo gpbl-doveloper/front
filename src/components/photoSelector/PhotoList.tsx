@@ -1,21 +1,19 @@
 import React from "react";
-import {
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  Image,
-} from "react-native";
-import { SelectableImage } from "./SelectableImage";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import * as MediaLibrary from "expo-media-library";
+import { SelectableImage } from "./SelectableImage";
 
 interface PhotoListProps {
-    photos: MediaLibrary.Asset[];
-    selectedPhotos: string[];
-    toggleSelectPhoto: (id: string) => void;
-  }
+  photos: MediaLibrary.Asset[] | any[];
+  selectedPhotos: string[];
+  toggleSelectPhoto: (id: string) => void;
+}
 
-export function PhotoList({ photos, selectedPhotos, toggleSelectPhoto }: PhotoListProps) {
+export function PhotoList({
+  photos,
+  selectedPhotos,
+  toggleSelectPhoto,
+}: PhotoListProps) {
   return (
     <FlatList
       data={photos}
@@ -24,7 +22,7 @@ export function PhotoList({ photos, selectedPhotos, toggleSelectPhoto }: PhotoLi
       renderItem={({ item }) => (
         <TouchableOpacity onPress={() => toggleSelectPhoto(item.id)}>
           <SelectableImage
-            uri={item.uri}
+            uri={item?.uri || item?.fileURL}
             isSelected={selectedPhotos.includes(item.id)}
           />
         </TouchableOpacity>

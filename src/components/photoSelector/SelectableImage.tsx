@@ -12,6 +12,7 @@ export function SelectableImage({ uri, isSelected }: SelectableImageProps) {
       <Image
         source={{ uri }}
         style={[styles.image, isSelected && styles.selectedImage]}
+        onError={() => console.log("error")}
       />
       {isSelected && <View style={styles.overlay} />}
     </View>
