@@ -5,6 +5,7 @@ import SelectDogPage from "./index";
 import AddDog from "./(add-dogs)";
 import PhotoSelector from "./(add-photo)";
 import ParentsHomeLayout from "../(main)/(home)/_layout";
+import { View } from "react-native";
 
 const Stack = createStackNavigator();
 

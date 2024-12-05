@@ -1,9 +1,4 @@
-import {
-  GestureResponderEvent,
-  Text,
-  TouchableOpacity,
-  ViewStyle,
-} from "react-native";
+import { GestureResponderEvent, Text, TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 
 type ButtonBigSizeProps = {

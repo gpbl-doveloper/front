@@ -3,8 +3,6 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 import JoinView from "./(join)";
 import LoginView from "./(login)";
-import DogProfileScreen from "../(dogs)/index";
-import SelectDogPage from "../(dogs)/index";
 import SelectDogLayout from "../(dogs)/_layout";
 import AddCenterPage from "../(center)";
 import TeacherHomeLayout from "../(main)/(teacher-home)/_layout";

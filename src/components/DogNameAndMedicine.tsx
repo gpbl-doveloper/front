@@ -2,6 +2,7 @@ import { IconBtn, IconTextBtn } from "@/src/components/main/Button";
 import { Href, router } from "expo-router";
 import { StyleSheet, View } from "react-native";
 
+// 안쓰는거같음
 export function DogNameAndMedicine(props: { userRole: string }) {
   return (
     // 상단 버튼, 강아지 이름 선택 및 약 아이콘

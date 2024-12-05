@@ -6,6 +6,7 @@ interface HeaderButtonsProps {
   onDone: () => void;
 }
 
+// 사진 추가 페이지에서 사용
 export function Header2Buttons({ onCancel, onDone }: HeaderButtonsProps) {
   return (
     <View style={styles.container}>

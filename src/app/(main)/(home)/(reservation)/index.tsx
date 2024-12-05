@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  RefreshControl,
 } from "react-native";
 import { BookedCard, NoCardComponent } from "./reservationView";
 import { StatusFilter } from "@/src/components/FilterBar";
@@ -14,6 +15,9 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Center } from "./(add-reservation)";
 import { useFocusEffect } from "expo-router";
+import separateReservations from "@/src/utils/reservation/seperateReservations";
+import sortReservations from "@/src/utils/reservation/sortReservations";
+import { fetchWithDelay } from "@/src/utils/fetchWithDelay";
 
 export type Reservation = {
   id: number;
@@ -31,52 +35,26 @@ export function ReservationPage() {
   const [reservationList, setReservationList] = useState<Reservation[]>([]);
   const [historyList, setHistoryList] = useState<Reservation[]>([]);
   const { idToken } = useFirebaseAuth();
+  const [refreshing, setRefreshing] = useState(false);
 
   // 예약 데이터 불러오기
-  // 오늘 날짜 기준으로 예약 데이터 분리
-  // 최신순 정렬
   const getReservationData = async () => {
-    const response = await parentReservationAPI(idToken);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // 오늘 날짜의 시작시간으로 설정
+    try {
+      setRefreshing(true);
+      const response = await fetchWithDelay(() =>
+        parentReservationAPI(idToken)
+      );
 
-    // 예약 데이터 분리
-    const { futureReservations, pastReservations } = response.reduce(
-      (
-        acc: {
-          futureReservations: Reservation[];
-          pastReservations: Reservation[];
-        },
-        reservation: Reservation
-      ) => {
-        const reservationDate = new Date(reservation.date);
-        reservationDate.setHours(0, 0, 0, 0);
+      const { futureReservations, pastReservations } =
+        separateReservations(response);
 
-        if (reservationDate >= today) {
-          acc.futureReservations.push(reservation);
-        } else {
-          acc.pastReservations.push(reservation);
-        }
-        return acc;
-      },
-      {
-        futureReservations: [],
-        pastReservations: [],
-      }
-    );
-
-    // 각각 날짜순 정렬 (최신순)
-    const sortedFuture = futureReservations.sort(
-      (a: Reservation, b: Reservation) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-    const sortedPast = pastReservations.sort(
-      (a: Reservation, b: Reservation) =>
-        new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
-
-    setReservationList(sortedFuture);
-    setHistoryList(sortedPast);
+      setReservationList(sortReservations(futureReservations, true)); // 오름차순
+      setHistoryList(sortReservations(pastReservations, false)); // 내림차순
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setRefreshing(false);
+    }
   };
 
   useFocusEffect(
@@ -85,10 +63,6 @@ export function ReservationPage() {
     }, [])
   );
 
-  useEffect(() => {
-    getReservationData();
-  }, []);
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Reservation</Text>
@@ -96,7 +70,17 @@ export function ReservationPage() {
         statusOptions={["Booked", "History"]}
         onStatusChange={setStatus}
       />
-      <ScrollView style={styles.content}>
+      <ScrollView
+        style={styles.content}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={getReservationData}
+            colors={["#6C4F3E"]} // 안드로이드용 로딩 색상
+            tintColor="#6C4F3E" // iOS용 로딩 색상
+          />
+        }
+      >
         {status === "History" ? (
           historyList.length === 0 ? (
             <NoCardComponent text="past reservations" />
@@ -123,7 +107,7 @@ export function ReservationPage() {
               <Text style={styles.buttonText}>Make Reservation</Text>
               <Ionicons name="chevron-forward" size={24} color="#55382A" />
             </TouchableOpacity>
-            {reservationList.reverse().map((reservation: Reservation) => (
+            {reservationList.map((reservation: Reservation) => (
               <BookedCard
                 key={reservation.id}
                 reservation={reservation}
