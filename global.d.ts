@@ -34,6 +34,8 @@ export type RootStackParamList = {
   PhotoSelector: undefined;
   DogDetail: undefined;
   SelectDog: undefined;
+  NotePhotoSelector: undefined;
+  WriteNote: undefined;
 };
 
 export type NavigationProp = NativeStackNavigationProp<

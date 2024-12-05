@@ -16,3 +16,25 @@ export const putCenterDiarySend = async (idToken: string, diaryId: number) => {
     handleApiError(error, "sendCenterDiary");
   }
 };
+
+// [center] 사진 전송
+export const putCenterPhotoSend = async (
+  idToken: string,
+  diaryId: number,
+  pictureIds: number[]
+) => {
+  try {
+    console.log("pictureIds : ", pictureIds);
+    console.log("diaryId : ", diaryId);
+    const response = await axiosInstance.put(
+      `/api/diary/send/photo/${diaryId}`,
+      { pictureIds: pictureIds },
+      {
+        headers: { Authorization: `Bearer ${idToken}` },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    handleApiError(error, "sendCenterDiaryPhoto");
+  }
+};

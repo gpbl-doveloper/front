@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Alert } from "react-native";
 import * as MediaLibrary from "expo-media-library";
-import { useLocalSearchParams, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import { Header2Buttons } from "@/src/components/Header";
 import { usePhotoStore } from "@/src/store/photoStore";
-import { getPhotosAPI, postPictures } from "./photoModel";
 import { useFirebaseAuth } from "@/src/store/userStore";
 import { PhotoList } from "@/src/components/photoSelector/PhotoList";
-import { getTodayPhotos } from "@/src/utils/getTodayPhotos";
-import { photoSelectorStyles } from "./photoSelectorStyles";
+import {
+  getPhotosAPI,
+  postPictures,
+} from "@/src/app/(photo-selector)/photoModel";
+import { photoSelectorStyles } from "@/src/app/(photo-selector)/photoSelectorStyles";
+import { sendPhotoAPI } from "./notePhotoModel";
+import { useSingleDiaryStore } from "@/src/store/diaryStore";
 
-export default function PhotoSelector() {
+export default function NotePhotoSelector() {
   const navigator = useNavigation();
   // 가져온 사진
   const [photos, setPhotos] = useState<MediaLibrary.Asset[]>([]);
@@ -19,6 +23,11 @@ export default function PhotoSelector() {
   // 보낸 사진 저장한 전역변수 (나중에 이거에 해당하는애들은 칠해줌)
   const { sendedPhotos, setSendedPhotos } = usePhotoStore();
   const { idToken } = useFirebaseAuth();
+  const { diary } = useSingleDiaryStore();
+  if (!diary) {
+    Alert.alert("Error", "Diary information not found");
+    return;
+  }
 
   // 선택된 사진들
   const toggleSelectPhoto = (id: string) => {
@@ -32,35 +41,40 @@ export default function PhotoSelector() {
   // Upload 버튼 클릭 시 선택된 사진 전역변수에 저장 후 뒤로가기
   const handleRightButtonPress = async () => {
     try {
+      console.log("selectedPhotos : ", selectedPhotos);
       // 사진 업로드 호출
-      const response = await postPictures({ idToken, selectedPhotos });
+      const response = await sendPhotoAPI({
+        idToken,
+        diaryId: diary.id,
+        pictureIds: selectedPhotos.map((photo) => parseInt(photo)),
+      });
 
       // 업로드된 사진을 전역 상태에 저장
       setSendedPhotos(selectedPhotos);
 
       // 성공 알림 표시
-      Alert.alert("업로드 성공", "사진이 성공적으로 업로드되었습니다.", [
+      // Success alert
+      Alert.alert("Upload Success", "Photos have been successfully sent.", [
         {
-          text: "확인",
+          text: "OK",
           onPress: () => navigator.goBack(),
         },
       ]);
     } catch (error) {
       console.error("Error in handleRightButtonPress:", error);
-      Alert.alert(
-        "업로드 실패",
-        "사진 업로드에 실패했습니다. 다시 시도해주세요."
-      );
+      Alert.alert("Upload Failed", "Failed to send photos. Please try again.");
     }
   };
 
-  const loadPhotoFromLocal = async () => {
-    const photos = await getTodayPhotos();
-    setPhotos(photos);
+  const photosToNote = async () => {
+    const date = new Date().toISOString().split("T")[0];
+    const photos = await getPhotosAPI(idToken, date);
+    console.log("photos : ", photos.data.files);
+    setPhotos(photos.data.files);
   };
 
   useEffect(() => {
-    loadPhotoFromLocal();
+    photosToNote();
   }, []);
 
   return (

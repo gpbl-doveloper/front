@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,6 +13,7 @@ import { makePhoneCall, parentReservationAPI } from "./reservationModel";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { Center } from "./(add-reservation)";
+import { useFocusEffect } from "expo-router";
 
 export type Reservation = {
   id: number;
@@ -78,6 +79,12 @@ export function ReservationPage() {
     setHistoryList(sortedPast);
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      getReservationData();
+    }, [])
+  );
+
   useEffect(() => {
     getReservationData();
   }, []);
@@ -116,7 +123,7 @@ export function ReservationPage() {
               <Text style={styles.buttonText}>Make Reservation</Text>
               <Ionicons name="chevron-forward" size={24} color="#55382A" />
             </TouchableOpacity>
-            {reservationList.map((reservation: Reservation) => (
+            {reservationList.reverse().map((reservation: Reservation) => (
               <BookedCard
                 key={reservation.id}
                 reservation={reservation}
