@@ -1,33 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Alert } from "react-native";
-import * as MediaLibrary from "expo-media-library";
+import { View, Text } from "react-native";
 import { useNavigation } from "expo-router";
 import { Header2Buttons } from "@/src/components/Header";
-import { usePhotoStore } from "@/src/store/photoStore";
-import { useFirebaseAuth } from "@/src/store/userStore";
-import { PhotoList } from "@/src/components/photoSelector/PhotoList";
 import {
-  getPhotosAPI,
-  postPictures,
-} from "@/src/app/(photo-selector)/photoModel";
+  useCategorizedDogPhotoStore,
+  useDiaryPhotoStore,
+} from "@/src/store/photoStore";
+import { useFirebaseAuth } from "@/src/store/userStore";
 import { photoSelectorStyles } from "@/src/app/(photo-selector)/photoSelectorStyles";
 import { sendPhotoAPI } from "./notePhotoModel";
-import { useSingleDiaryStore } from "@/src/store/diaryStore";
+import { PhotoList } from "./components/PhotoList";
+import { showCustomAlert } from "@/src/components/alerts/dogDetailAlerts";
+import { useSelectedDogStore } from "@/src/store/dogStore";
 
 export default function NotePhotoSelector() {
   const navigator = useNavigation();
-  // 가져온 사진
-  const [photos, setPhotos] = useState<MediaLibrary.Asset[]>([]);
-  // 선택된 사진
-  const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
-  // 보낸 사진 저장한 전역변수 (나중에 이거에 해당하는애들은 칠해줌)
-  const { sendedPhotos, setSendedPhotos } = usePhotoStore();
   const { idToken } = useFirebaseAuth();
-  const { diary } = useSingleDiaryStore();
-  if (!diary) {
-    Alert.alert("Error", "Diary information not found");
-    return;
-  }
+  const { diaryPhotos } = useDiaryPhotoStore(); // 그날의 사진
+  const { categorizedDogPhoto } = useCategorizedDogPhotoStore(); // 분류된 특정 강아지 사진
+  const { selectedDog } = useSelectedDogStore();
+  // 선택된 사진
+  const [selectedPhotos, setSelectedPhotos] = useState<string[]>(
+    () => categorizedDogPhoto?.map(String) // ID가 숫자인 경우 문자열로 변환
+  );
 
   // 선택된 사진들
   const toggleSelectPhoto = (id: string) => {
@@ -41,41 +36,22 @@ export default function NotePhotoSelector() {
   // Upload 버튼 클릭 시 선택된 사진 전역변수에 저장 후 뒤로가기
   const handleRightButtonPress = async () => {
     try {
-      console.log("selectedPhotos : ", selectedPhotos);
       // 사진 업로드 호출
       const response = await sendPhotoAPI({
         idToken,
-        diaryId: diary.id,
+        // @ts-ignore
+        diaryPhotoId: selectedDog.diaryPhotoId,
         pictureIds: selectedPhotos.map((photo) => parseInt(photo)),
       });
-
-      // 업로드된 사진을 전역 상태에 저장
-      setSendedPhotos(selectedPhotos);
-
-      // 성공 알림 표시
       // Success alert
-      Alert.alert("Upload Success", "Photos have been successfully sent.", [
-        {
-          text: "OK",
-          onPress: () => navigator.goBack(),
-        },
-      ]);
+      showCustomAlert("success", "Photos have been successfully sent.", {
+        onPress: () => navigator.goBack(),
+      });
     } catch (error) {
       console.error("Error in handleRightButtonPress:", error);
-      Alert.alert("Upload Failed", "Failed to send photos. Please try again.");
+      showCustomAlert("error", "Failed to send photos. Please try again.");
     }
   };
-
-  const photosToNote = async () => {
-    const date = new Date().toISOString().split("T")[0];
-    const photos = await getPhotosAPI(idToken, date);
-    console.log("photos : ", photos.data.files);
-    setPhotos(photos.data.files);
-  };
-
-  useEffect(() => {
-    photosToNote();
-  }, []);
 
   return (
     <View style={photoSelectorStyles.container}>
@@ -84,13 +60,13 @@ export default function NotePhotoSelector() {
         onDone={handleRightButtonPress}
       />
 
-      {photos.length === 0 ? (
+      {diaryPhotos.length === 0 ? (
         <Text style={photoSelectorStyles.errorText}>
           No photos found for today.
         </Text>
       ) : (
         <PhotoList
-          photos={photos}
+          photos={diaryPhotos}
           selectedPhotos={selectedPhotos}
           toggleSelectPhoto={toggleSelectPhoto}
         />

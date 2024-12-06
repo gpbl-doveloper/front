@@ -3,15 +3,19 @@ import { handleApiError } from "@/src/apis/utils/errorHandler";
 
 export const sendPhotoAPI = async ({
   idToken,
-  diaryId,
+  diaryPhotoId,
   pictureIds,
 }: {
   idToken: string;
-  diaryId: number;
+  diaryPhotoId: number;
   pictureIds: number[];
 }) => {
   try {
-    const response = await putCenterPhotoSend(idToken, diaryId, pictureIds);
+    const response = await putCenterPhotoSend(
+      idToken,
+      diaryPhotoId,
+      pictureIds
+    );
     return response;
   } catch (error) {
     handleApiError(error, "sendPhotoAPI");

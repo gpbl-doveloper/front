@@ -20,14 +20,14 @@ export const putCenterDiarySend = async (idToken: string, diaryId: number) => {
 // [center] 사진 전송
 export const putCenterPhotoSend = async (
   idToken: string,
-  diaryId: number,
+  diaryPhotoId: number,
   pictureIds: number[]
 ) => {
   try {
     console.log("pictureIds : ", pictureIds);
-    console.log("diaryId : ", diaryId);
+    console.log("diaryId : ", diaryPhotoId);
     const response = await axiosInstance.put(
-      `/api/diary/send/photo/${diaryId}`,
+      `/api/diary/send/photo/${diaryPhotoId}`,
       { pictureIds: pictureIds },
       {
         headers: { Authorization: `Bearer ${idToken}` },

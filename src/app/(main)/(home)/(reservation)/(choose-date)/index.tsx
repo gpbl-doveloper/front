@@ -46,13 +46,9 @@ export function ChooseDatePage() {
       time.getMinutes()
     );
 
-    // 로컬 시간대로 조정
-    const offset = finalDateTime.getTimezoneOffset() * 60000;
-    const localDateTime = new Date(finalDateTime.getTime() - offset);
-
     const reservationData = {
       dogId: selectedDog.id,
-      date: localDateTime.toISOString(),
+      date: finalDateTime.toISOString(),
       centerId: centerId,
     };
 
@@ -70,7 +66,6 @@ export function ChooseDatePage() {
           display="inline"
           onChange={onDateChange}
           style={styles.datePicker}
-          timeZoneName="America/Los_Angeles" // 캘리포니아 시간대
         />
         <View style={styles.timeContainer}>
           <Text style={styles.timeText}>Time</Text>
@@ -80,7 +75,6 @@ export function ChooseDatePage() {
             display="inline"
             onChange={onTimeChange}
             style={styles.datePicker}
-            timeZoneName="America/Los_Angeles" // 캘리포니아 시간대
           />
         </View>
       </View>

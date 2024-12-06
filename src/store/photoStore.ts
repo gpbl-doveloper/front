@@ -22,7 +22,21 @@ interface DiaryPhotoStore {
   setDiaryPhotos: (diaryPhotos: string[]) => void;
 }
 
+interface SelectedDogPhotoStore {
+  categorizedDogPhoto: string[];
+  setCategorizedDogPhoto: (categorizedDogPhoto: string[]) => void;
+}
+
+// [center] 그날의 사진 받아올 시 상태 저장소
 export const useDiaryPhotoStore = create<DiaryPhotoStore>((set) => ({
   diaryPhotos: [],
   setDiaryPhotos: (diaryPhotos) => set({ diaryPhotos }),
 }));
+
+export const useCategorizedDogPhotoStore = create<SelectedDogPhotoStore>(
+  (set) => ({
+    categorizedDogPhoto: [],
+    setCategorizedDogPhoto: (categorizedDogPhoto) =>
+      set({ categorizedDogPhoto }),
+  })
+);

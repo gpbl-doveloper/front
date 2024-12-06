@@ -25,11 +25,11 @@ export interface DiaryStatus {
 }
 
 export interface DogFromBackend extends Dog {
-  diaryNoteId: number; // 없으면0
+  diaryNoteId: number;
   diaryPhotoId: number;
   photoLength: number;
-  diaryNoteStatus: number;
-  diaryPhotoStatus: number;
+  diaryNoteStatus: number; // 없으면 0
+  diaryPhotoStatus: number; // 없으면 0
 }
 
 // [center] 강아지 리스트 저장소

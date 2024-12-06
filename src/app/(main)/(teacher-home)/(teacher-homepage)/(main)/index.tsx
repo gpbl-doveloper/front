@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, RefreshControl } from "react-native";
 import { StatusFilter } from "@/components/FilterBar";
 import { DogItem, DogStatusInfoList } from "./DogItem";
@@ -9,31 +9,11 @@ import { getAllDogs } from "./mainModel";
 import { DogStatus, useFilterStore } from "@/src/store/filterStore";
 import { TeacherHomeContainer } from "../../teacherHomeStyles";
 import { fetchWithDelay } from "@/src/utils/fetchWithDelay";
-
-// 필터링 함수
-export const filterDogsByStatus = (
-  status: DogStatus,
-  dogs: DogFromBackend[]
-): DogFromBackend[] => {
-  switch (status) {
-    case DogStatus.ALL:
-      return dogs;
-    case DogStatus.NOT_STARTED:
-      return dogs.filter(
-        (dog) => !dog.diaryPhotoStatus && !dog.diaryNoteStatus
-      );
-    case DogStatus.DRAFT:
-      return dogs.filter(
-        (dog) =>
-          (dog.diaryPhotoStatus && !dog.diaryNoteStatus) ||
-          (!dog.diaryPhotoStatus && dog.diaryNoteStatus)
-      );
-    case DogStatus.SENT:
-      return dogs.filter((dog) => dog.diaryPhotoStatus && dog.diaryNoteStatus);
-    default:
-      return dogs;
-  }
-};
+import { useDiaryPhotoStore } from "@/src/store/photoStore";
+import { getCenterTodayPictureAPI } from "../(dog-detail)/dogDetailModel";
+import { useSingleDiaryStore } from "@/src/store/diaryStore";
+import { useFocusEffect } from "@react-navigation/native";
+import { filterDogsByStatus } from "./utils/filterDogsByStatus";
 
 export default function TeacherHomePage() {
   const { status } = useFilterStore();
@@ -41,8 +21,23 @@ export default function TeacherHomePage() {
   const { dogs, setDogs } = useDogStore();
   const { idToken } = useFirebaseAuth();
   const [refreshing, setRefreshing] = useState(false);
+  const { resetDiary } = useSingleDiaryStore();
 
-  const fetchData = async () => {
+  const { setDiaryPhotos } = useDiaryPhotoStore();
+
+  // [center] 오늘 올린 모든 사진 불러오기
+  const fetchTodayPhotoData = useCallback(async () => {
+    try {
+      const photoData = await getCenterTodayPictureAPI(idToken, new Date());
+      setDiaryPhotos(photoData);
+      return photoData;
+    } catch (error) {
+      console.error("Failed to fetch photo data:", error);
+    }
+  }, [idToken]);
+
+  // 강아지 리스트 불러오기
+  const fetchData = useCallback(async () => {
     setRefreshing(true);
     try {
       const dogsData = await fetchWithDelay(() => getAllDogs(idToken));
@@ -56,16 +51,21 @@ export default function TeacherHomePage() {
     } finally {
       setRefreshing(false);
     }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  }, [idToken, setDogs]);
 
   useEffect(() => {
     const filteredData = filterDogsByStatus(status, dogs);
     setFilteredDogs(filteredData);
   }, [status, dogs]);
+
+  // 메인 화면 포커스 될 때마다 실행 (오늘 사진 불러오기, 강아지 리스트 불러오기, 일기 초기화)
+  useFocusEffect(
+    useCallback(() => {
+      fetchTodayPhotoData();
+      fetchData();
+      resetDiary();
+    }, [fetchTodayPhotoData, fetchData, resetDiary])
+  );
 
   return (
     <TeacherHomeContainer>
