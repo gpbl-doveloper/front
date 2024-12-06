@@ -1,40 +1,66 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "expo-router";
 import { useSelectedDogStore } from "@/src/store/dogStore";
 import { useFirebaseAuth } from "@/src/store/userStore";
-import { getDogDiaryAPI } from "./dogDetailModel";
+import { getDogDiaryAPI, getDogPictureAPI } from "./dogDetailModel";
 import { useSingleDiaryStore } from "@/src/store/diaryStore";
 import { calculateAge } from "./utils/calculateAge";
 import { dogDetailStyles } from "./styles/dogDetailStyle";
 import { TeacherHomeContainer } from "../../teacherHomeStyles";
+import { useCategorizedDogPhotoStore } from "@/src/store/photoStore";
+import isSameDay from "@/src/utils/isSameDay";
+
+const DIARY_STATE = ["Not started", "Draft", "Sent"];
 
 export default function DogDetailScreen() {
   const navigation = useNavigation();
   const { selectedDog } = useSelectedDogStore();
   const { idToken } = useFirebaseAuth();
   const { setDiary, resetDiary } = useSingleDiaryStore();
-
+  const { setCategorizedDogPhoto } = useCategorizedDogPhotoStore();
   if (selectedDog === null) {
     navigation.goBack();
     return null;
   }
 
-  const diaryState = ["Not started", "Draft", "Sent"];
+  // 특정 강아지 사진 불러오기
+  const fetchPhotoData = useCallback(async () => {
+    try {
+      // @ts-ignore
+      if (selectedDog.diaryPhotoId) {
+        const photoData = await getDogPictureAPI(
+          idToken,
+          // @ts-ignore
+          selectedDog.diaryPhotoId
+        );
+        setCategorizedDogPhoto(photoData);
+      }
+    } catch (error) {
+      console.error("Failed to fetch photo data:", error);
+    }
+  }, [idToken]);
 
   const handleGoBack = () => {
-    resetDiary();
     navigation.goBack();
   };
 
+  // 강아지 상세 화면 포커스 될 때 실행 (사진 불러오기, 일기 불러오기)
   useEffect(() => {
     const fetchDogDetail = async () => {
-      const result = await getDogDiaryAPI(idToken, selectedDog.id);
-      if (result) {
-        setDiary(result);
-      } else {
-        resetDiary();
+      fetchPhotoData();
+      // @ts-ignore
+      // dog랑 dogFromBackend 타입 차이 때문에 오류 발생
+      if (selectedDog.diaryNoteId) {
+        // @ts-ignore
+        const result = await getDogDiaryAPI(idToken, selectedDog.diaryNoteId);
+
+        if (result) {
+          isSameDay(result?.createdAt) ? setDiary(result) : resetDiary();
+        } else {
+          resetDiary();
+        }
       }
     };
     fetchDogDetail();
@@ -92,6 +118,7 @@ export default function DogDetailScreen() {
       {/* 일단 돌아가니까 나중에 고치져 */}
       <InfoCard
         title={"Photo"}
+        // @ts-ignore
         description={`${selectedDog.diaryPhotoStatus} photos`}
         onPress={() => {
           navigation.navigate("NotePhotoSelector");
@@ -99,7 +126,8 @@ export default function DogDetailScreen() {
       />
       <InfoCard
         title={"Note"}
-        description={diaryState[selectedDog.diaryNoteStatus]}
+        // @ts-ignore
+        description={DIARY_STATE[selectedDog.diaryNoteStatus]}
         onPress={() => {
           navigation.navigate("WriteNote");
         }}

@@ -19,6 +19,7 @@ export interface SingleDiaryStore {
   setDiary: (diary: Diary | null) => void;
   resetDiary: () => void;
 }
+
 // (dog-detail) 받아온 단일 일기 여기다 저장,
 export const useSingleDiaryStore = create<SingleDiaryStore>((set) => ({
   diary: null,
