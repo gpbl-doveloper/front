@@ -2,19 +2,29 @@
 
 ## 📝 프로젝트 소개
 
-Dovelopers는 반려동물 돌봄 센터와 보호자를 연결하는 모바일 애플리케이션입니다. 실시간 모니터링, 일지 관리, 예약 시스템을 통해 더 나은 반려동물 케어 서비스를 제공합니다.
+Dovelopers는 반려동물 돌봄 센터와 보호자를 연결하는 모바일 애플리케이션입니다.
+일지 관리, 예약 시스템을 통해 더 나은 반려동물 케어 서비스를 제공합니다.
+
+## 🎥 데모 & 발표자료
+
+### 프로젝트 데모
+
+- [📱 앱 시연 영상](https://www.canva.com/design/DAGYkH_AXNE/FtMGOie2TOI1_TAK1-ex1w/edit?utm_content=DAGYkH_AXNE&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
+### 발표 자료
+
+- [📊 프로젝트 소개 PPT](https://www.figma.com/slides/tsxvJmeHWFl0pkZJ8CatkU/Final-Demo?node-id=1-25&t=CNlIz0thWo28wEbt-1)
 
 ### 핵심 가치
 
 - 💝 신뢰할 수 있는 반려동물 케어 서비스
 - 🤝 보호자와 센터 간의 원활한 소통
-- 📊 체계적인 반려동물 건강 관리
 
 ## ⭐️ 주요 기능
 
 ### 보호자용
 
-- 실시간 반려동물 상태 모니터링
+- 데일리 케어 일지 확인
 - 돌봄 센터 검색 및 예약
 - 반려동물 프로필 관리
 - 케어 히스토리 확인
@@ -23,7 +33,6 @@ Dovelopers는 반려동물 돌봄 센터와 보호자를 연결하는 모바일 
 
 - 📝 데일리 케어 일지 작성
 - 📸 실시간 사진/영상 공유
-- 📊 반려동물 건강 상태 기록
 - 📅 예약 관리 시스템
 
 ## 🛠 기술 스택
