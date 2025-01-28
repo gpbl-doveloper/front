@@ -36,12 +36,9 @@ Dovelopers는 반려동물 돌봄 센터와 보호자를 연결하는 모바일 
 - **Styling:** TailwindCSS
 - **API Client:** Axios
 
-### Backend
+### Cloud
 
 - **Authentication:** Firebase Auth
-- **Database:** Firebase Realtime Database
-- **Storage:** Firebase Cloud Storage
-- **Hosting:** Firebase Hosting
 
 ## 🚀 시작하기
 
@@ -50,7 +47,7 @@ Dovelopers는 반려동물 돌봄 센터와 보호자를 연결하는 모바일 
 - Node.js (v16.0.0 이상)
 - npm 또는 yarn
 - Expo CLI
-- iOS 시뮬레이터 또는 Android 에뮬레이터 (선택사항)
+- iOS 시뮬레이터 또는 Android 에뮬레이터 (ios 권장)
 
 ### 설치 방법
 
@@ -97,9 +94,10 @@ FIREBASE_AUTH_DOMAIN=your_auth_domain
 
 ## 👥 팀 멤버
 
-- 기획/디자인: @designer
-- 프론트엔드: @frontend-dev
-- 백엔드: @backend-dev
+- 기획/디자인: @[cathy0305](https://github.com/cathy0305)
+- 프론트엔드: @[0yeonnnn0](https://github.com/0yeonnnn0)
+- 백엔드: @[haram8009](https://github.com/haram8009)
+- AI: @[nampaca123](https://github.com/nampaca123)
 
 ## 📞 문의하기
 
