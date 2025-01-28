@@ -10,7 +10,7 @@ export default ({ config }) => {
       appId: process.env.FIREBASE_APP_ID,
       measurementId: process.env.FIREBASE_MEASUREMENT_ID,
       router: {
-        exclude: ["**/_*.tsx", "**/inner/[**]"], // 제외할 경로 추가
+        exclude: ["**/_*.tsx"], // 제외할 경로 추가
       },
       apiUrl: process.env.REACT_APP_API_URL,
     },
